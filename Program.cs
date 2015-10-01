@@ -42,13 +42,11 @@ filename is a .zip then all .xml files in the .zip will be processed
 regardless of their path within the .zip file. The -i parameter may be
 repeated to process multiple input sources.
 
- -oi <output filename>
-Output file for item information. This will be a .csv formatted file that
-contains the item metadata from all of the input files.
-
- -os <output filename>
-Output file for stimulus information. This will be a .csv formatted file
-that contains the stimulus metadata for all of the input files.
+ -o <output filename>
+Output filename prefix. The results are stored in the following files:
+  filename.items.csv    Tabulation of item data
+  filename.stims.csv    Tabulation of stimulus data
+  filename.errors.csv   Tabulation of errors (if any)
 
 -scoring
 Causes the tabulator to tabulate scoring packages and ignore all other
@@ -61,8 +59,7 @@ all administration packages and ignores all other package types.
             try
             {
                 List<string> inputFilenames = new List<string>();
-                string oiFilename = null;
-                string osFilename = null;
+                string oFilename = null;
                 PackageType packageType = PackageType.Administration;
                 
                 bool help = false;
@@ -83,21 +80,13 @@ all administration packages and ignores all other package types.
                             }
                             break;
 
-                        case "-oi":
+                        case "-o":
                             {
                                 ++i;
-                                if (i >= args.Length) throw new ArgumentException("Invalid command line. '-oi' option not followed by filename.");
-                                if (oiFilename != null) throw new ArgumentException("Only one item output file may be specified.");
-                                oiFilename = Path.GetFullPath(args[i]);
-                            }
-                            break;
-
-                        case "-os":
-                            {
-                                ++i;
-                                if (i >= args.Length) throw new ArgumentException("Invalid command line. '-os' option not followed by filename.");
-                                if (osFilename != null) throw new ArgumentException("Only one stimulus output file may be specified.");
-                                osFilename = Path.GetFullPath(args[i]);
+                                if (i >= args.Length) throw new ArgumentException("Invalid command line. '-o' option not followed by filename.");
+                                if (oFilename != null) throw new ArgumentException("Only one item output filename may be specified.");
+                                oFilename = Path.GetFullPath(args[i]);
+                                if (oFilename.EndsWith(".csv")) oFilename = oFilename.Substring(0, oFilename.Length - 4);
                             }
                             break;
 
@@ -117,13 +106,9 @@ all administration packages and ignores all other package types.
 
                 else
                 {
-                    if (inputFilenames.Count == 0 || (oiFilename == null && osFilename == null)) throw new ArgumentException("Invalid command line. One output filename and at least one input filename must be specified.");
+                    if (inputFilenames.Count == 0 || oFilename == null) throw new ArgumentException("Invalid command line. One output filename and at least one input filename must be specified.");
 
-                    if (oiFilename != null)
-                        Console.WriteLine("Writing item metadata to: " + oiFilename);
-                    if (osFilename != null)
-                        Console.WriteLine("Writing stimulus metadata to: " + osFilename);
-                    using (TestPackageProcessor processor = new TestPackageProcessor(oiFilename, osFilename))
+                    using (TestPackageProcessor processor = new TestPackageProcessor(oFilename))
                     {
                         processor.ExpectedPackageType = packageType;
 
