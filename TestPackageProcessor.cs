@@ -129,7 +129,7 @@ namespace TabulateSmarterTestAdminPackage
         // GroupItem Selector
         // /testspecification/administration/testform/formpartition/itemgroup/groupitem
         // /testspecification/administration/adminsegment/segmentpool/itemgroup/groupitem
-        static XPathExpression sXp_GroupItem = XPathExpression.Compile("/testspecification//groupitem");
+        static XPathExpression sXp_GroupItem = XPathExpression.Compile("/testspecification//groupitem");        
 
         static Dictionary<string, int> sPoolPropertyMapping;
         static HashSet<string> sKnownMeasurementModels;
