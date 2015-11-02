@@ -41,6 +41,7 @@ namespace TabulateSmarterTestAdminPackage
             IsActive,
             ResponseRequired,
             AdminRequired,
+            FormPosition,
             MeasurementModel,
             Weight,
             ScorePoints,
@@ -85,6 +86,7 @@ namespace TabulateSmarterTestAdminPackage
             public string IsActive;
             public string ResponseRequired;
             public string AdminRequired;
+            public string FormPosition;
         }
 
         // Test Info
@@ -223,6 +225,7 @@ namespace TabulateSmarterTestAdminPackage
                     string isActive = node.GetAttribute("isactive", string.Empty);
                     string responseRequired = node.GetAttribute("responserequired", string.Empty);
                     string adminRequired = node.GetAttribute("adminrequired", string.Empty);
+                    string formPosition = node.GetAttribute("formposition", string.Empty);
 
                     GroupItemInfo gii;
                     if (indexGroupItemInfo.TryGetValue(itemId, out gii))
@@ -243,6 +246,10 @@ namespace TabulateSmarterTestAdminPackage
                         {
                             ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
                         }
+                        if (!string.Equals(gii.FormPosition, formPosition, StringComparison.Ordinal))
+                        {
+                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
+                        }
                     }
                     else
                     {
@@ -251,6 +258,7 @@ namespace TabulateSmarterTestAdminPackage
                         gii.IsActive = isActive;
                         gii.ResponseRequired = responseRequired;
                         gii.AdminRequired = adminRequired;
+                        gii.FormPosition = formPosition;
                         indexGroupItemInfo.Add(itemId, gii);
                         //Console.WriteLine(itemId);
                     }
@@ -261,7 +269,7 @@ namespace TabulateSmarterTestAdminPackage
             // Report the item fields
             if (m_itemWriter != null)
             {
-                XPathNodeIterator nodes = nav.Select(sXp_Item);
+                XPathNodeIterator nodes = nav.Select(sXp_Item);                
                 while (nodes.MoveNext())
                 {
                     XPathNavigator node = nodes.Current;
@@ -373,6 +381,7 @@ namespace TabulateSmarterTestAdminPackage
                         itemFields[(int)ItemFieldNames.IsActive] = gii.IsActive;
                         itemFields[(int)ItemFieldNames.ResponseRequired] = gii.ResponseRequired;
                         itemFields[(int)ItemFieldNames.AdminRequired] = gii.AdminRequired;
+                        itemFields[(int)ItemFieldNames.FormPosition] = gii.FormPosition;
                     }
 
                     // Write one line to the CSV
