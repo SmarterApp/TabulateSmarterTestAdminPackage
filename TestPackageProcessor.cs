@@ -383,6 +383,14 @@ namespace TabulateSmarterTestAdminPackage
                         itemFields[(int)ItemFieldNames.AdminRequired] = gii.AdminRequired;
                         itemFields[(int)ItemFieldNames.FormPosition] = gii.FormPosition;
                     }
+                    else
+                    {
+                        itemFields[(int)ItemFieldNames.IsFieldTest] = string.Empty;
+                        itemFields[(int)ItemFieldNames.IsActive] = string.Empty;
+                        itemFields[(int)ItemFieldNames.ResponseRequired] = string.Empty;
+                        itemFields[(int)ItemFieldNames.AdminRequired] = string.Empty;
+                        itemFields[(int)ItemFieldNames.FormPosition] = string.Empty;
+                    }
 
                     // Write one line to the CSV
                     m_itemWriter.Write(itemFields);
