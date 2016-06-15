@@ -204,7 +204,8 @@ namespace TabulateSmarterTestAdminPackage
             string purpose = nav.Eval(sXp_PackagePurpose);
             if (!string.Equals(purpose, ExpectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("  Skipping package. Type is '{0}' but processing '{1}.", purpose, ExpectedPackageType);
+                Console.WriteLine("  Skipping package. Type is '{0}' but processing '{1}'.", purpose, ExpectedPackageType);
+                return;
             }
 
             // Get the test info
