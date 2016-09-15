@@ -9,7 +9,7 @@ namespace Parse
     class CsvWriter : IDisposable
     {
         static readonly UTF8Encoding sUTF8_NoBom = new UTF8Encoding(false);
-        static readonly char[] sCsvSpecialChars = new char[] { ',', '"', '\r', '\n' };
+        static readonly char[] sCsvSpecialChars = new char[] { ',', '"', '\r', '\n', '\t' };
 
         const int cBufSize = 8192;
         TextWriter mWriter;

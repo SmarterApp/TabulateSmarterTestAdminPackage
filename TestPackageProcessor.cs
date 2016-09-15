@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml.XPath;
 using System.Diagnostics;
-using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace TabulateSmarterTestAdminPackage
 {
@@ -24,6 +22,9 @@ namespace TabulateSmarterTestAdminPackage
             Version,
             ItemType,
             Grade,
+            Standard,
+            Claim,
+            Target,
             PassageRef,
             PassageLength,
             HearingImpaired,
@@ -129,7 +130,13 @@ namespace TabulateSmarterTestAdminPackage
         // GroupItem Selector
         // /testspecification/administration/testform/formpartition/itemgroup/groupitem
         // /testspecification/administration/adminsegment/segmentpool/itemgroup/groupitem
-        static XPathExpression sXp_GroupItem = XPathExpression.Compile("/testspecification//groupitem");        
+        static XPathExpression sXp_GroupItem = XPathExpression.Compile("/testspecification//groupitem");
+
+        // Parse bpref entries to standard, claim, target
+        static Regex s_Rx_BprefMath = new Regex(@"^SBAC-(\d)\|[A-Z]{1,4}\|[0-9A-Z]{1,4}\|([A-Z]+(?:-\d+)?)$");
+        static Regex s_Rx_BprefEla = new Regex(@"^SBAC-(\d-[A-Z]{1,2})\|(\d{1,2}-\d{1,2})(?:\|[A-Za-z0-9\-\.]+)?$");
+        const string c_MathStdPrefix = "SBAC-MA-v6:";
+        const string c_ElaStdPrefix = "SBAC-ELA-v1:";
 
         static Dictionary<string, int> sPoolPropertyMapping;
         static HashSet<string> sKnownMeasurementModels;
@@ -138,7 +145,6 @@ namespace TabulateSmarterTestAdminPackage
         static TestPackageProcessor()
         {
             sPoolPropertyMapping = new Dictionary<string, int>();
-            sPoolPropertyMapping.Add("--ITEMTYPE--", 0); // Value of zero means suppress
             sPoolPropertyMapping.Add("Appropriate for Hearing Impaired", (int)ItemFieldNames.HearingImpaired);
             sPoolPropertyMapping.Add("ASL", (int)ItemFieldNames.ASL);
             sPoolPropertyMapping.Add("Braille", (int)ItemFieldNames.Braille);
@@ -151,6 +157,16 @@ namespace TabulateSmarterTestAdminPackage
             sPoolPropertyMapping.Add("TDSPoolFilter", (int)ItemFieldNames.TDSPoolFilter);
             sPoolPropertyMapping.Add("Calculator", (int)ItemFieldNames.Calculator);
             sPoolPropertyMapping.Add("Glossary", (int)ItemFieldNames.Glossary);
+
+            // Ignore these pool properties
+            sPoolPropertyMapping.Add("--ITEMTYPE--", 0); // Value of zero means suppress
+            sPoolPropertyMapping.Add("Difficulty Category", 0);
+            sPoolPropertyMapping.Add("Test Pool", 0);
+            sPoolPropertyMapping.Add("Rubric Source", 0);
+            sPoolPropertyMapping.Add("Smarter Balanced Item Response Types", 0);
+            sPoolPropertyMapping.Add("Answer Key", 0);
+            sPoolPropertyMapping.Add("Claim2_Category", 0);
+            sPoolPropertyMapping.Add("Revision Sub-category", 0);
 
             sKnownMeasurementModels = new HashSet<string>();
             sKnownMeasurementModels.Add("RAWSCORE");
@@ -268,11 +284,13 @@ namespace TabulateSmarterTestAdminPackage
             }
 
             // Report the item fields
+            int itemCount = 0;
             if (m_itemWriter != null)
             {
                 XPathNodeIterator nodes = nav.Select(sXp_Item);                
                 while (nodes.MoveNext())
                 {
+                    ++itemCount;
                     XPathNavigator node = nodes.Current;
 
                     // Collect the item fields
@@ -373,7 +391,38 @@ namespace TabulateSmarterTestAdminPackage
                             ReportError(testName, ErrorSeverity.Benign, itemId, "More than {0} bpref nodes", MaxBpRefs);
                         else
                             itemFields[(int)ItemFieldNames.bpref1 + bpIndex++] = bpref;
+
+                        // Attempt to parse the bpref as an SBAC standard
+                        // See http://www.smarterapp.org/documents/InterpretingSmarterBalancedStandardIDs.html
+                        // A proper Math standard ID should be in this format: SBAC-MA-v6:1|P|TS04|D-6
+                        // However, the bpref form substitutes "SBAC-" for "SBAC-MA-v6:"
+                        // A proper ELA standard ID should be in this format: SBAC-ELA-v1:3-L|4-6|6.SL.2
+                        // However, the bpref form substitutes "SBAC-" FOR "SBAC-ELA-v1:" and it drops the
+                        // last segment which is the common core state standard.
+                        if (testSubject.Equals("Math", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Match match = s_Rx_BprefMath.Match(bpref);
+                            if (match.Success)
+                            {
+                                itemFields[(int)ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix, match.Value.Substring(5));
+                                itemFields[(int)ItemFieldNames.Claim] = match.Groups[1].Value;
+                                itemFields[(int)ItemFieldNames.Target] = match.Groups[2].Value;
+                            }
+                        }
+                        else if (testSubject.Equals("ELA", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Match match = s_Rx_BprefEla.Match(bpref);
+                            if (match.Success)
+                            {
+                                itemFields[(int)ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix, match.Value.Substring(5));
+                                itemFields[(int)ItemFieldNames.Claim] = match.Groups[1].Value + "\t";   // Adding tab character prevents Excel from treating these as dates.
+                                itemFields[(int)ItemFieldNames.Target] = match.Groups[2].Value + "\t";
+                            }
+                        }
                     }
+                    if (itemFields[(int)ItemFieldNames.Standard] == null) itemFields[(int)ItemFieldNames.Standard] = string.Empty;
+                    if (itemFields[(int)ItemFieldNames.Claim] == null) itemFields[(int)ItemFieldNames.Claim] = string.Empty;
+                    if (itemFields[(int)ItemFieldNames.Target] == null) itemFields[(int)ItemFieldNames.Target] = string.Empty;
 
                     GroupItemInfo gii;
                     if (indexGroupItemInfo.TryGetValue(itemId, out gii))
@@ -421,6 +470,16 @@ namespace TabulateSmarterTestAdminPackage
                 }
             }
 
+            // Get the item counts
+            int opitemcount = int.Parse(nav.Eval(XPathExpression.Compile("/testspecification//bpelement[@elementtype='test']/@opitemcount")));
+            int ftitemcount = int.Parse(nav.Eval(XPathExpression.Compile("/testspecification//bpelement[@elementtype='test']/@ftitemcount")));
+            int maxopitems = int.Parse(nav.Eval(XPathExpression.Compile("/testspecification//bpelement[@elementtype='test']/@maxopitems")));
+            //Console.WriteLine("  opitemcount = {0}", opitemcount);
+            //Console.WriteLine("  ftitemcount = {0}", ftitemcount);
+            //Console.WriteLine("  totalcount  = {0}", opitemcount + ftitemcount);
+            //Console.WriteLine("  maxopitems  = {0}", maxopitems);
+            //Console.WriteLine("  opitemcount/maxopitems = {0}/{1} = {2}", opitemcount, maxopitems, ((double)opitemcount) / ((double)maxopitems));
+            //Debug.WriteLine("{0},{1},{2}", testName, opitemcount, maxopitems);
         } // ProcessPackage
 
         void ReportError(string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
@@ -433,7 +492,7 @@ namespace TabulateSmarterTestAdminPackage
 
             string outMessage = string.Format(message, args);
             m_errWriter.Write(new string[] { testName, severity.ToString(), itemId, outMessage });
-            Console.WriteLine("    " + outMessage);
+            //Console.WriteLine("    " + outMessage);
 #if DEBUG1
             Debug.Fail(outMessage);
 #endif
