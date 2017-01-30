@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 
-namespace Parse
+namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 {
-    class CsvWriter : IDisposable
+    public class CsvWriter : IDisposable
     {
         static readonly UTF8Encoding sUTF8_NoBom = new UTF8Encoding(false);
         static readonly char[] sCsvSpecialChars = new char[] { ',', '"', '\r', '\n', '\t' };

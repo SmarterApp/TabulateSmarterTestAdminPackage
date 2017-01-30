@@ -48,10 +48,10 @@
     <Compile Include="Generic\StringValidations.cs" />
     <Compile Include="AttributeValidation\Version.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tabulation\CsvWriter.cs" />
+    <Compile Include="Tabulation\ErrorHandling.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tabulation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

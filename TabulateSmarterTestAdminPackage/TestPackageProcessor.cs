@@ -6,8 +6,10 @@ using System.Xml.XPath;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Tabulation;
 using TabulateSmarterTestAdminPackage.Exceptions;
 using TabulateSmarterTestAdminPackage.Processors;
+using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage
 {
@@ -120,27 +122,26 @@ namespace TabulateSmarterTestAdminPackage
             sKnownMeasurementParameters.Add("b3");
         }
 
-        Parse.CsvWriter m_itemWriter;
-        Parse.CsvWriter m_stimWriter;
+        CsvWriter m_itemWriter;
+        CsvWriter m_stimWriter;
         string m_errFilename;
-        Parse.CsvWriter m_errWriter;
+        CsvWriter m_errWriter;
+        private AdminPackageUtility adminPackageUtility;
 
         public TestPackageProcessor(string oFilename)
         {
-            string itemFilename = oFilename + ".items.csv";
-            string stimFilename = oFilename + ".stims.csv";
-            m_errFilename = oFilename + ".errors.csv";
-#if DEBUG
+            adminPackageUtility = new AdminPackageUtility(oFilename);
+#if DEBUG 
             if (File.Exists(m_errFilename)) File.Delete(m_errFilename);
 #else
             if (File.Exists(itemFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", itemFilename));
             if (File.Exists(stimFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", stimFilename));
             if (File.Exists(m_errFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", m_errFilename));
 #endif
-            m_itemWriter = new Parse.CsvWriter(itemFilename, false);
+            m_itemWriter = new CsvWriter(adminPackageUtility.itemFileName, false);
             m_itemWriter.Write(Enum.GetNames(typeof(ItemFieldNames)));
 
-            m_stimWriter = new Parse.CsvWriter(stimFilename, false);
+            m_stimWriter = new CsvWriter(adminPackageUtility.stimuliFileName, false);
             m_stimWriter.Write(Enum.GetNames(typeof(StimFieldNames)));
         }
 
@@ -190,23 +191,23 @@ namespace TabulateSmarterTestAdminPackage
                     {
                         if (!string.Equals(gii.IsFieldTest, isFieldTest, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isfieldtest info: '{0}' <> '{1}'", isFieldTest, gii.IsFieldTest);
+                            adminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isfieldtest info: '{0}' <> '{1}'", isFieldTest, gii.IsFieldTest);
                         }
                         if (!string.Equals(gii.IsActive, isActive, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isactive info: '{0}' <> '{1}'", isActive, gii.IsActive);
+                            adminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isactive info: '{0}' <> '{1}'", isActive, gii.IsActive);
                         }
                         if (!string.Equals(gii.ResponseRequired, responseRequired, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting responserequired info: '{0}' <> '{1}'", responseRequired, gii.ResponseRequired);
+                            adminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting responserequired info: '{0}' <> '{1}'", responseRequired, gii.ResponseRequired);
                         }
                         if (!string.Equals(gii.AdminRequired, adminRequired, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
+                            adminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
                         }
                         if (!string.Equals(gii.FormPosition, formPosition, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
+                            adminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
                         }
                     }
                     else
@@ -287,13 +288,13 @@ namespace TabulateSmarterTestAdminPackage
                                 if (fieldIndex != 0)
                                 {
                                     if (!string.IsNullOrEmpty(itemFields[fieldIndex]))
-                                        ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
+                                        adminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
                                     itemFields[fieldIndex] = ppValue;
                                 }
                             }
                             else
                             {
-                                ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
+                                adminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
                             }
                         }
                     }
@@ -311,7 +312,7 @@ namespace TabulateSmarterTestAdminPackage
 
                     // Check known measurement model
                     if (!sKnownMeasurementModels.Contains(itemFields[(int)ItemFieldNames.MeasurementModel]))
-                        ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Model", itemFields[(int)ItemFieldNames.MeasurementModel]);
+                        adminPackageUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Model", itemFields[(int)ItemFieldNames.MeasurementModel]);
 
                     // Check known parameters
                     XPathNodeIterator pnNodes = node.Select(sXp_ParameterName);
@@ -319,7 +320,7 @@ namespace TabulateSmarterTestAdminPackage
                     {
                         string name = pnNodes.Current.Value;
                         if (!sKnownMeasurementParameters.Contains(name))
-                            ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Parameter", name);
+                            adminPackageUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Parameter", name);
                     }
 
                     // bprefs
@@ -329,7 +330,7 @@ namespace TabulateSmarterTestAdminPackage
                     {
                         string bpref = bpNodes.Current.Value;
                         if (bpIndex >= MaxBpRefs)
-                            ReportError(testName, ErrorSeverity.Benign, itemId, "More than {0} bpref nodes", MaxBpRefs);
+                            adminPackageUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "More than {0} bpref nodes", MaxBpRefs);
                         else
                             itemFields[(int)ItemFieldNames.bpref1 + bpIndex++] = bpref;
 
@@ -422,22 +423,6 @@ namespace TabulateSmarterTestAdminPackage
             //Console.WriteLine("  opitemcount/maxopitems = {0}/{1} = {2}", opitemcount, maxopitems, ((double)opitemcount) / ((double)maxopitems));
             //Debug.WriteLine("{0},{1},{2}", testName, opitemcount, maxopitems);
         } // ProcessPackage
-
-        void ReportError(string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
-        {
-            if (m_errWriter == null)
-            {
-                m_errWriter = new Parse.CsvWriter(m_errFilename, false);
-                m_errWriter.Write(new string[] { "TestName", "Severity", "ItemId", "Message" });
-            }
-
-            string outMessage = string.Format(message, args);
-            m_errWriter.Write(new string[] { testName, severity.ToString(), itemId, outMessage });
-            //Console.WriteLine("    " + outMessage);
-#if DEBUG1
-            Debug.Fail(outMessage);
-#endif
-        }
 
         static string Strip200(string val)
         {
