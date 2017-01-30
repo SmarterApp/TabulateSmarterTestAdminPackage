@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TabulateSmarterTestAdminPackage")]
+[assembly: AssemblyTitle("TabulateSmarterTestAdminPackage.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TabulateSmarterTestAdminPackage")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyProduct("TabulateSmarterTestAdminPackage.Tests")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4662087f-29fe-4ef2-a3e6-0db85a286ad6")]
+[assembly: Guid("11ee9b6a-df6c-4247-ac88-07c9a627627b")]
 
 // Version information for an assembly consists of the following four values:
 //
