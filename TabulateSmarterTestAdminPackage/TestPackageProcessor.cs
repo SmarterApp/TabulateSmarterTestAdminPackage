@@ -5,6 +5,8 @@ using System.IO;
 using System.Xml.XPath;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using TabulateSmarterTestAdminPackage.Exceptions;
+using TabulateSmarterTestAdminPackage.Processors;
 
 namespace TabulateSmarterTestAdminPackage
 {
@@ -91,7 +93,6 @@ namespace TabulateSmarterTestAdminPackage
         }
 
         // Test Info
-        static XPathExpression sXp_PackagePurpose = XPathExpression.Compile("/testspecification/@purpose");
         static XPathExpression sXp_TestName = XPathExpression.Compile("/testspecification/identifier/@name");
         static XPathExpression sXp_TestSubject = XPathExpression.Compile("/testspecification/property[@name='subject']/@value");
         static XPathExpression sXp_TestGrade = XPathExpression.Compile("/testspecification/property[@name='grade']/@value");
@@ -213,14 +214,18 @@ namespace TabulateSmarterTestAdminPackage
 
         public void ProcessResult(Stream input)
         {
-            XPathDocument doc = new XPathDocument(input);
-            XPathNavigator nav = doc.CreateNavigator();
+            var doc = new XPathDocument(input);
+            var nav = doc.CreateNavigator();
 
-            // Get the package purpose
-            string purpose = nav.Eval(sXp_PackagePurpose);
-            if (!string.Equals(purpose, ExpectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
+            // /testspecification
+            var testSpecificationProcessor = new TestSpecificationProcessor(nav);
+            try
             {
-                Console.WriteLine("  Skipping package. Type is '{0}' but processing '{1}'.", purpose, ExpectedPackageType);
+                testSpecificationProcessor.IsTestSpecificationValid(ExpectedPackageType);
+            } catch (IncorrectPackageTypeException exception)
+            {
+                // If the test package is not what we expect, we should short circuit and return without processing any further
+                Console.WriteLine(exception.Message);
                 return;
             }
 
