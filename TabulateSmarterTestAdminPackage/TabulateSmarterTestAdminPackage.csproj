@@ -46,6 +46,8 @@
     <Compile Include="ConsoleHelper.cs" />
     <Compile Include="CsvWriter.cs" />
     <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
+    <Compile Include="Processors\IdentifierProcessor.cs" />
+    <Compile Include="Processors\PropertyProcessor.cs" />
     <Compile Include="Processors\TestSpecificationProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +55,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestAdminPackage.Common.csproj">
+      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
+      <Name>TabulateSmarterTestAdminPackage.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

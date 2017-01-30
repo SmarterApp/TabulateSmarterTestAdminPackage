@@ -218,7 +218,7 @@ namespace TabulateSmarterTestAdminPackage
             var nav = doc.CreateNavigator();
 
             // /testspecification
-            var testSpecificationProcessor = new TestSpecificationProcessor(nav);
+            var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode("/testspecification"));
             try
             {
                 testSpecificationProcessor.IsTestSpecificationValid(ExpectedPackageType);
