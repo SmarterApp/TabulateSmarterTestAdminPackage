@@ -41,9 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ErrorSeverity.cs" />
+    <Compile Include="Enums\ItemFieldNames.cs" />
+    <Compile Include="Enums\StimFieldNames.cs" />
+    <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
     <Compile Include="Generic\StringValidations.cs" />
     <Compile Include="AttributeValidation\Version.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tabulation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

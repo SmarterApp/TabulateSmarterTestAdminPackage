@@ -5,83 +5,19 @@ using System.IO;
 using System.Xml.XPath;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Exceptions;
 using TabulateSmarterTestAdminPackage.Processors;
 
 namespace TabulateSmarterTestAdminPackage
 {
-
-    class TestPackageProcessor : ITestResultProcessor
+    internal class TestPackageProcessor : ITestResultProcessor
     {
-        enum ItemFieldNames : int
-        {
-            TestName,
-            TestSubject,
-            TestGrade,
-            TestType, // PT or Summative
-            ItemId, // Strip the "200-" bankId prefix
-            Filename,
-            Version,
-            ItemType,
-            Grade,
-            Standard,
-            Claim,
-            Target,
-            PassageRef,
-            PassageLength,
-            HearingImpaired,
-            ASL,
-            Braille,
-            LanguageBraille,
-            DOK,
-            Language,
-            Calculator,
-            Glossary,
-            ScoringEngine,
-            Spanish,
-            TDSPoolFilter,
-            IsFieldTest,
-            IsActive,
-            ResponseRequired,
-            AdminRequired,
-            FormPosition,
-            MeasurementModel,
-            Weight,
-            ScorePoints,
-            a,
-            b0_b,
-            b1_c,
-            b2,
-            b3,
-            bpref1,
-            bpref2,
-            bpref3,
-            bpref4,
-            bpref5,
-            bpref6,
-            bpref7
-        }
+       
         static readonly int ItemFieldNamesCount = Enum.GetNames(typeof(ItemFieldNames)).Length;
         const int MaxBpRefs = 7;
 
-        enum StimFieldNames : int
-        {
-            TestName,
-            TestSubject,
-            TestGrade,
-            TestType, // PT or Summative
-            StimId, // Strip the "200-" bankId prefix
-            Filename,
-            Version
-        };
         static readonly int StimFieldNamesCount = Enum.GetNames(typeof(StimFieldNames)).Length;
-
-        enum ErrorSeverity : int
-        {
-            Benign,
-            Degraded,
-            Severe
-        }
 
         private class GroupItemInfo
         {

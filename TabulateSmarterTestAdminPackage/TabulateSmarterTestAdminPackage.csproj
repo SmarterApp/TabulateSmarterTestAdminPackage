@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
     <Compile Include="CsvWriter.cs" />
-    <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
     <Compile Include="Processors\IdentifierProcessor.cs" />
     <Compile Include="Processors\PropertyProcessor.cs" />
     <Compile Include="Processors\TestSpecificationProcessor.cs" />
