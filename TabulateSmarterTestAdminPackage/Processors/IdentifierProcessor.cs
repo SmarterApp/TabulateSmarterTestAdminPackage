@@ -1,11 +1,12 @@
-﻿using System.Xml.XPath;
+﻿using System;
+using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.AttributeValidation;
 using TabulateSmarterTestAdminPackage.Common.Generic;
 using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors
 {
-    internal class IdentifierProcessor
+    internal class IdentifierProcessor : IDisposable
     {
         private static readonly XPathExpression sXp_Name = XPathExpression.Compile("@name");
         private static readonly XPathExpression sXp_UniqueId = XPathExpression.Compile("@uniqueid");
@@ -14,17 +15,18 @@ namespace TabulateSmarterTestAdminPackage.Processors
 
         private readonly XPathNavigator _navigator;
 
-        internal IdentifierProcessor(XPathNavigator navigator, string testName)
+        internal IdentifierProcessor(XPathNavigator navigator)
         {
             _navigator = navigator;
-            TestName = testName;
         }
 
         private string Name { get; set; }
         private string Version { get; set; }
         private string Label { get; set; }
         private string UniqueId { get; set; }
-        private string TestName { get; set; }
+
+        public void Dispose()
+        {}
 
         internal bool IsIdentifierValid()
         {

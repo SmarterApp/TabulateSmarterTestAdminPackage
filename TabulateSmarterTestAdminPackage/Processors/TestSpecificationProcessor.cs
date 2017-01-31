@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.XPath;
+using TabulateSmarterTestAdminPackage.Common.AttributeValidation;
 using TabulateSmarterTestAdminPackage.Common.Generic;
 using TabulateSmarterTestAdminPackage.Exceptions;
-using TabulateSmarterTestAdminPackage.Common.AttributeValidation;
 using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors
@@ -21,7 +21,7 @@ namespace TabulateSmarterTestAdminPackage.Processors
         internal TestSpecificationProcessor(XPathNavigator navigator)
         {
             _navigator = navigator;
-            IdentifierProcessor = new IdentifierProcessor(navigator.SelectSingleNode("identifier"), string.Empty);
+            IdentifierProcessor = new IdentifierProcessor(navigator.SelectSingleNode("identifier"));
 
             PropertyProcessors = new List<PropertyProcessor>();
             var properties = navigator.Select("property");
@@ -62,7 +62,10 @@ namespace TabulateSmarterTestAdminPackage.Processors
         internal bool IsValidPublisher()
         {
             Publisher = _navigator.Eval(sXp_Publisher);
-            if (Publisher.NonemptyStringLessThanEqual(255)) return true;
+            if (Publisher.NonemptyStringLessThanEqual(255))
+            {
+                return true;
+            }
             AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Publisher.Expression, "string required [length<=255]");
             return false;
         }

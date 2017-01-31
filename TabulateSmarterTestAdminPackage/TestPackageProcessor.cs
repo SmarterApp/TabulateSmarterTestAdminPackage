@@ -442,24 +442,7 @@ namespace TabulateSmarterTestAdminPackage
 
         void Dispose(bool disposing)
         {
-            if (AdminPackageUtility.ItemWriter != null)
-            {
-#if DEBUG
-                if (!disposing) Debug.Fail("Failed to dispose TestPackageProcessor");
-#endif
-                AdminPackageUtility.ItemWriter.Dispose();
-                AdminPackageUtility.ItemWriter = null;
-            }
-            if (AdminPackageUtility.StimuliWriter != null)
-            {
-                AdminPackageUtility.StimuliWriter.Dispose();
-                AdminPackageUtility.StimuliWriter = null;
-            }
-            if (AdminPackageUtility.ErrorWriter != null)
-            {
-                AdminPackageUtility.ErrorWriter.Dispose();
-                AdminPackageUtility.ErrorWriter = null;
-            }
+            AdminPackageUtility.Dispose(disposing);
             if (disposing)
             {
                 GC.SuppressFinalize(this);

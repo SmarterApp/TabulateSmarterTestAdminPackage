@@ -9,11 +9,11 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
             if (writer == null)
             {
                 writer = new CsvWriter(errorFileName, false);
-                writer.Write(new[] { "TestName", "Severity", "ItemId", "Message" });
+                writer.Write(new[] {"TestName", "Severity", "ItemId", "Message"});
             }
 
             var outMessage = string.Format(message, args);
-            writer.Write(new[] { testName, severity.ToString(), itemId, outMessage });
+            writer.Write(new[] {testName, severity.ToString(), itemId, outMessage});
 #if DEBUG1
             Debug.Fail(outMessage);
 #endif

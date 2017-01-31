@@ -13,7 +13,7 @@ namespace TabulateSmarterTestAdminPackage.Processors
 
         internal PropertyProcessor(XPathNavigator navigator)
         {
-            this._navigator = navigator;
+            _navigator = navigator;
         }
 
         private readonly XPathNavigator _navigator;
