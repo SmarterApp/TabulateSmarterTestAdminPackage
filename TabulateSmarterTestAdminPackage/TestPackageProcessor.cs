@@ -130,8 +130,8 @@ namespace TabulateSmarterTestAdminPackage
             if (File.Exists(stimFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", stimFilename));
             if (File.Exists(m_errFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", m_errFilename));
 #endif
-            AdminPackageUtility.ItemWriter.Write(Enum.GetNames(typeof(ItemFieldNames)));
-            AdminPackageUtility.StimuliWriter.Write(Enum.GetNames(typeof(StimFieldNames)));
+            AdminPackageUtility.GetItemWriter().Write(Enum.GetNames(typeof(ItemFieldNames)));
+            AdminPackageUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
         }
 
         public PackageType ExpectedPackageType { get; set; }
@@ -219,7 +219,7 @@ namespace TabulateSmarterTestAdminPackage
 
             // Report the item fields
             int itemCount = 0;
-            if (AdminPackageUtility.ItemWriter != null)
+            if (AdminPackageUtility.GetItemWriter() != null)
             {
                 XPathNodeIterator nodes = nav.Select(sXp_Item);                
                 while (nodes.MoveNext())
@@ -377,12 +377,12 @@ namespace TabulateSmarterTestAdminPackage
                     }
 
                     // Write one line to the CSV
-                    AdminPackageUtility.ItemWriter.Write(itemFields);
+                    AdminPackageUtility.GetItemWriter().Write(itemFields);
                 }
             }
 
             // Report the stimuli fields
-            if (AdminPackageUtility.StimuliWriter != null)
+            if (AdminPackageUtility.GetStimuliWriter() != null)
             {
                 XPathNodeIterator nodes = nav.Select(sXp_Stim);
                 while (nodes.MoveNext())
@@ -400,7 +400,7 @@ namespace TabulateSmarterTestAdminPackage
                     stimFields[(int)StimFieldNames.Version] = node.Eval(sXp_Version);
 
                     // Write one line to the CSV
-                    AdminPackageUtility.StimuliWriter.Write(stimFields);
+                    AdminPackageUtility.GetStimuliWriter().Write(stimFields);
                 }
             }
 

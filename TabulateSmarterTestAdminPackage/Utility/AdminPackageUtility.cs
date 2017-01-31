@@ -14,11 +14,26 @@ namespace TabulateSmarterTestAdminPackage.Utility
         internal static string ErrorFileName { get; set; }
         internal static string ItemFileName { get; set; }
         internal static string StimuliFileName { get; set; }
-        internal static CsvWriter ErrorWriter { get; set; }
-        internal static CsvWriter ItemWriter { get; set; }
-        internal static CsvWriter StimuliWriter { get; set; }
+        internal static CsvWriter ErrorWriter;
+        internal static CsvWriter ItemWriter;
+        internal static CsvWriter StimuliWriter;
         internal static ErrorHandling ErrorHandling { get; set; }
         internal static string TestName { get; set; }
+
+        internal static CsvWriter GetItemWriter()
+        {
+            return ItemWriter ?? (ItemWriter = new CsvWriter(ItemFileName, false));
+        }
+
+        internal static CsvWriter GetStimuliWriter()
+        {
+            return StimuliWriter ?? (StimuliWriter = new CsvWriter(StimuliFileName, false));
+        }
+
+        internal static CsvWriter GetErrorWriter()
+        {
+            return ErrorWriter ?? (ErrorWriter = new CsvWriter(ErrorFileName, false));
+        }
 
         internal static void SetFileName(string fileName)
         {
@@ -29,12 +44,7 @@ namespace TabulateSmarterTestAdminPackage.Utility
 
         public static void ReportError(string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
         {
-            if (ErrorWriter == null)
-            {
-                ErrorWriter = new CsvWriter(ErrorFileName, false);
-            }
-            ErrorHandling.ReportError(ErrorWriter, ErrorFileName, testName, severity, itemId, message, args);
-            ErrorWriter.Dispose();
+            ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, severity, itemId, message, args);
         }
 
         public static void ReportSpecificationError(string path, string attribute, string violationMessage)
