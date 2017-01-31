@@ -2,7 +2,7 @@
 using TabulateSmarterTestAdminPackage.Common.Generic;
 using TabulateSmarterTestAdminPackage.Utility;
 
-namespace TabulateSmarterTestAdminPackage.Processors
+namespace TabulateSmarterTestAdminPackage.Processors.Specification
 {
     internal class PropertyProcessor
     {

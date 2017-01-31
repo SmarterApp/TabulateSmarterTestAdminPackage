@@ -40,9 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
-    <Compile Include="Processors\IdentifierProcessor.cs" />
-    <Compile Include="Processors\PropertyProcessor.cs" />
-    <Compile Include="Processors\TestSpecificationProcessor.cs" />
+    <Compile Include="Processors\Specification\IdentifierProcessor.cs" />
+    <Compile Include="Processors\Specification\PropertyProcessor.cs" />
+    <Compile Include="Processors\Loader\TestSpecificationErrorProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecificationProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestPackageProcessor.cs" />

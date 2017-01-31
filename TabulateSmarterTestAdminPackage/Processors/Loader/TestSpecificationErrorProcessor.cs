@@ -1,8 +1,9 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Generic;
+using TabulateSmarterTestAdminPackage.Processors.Specification;
 using TabulateSmarterTestAdminPackage.Utility;
 
-namespace TabulateSmarterTestAdminPackage.Processors
+namespace TabulateSmarterTestAdminPackage.Processors.Loader
 {
     internal class TestSpecificationErrorProcessor : TestSpecificationProcessor
     {
