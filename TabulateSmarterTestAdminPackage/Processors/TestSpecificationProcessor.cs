@@ -11,16 +11,16 @@ namespace TabulateSmarterTestAdminPackage.Processors
 {
     internal class TestSpecificationProcessor
     {
-        private static readonly XPathExpression sXp_PackagePurpose = XPathExpression.Compile("@purpose");
-        private static readonly XPathExpression sXp_Publisher = XPathExpression.Compile("@publisher");
-        private static readonly XPathExpression sXp_PublishDate = XPathExpression.Compile("@publishdate");
-        private static readonly XPathExpression sXp_Version = XPathExpression.Compile("@version");
+        internal static readonly XPathExpression sXp_PackagePurpose = XPathExpression.Compile("@purpose");
+        internal static readonly XPathExpression sXp_Publisher = XPathExpression.Compile("@publisher");
+        internal static readonly XPathExpression sXp_PublishDate = XPathExpression.Compile("@publishdate");
+        internal static readonly XPathExpression sXp_Version = XPathExpression.Compile("@version");
 
-        private readonly XPathNavigator _navigator;
+        internal readonly XPathNavigator Navigator;
 
         internal TestSpecificationProcessor(XPathNavigator navigator)
         {
-            _navigator = navigator;
+            Navigator = navigator;
             IdentifierProcessor = new IdentifierProcessor(navigator.SelectSingleNode("identifier"));
 
             PropertyProcessors = new List<PropertyProcessor>();
@@ -49,7 +49,7 @@ namespace TabulateSmarterTestAdminPackage.Processors
         // Must match explicit package purpose as defined by enum
         internal bool IsExpectedPackagePurpose(PackageType expectedPackageType)
         {
-            Purpose = _navigator.Eval(sXp_PackagePurpose);
+            Purpose = Navigator.Eval(sXp_PackagePurpose);
             if (Purpose.Length < 100
                 && string.Equals(Purpose, expectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
             {
@@ -61,38 +61,38 @@ namespace TabulateSmarterTestAdminPackage.Processors
         // One or more printable ASCII characters
         internal bool IsValidPublisher()
         {
-            Publisher = _navigator.Eval(sXp_Publisher);
+            Publisher = Navigator.Eval(sXp_Publisher);
             if (Publisher.NonemptyStringLessThanEqual(255))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Publisher.Expression, "string required [length<=255]");
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Publisher.Expression, "string required [length<=255]");
             return false;
         }
 
         // Valid date and time
         internal bool IsValidPublishDate()
         {
-            PublishDate = _navigator.Eval(sXp_PublishDate);
+            PublishDate = Navigator.Eval(sXp_PublishDate);
             var publishDateTime = new DateTime();
             if (PublishDate.Length < 200
                 && DateTime.TryParse(PublishDate, out publishDateTime))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_PublishDate.Expression, "datetime required [length<=200]");
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_PublishDate.Expression, "datetime required [length<=200]");
             return false;
         }
 
         // Version must be a positive decimal number
         internal bool IsValidVersion()
         {
-            Version = _navigator.Eval(sXp_Version);
+            Version = Navigator.Eval(sXp_Version);
             if (VersionValidation.IsValidVersionDecimal(Version))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Version.Expression, "decimal required [positive][length<=20]");
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Version.Expression, "decimal required [positive][length<=20]");
             return false;
         }
     }

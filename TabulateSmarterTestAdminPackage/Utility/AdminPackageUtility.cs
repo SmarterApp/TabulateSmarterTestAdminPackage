@@ -42,6 +42,11 @@ namespace TabulateSmarterTestAdminPackage.Utility
             ReportError(TestName, ErrorSeverity.Degraded, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
         }
 
+        public static void ReportLoadError(string path, string attribute, string violationMessage)
+        {
+            ReportError(TestName, ErrorSeverity.Severe, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
+        }
+
         public static void Dispose(bool disposing)
         {
             if (ItemWriter != null)
