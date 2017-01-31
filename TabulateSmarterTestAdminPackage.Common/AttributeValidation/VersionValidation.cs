@@ -1,6 +1,6 @@
 ﻿namespace TabulateSmarterTestAdminPackage.Common.AttributeValidation
 {
-    public static class Version
+    public static class VersionValidation
     {
         public static bool IsValidVersionDecimal(string versionString)
         {

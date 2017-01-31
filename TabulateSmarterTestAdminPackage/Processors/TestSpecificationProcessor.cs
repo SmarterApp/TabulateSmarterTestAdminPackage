@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Generic;
 using TabulateSmarterTestAdminPackage.Exceptions;
-using Version = TabulateSmarterTestAdminPackage.Common.AttributeValidation.Version;
+using TabulateSmarterTestAdminPackage.Common.AttributeValidation;
+using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors
 {
@@ -15,27 +16,27 @@ namespace TabulateSmarterTestAdminPackage.Processors
         private static readonly XPathExpression sXp_PublishDate = XPathExpression.Compile("@publishdate");
         private static readonly XPathExpression sXp_Version = XPathExpression.Compile("@version");
 
-        private readonly XPathNavigator navigator;
+        private readonly XPathNavigator _navigator;
 
         internal TestSpecificationProcessor(XPathNavigator navigator)
         {
-            this.navigator = navigator;
-            identifierProcessor = new IdentifierProcessor(navigator.SelectSingleNode("identifier"));
+            _navigator = navigator;
+            IdentifierProcessor = new IdentifierProcessor(navigator.SelectSingleNode("identifier"), string.Empty);
 
-            propertyProcessors = new List<PropertyProcessor>();
+            PropertyProcessors = new List<PropertyProcessor>();
             var properties = navigator.Select("property");
             foreach (XPathNavigator property in properties)
             {
-                ((IList)propertyProcessors).Add(new PropertyProcessor(property));
+                ((IList)PropertyProcessors).Add(new PropertyProcessor(property));
             }
         }
 
-        private IdentifierProcessor identifierProcessor { get; }
-        private IEnumerable<PropertyProcessor> propertyProcessors { get; }
-        private string purpose { get; set; }
-        public string publisher { get; set; }
-        public string publishDate { get; set; }
-        public string version { get; set; }
+        private IdentifierProcessor IdentifierProcessor { get; }
+        private IEnumerable<PropertyProcessor> PropertyProcessors { get; }
+        private string Purpose { get; set; }
+        public string Publisher { get; set; }
+        public string PublishDate { get; set; }
+        public string Version { get; set; }
 
         internal bool IsTestSpecificationValid(PackageType expectedPackageType)
         {
@@ -48,36 +49,48 @@ namespace TabulateSmarterTestAdminPackage.Processors
         // Must match explicit package purpose as defined by enum
         internal bool IsExpectedPackagePurpose(PackageType expectedPackageType)
         {
-            purpose = navigator.Eval(sXp_PackagePurpose);
-            if (purpose.Length < 100
-                && string.Equals(purpose, expectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
+            Purpose = _navigator.Eval(sXp_PackagePurpose);
+            if (Purpose.Length < 100
+                && string.Equals(Purpose, expectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
-            throw new IncorrectPackageTypeException($"  Skipping package. Type is '{purpose}' but processing '{expectedPackageType}'.");
+            throw new IncorrectPackageTypeException($"  Skipping package. Type is '{Purpose}' but processing '{expectedPackageType}'.");
         }
 
         // One or more printable ASCII characters
         internal bool IsValidPublisher()
         {
-            publisher = navigator.Eval(sXp_Publisher);
-            return publisher.NonemptyStringLessThanEqual(255);
+            Publisher = _navigator.Eval(sXp_Publisher);
+            if (Publisher.NonemptyStringLessThanEqual(255)) return true;
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Publisher.Expression, "string required [length<=255]");
+            return false;
         }
 
         // Valid date and time
         internal bool IsValidPublishDate()
         {
-            publishDate = navigator.Eval(sXp_PublishDate);
+            PublishDate = _navigator.Eval(sXp_PublishDate);
             var publishDateTime = new DateTime();
-            return publishDate.Length < 200
-                   && DateTime.TryParse(publishDate, out publishDateTime);
+            if (PublishDate.Length < 200
+                && DateTime.TryParse(PublishDate, out publishDateTime))
+            {
+                return true;
+            }
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_PublishDate.Expression, "datetime required [length<=200]");
+            return false;
         }
 
         // Version must be a positive decimal number
         internal bool IsValidVersion()
         {
-            version = navigator.Eval(sXp_Version);
-            return Version.IsValidVersionDecimal(version);
+            Version = _navigator.Eval(sXp_Version);
+            if (VersionValidation.IsValidVersionDecimal(Version))
+            {
+                return true;
+            }
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Version.Expression, "decimal required [positive][length<=20]");
+            return false;
         }
     }
 }

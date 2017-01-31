@@ -3,25 +3,40 @@ using TabulateSmarterTestAdminPackage.Common.Tabulation;
 
 namespace TabulateSmarterTestAdminPackage.Utility
 {
-    public class AdminPackageUtility
+    public static class AdminPackageUtility
     {
-        internal string errorFileName { get; set; }
-        internal string itemFileName { get; set; }
-        internal string stimuliFileName { get; set; }
-        internal CsvWriter errorWriter { get; set; }
-        internal ErrorHandling errorHandling { get; set; }
+        internal static string ErrorFileName { get; set; }
+        internal static string ItemFileName { get; set; }
+        internal static string StimuliFileName { get; set; }
+        internal static CsvWriter ErrorWriter { get; set; }
+        internal static CsvWriter ItemWriter { get; set; }
+        internal static CsvWriter StimuliWriter { get; set; }
+        internal static ErrorHandling ErrorHandling { get; set; }
+        internal static string TestName { get; set; }
 
-        public AdminPackageUtility(string fileName)
+        static AdminPackageUtility()
         {
-            errorFileName = fileName + ".errors.csv";
-            itemFileName = fileName + ".items.csv";
-            stimuliFileName = fileName + ".stims.csv";
-            errorHandling = new ErrorHandling();
+            ErrorHandling = new ErrorHandling();
         }
 
-        public void ReportError(string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
+        internal static void SetFileName(string fileName)
         {
-            errorHandling.ReportError(errorWriter, errorFileName, testName, severity, itemId, message, args);
+            ErrorFileName = fileName + ".errors.csv";
+            ItemFileName = fileName + ".items.csv";
+            StimuliFileName = fileName + ".stims.csv";
+            ErrorWriter = new CsvWriter(ErrorFileName, false);
+            ItemWriter = new CsvWriter(ItemFileName, false);
+            StimuliWriter = new CsvWriter(StimuliFileName, false);
+        }
+
+        public static void ReportError(string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
+        {
+            ErrorHandling.ReportError(ErrorWriter, ErrorFileName, testName, severity, itemId, message, args);
+        }
+
+        public static void ReportSpecificationError(string path, string attribute, string violationMessage)
+        {
+            ReportError(TestName, ErrorSeverity.Degraded, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
         }
     }
 }

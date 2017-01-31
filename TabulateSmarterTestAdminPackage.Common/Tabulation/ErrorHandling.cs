@@ -4,7 +4,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 {
     public class ErrorHandling
     {
-        public void ReportError(CsvWriter writer, string errorFileName, string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
+        public static void ReportError(CsvWriter writer, string errorFileName, string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
         {
             if (writer == null)
             {

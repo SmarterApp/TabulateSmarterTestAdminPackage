@@ -46,7 +46,7 @@
     <Compile Include="Enums\StimFieldNames.cs" />
     <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
     <Compile Include="Generic\StringValidations.cs" />
-    <Compile Include="AttributeValidation\Version.cs" />
+    <Compile Include="AttributeValidation\VersionValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tabulation\CsvWriter.cs" />
     <Compile Include="Tabulation\ErrorHandling.cs" />

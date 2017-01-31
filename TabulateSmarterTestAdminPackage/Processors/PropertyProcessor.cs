@@ -1,5 +1,6 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Generic;
+using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors
 {
@@ -12,13 +13,13 @@ namespace TabulateSmarterTestAdminPackage.Processors
 
         internal PropertyProcessor(XPathNavigator navigator)
         {
-            this.navigator = navigator;
+            this._navigator = navigator;
         }
 
-        private readonly XPathNavigator navigator;
-        private string name { get; set; }
-        private string value { get; set; }
-        private string label { get; set; }
+        private readonly XPathNavigator _navigator;
+        private string Name { get; set; }
+        private string Value { get; set; }
+        private string Label { get; set; }
 
         internal bool IsPropertyValid()
         {
@@ -29,20 +30,35 @@ namespace TabulateSmarterTestAdminPackage.Processors
 
         internal bool IsValidName()
         {
-            name = navigator.Eval(sXp_Name);
-            return name.NonemptyStringLessThanEqual(200);
+            Name = _navigator.Eval(sXp_Name);
+            if (Name.NonemptyStringLessThanEqual(200))
+            {
+                return true;
+            }
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, "string required [length<=200]");
+            return false;
         }
 
         internal bool IsValidValue()
         {
-            value = navigator.Eval(sXp_Value);
-            return value.NonemptyStringLessThanEqual(200);
+            Value = _navigator.Eval(sXp_Value);
+            if(Value.NonemptyStringLessThanEqual(200))
+            {
+                return true;
+            }
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Value.Expression, "string required [length<=200]");
+            return false;
         }
 
         internal bool IsValidLabel()
         {
-            label = navigator.Eval(sXp_Label);
-            return label.NonemptyStringLessThanEqual(200);
+            Label = _navigator.Eval(sXp_Label);
+            if(Label.NonemptyStringLessThanEqual(200))
+            {
+                return true;
+            }
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, "string required [length<=200]");
+            return false;
         }
     }
 }
