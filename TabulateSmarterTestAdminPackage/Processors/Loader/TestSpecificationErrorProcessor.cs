@@ -18,7 +18,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Loader
                 return true;
             }
             AdminPackageUtility.ReportLoadError(Navigator.NamespaceURI, sXp_Publisher.Expression, "string required [length<=100]");
-            // If it fails loader enforcement we're goingto check if it meets spec enforcement.
+            // If it fails loader enforcement we're going to check if it meets spec enforcement.
             base.IsValidPublisher();
             return false;
         }

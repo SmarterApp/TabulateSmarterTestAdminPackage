@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.AttributeValidation;
 using TabulateSmarterTestAdminPackage.Common.Generic;
@@ -43,7 +44,9 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
             return IsExpectedPackagePurpose(expectedPackageType)
                    && IsValidPublisher()
                    && IsValidPublishDate()
-                   && IsValidVersion();
+                   && IsValidVersion()
+                   && IdentifierProcessor.IsIdentifierValid()
+                   && PropertyProcessors.All(x => x.IsPropertyValid());
         }
 
         // Must match explicit package purpose as defined by enum

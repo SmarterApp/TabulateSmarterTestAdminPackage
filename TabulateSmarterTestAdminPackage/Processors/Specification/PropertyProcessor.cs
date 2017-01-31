@@ -8,7 +8,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
     {
 
         private static readonly XPathExpression sXp_Name = XPathExpression.Compile("@name");
-        private static readonly XPathExpression sXp_Value = XPathExpression.Compile("@uniqueid");
+        private static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
         private static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
 
         internal PropertyProcessor(XPathNavigator navigator)
