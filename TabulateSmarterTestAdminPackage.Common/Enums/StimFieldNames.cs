@@ -9,5 +9,5 @@
         StimId, // Strip the "200-" bankId prefix
         Filename,
         Version
-    };
+    }
 }

@@ -7,11 +7,10 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 {
     public class CsvWriter : IDisposable
     {
-        static readonly UTF8Encoding sUTF8_NoBom = new UTF8Encoding(false);
-        static readonly char[] sCsvSpecialChars = new char[] { ',', '"', '\r', '\n', '\t' };
-
-        const int cBufSize = 8192;
-        TextWriter mWriter;
+        private const int cBufSize = 8192;
+        private static readonly UTF8Encoding sUTF8_NoBom = new UTF8Encoding(false);
+        private static readonly char[] sCsvSpecialChars = {',', '"', '\r', '\n', '\t'};
+        private TextWriter mWriter;
 
 
         public CsvWriter(TextWriter Writer)
@@ -21,47 +20,56 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 
         public CsvWriter(Stream stream, Encoding encoding = null, bool leaveOpen = false)
         {
-            if (encoding == null) encoding = sUTF8_NoBom;
+            if (encoding == null)
+            {
+                encoding = sUTF8_NoBom;
+            }
             mWriter = new StreamWriter(stream, encoding, cBufSize, leaveOpen);
         }
 
-        public CsvWriter(String path, bool append, Encoding encoding = null)
+        public CsvWriter(string path, bool append, Encoding encoding = null)
         {
-            if (encoding == null) encoding = sUTF8_NoBom;
-            mWriter = new StreamWriter(path, append, encoding, cBufSize);
-        }
-
-        public void Write(string[] values)
-        {
-            for (int i = 0; i < values.Length; ++i)
+            if (encoding == null)
             {
-                string value = values[i];
-                if (value == null)
-                {
-                    // Do nothing
-                }
-                else if (value.IndexOfAny(sCsvSpecialChars) >= 0)
-                {
-                    mWriter.Write('"');
-                    if (value.IndexOf('"') >= 0)
-                        mWriter.Write(value.Replace("\"", "\"\""));
-                    else
-                        mWriter.Write(value);
-                    mWriter.Write('"');
-                }
-                else
-                {
-                    mWriter.Write(value);
-                }
-                if (i < values.Length - 1)
-                    mWriter.Write(',');
+                encoding = sUTF8_NoBom;
             }
-            mWriter.WriteLine();
+            mWriter = new StreamWriter(path, append, encoding, cBufSize);
         }
 
         public void Dispose()
         {
             Dispose(true);
+        }
+
+        public void Write(string[] values)
+        {
+            for (var i = 0; i < values.Length; ++i)
+            {
+                var value = values[i];
+                if (value == null)
+                {
+                    // Do nothing
+                } else if (value.IndexOfAny(sCsvSpecialChars) >= 0)
+                {
+                    mWriter.Write('"');
+                    if (value.IndexOf('"') >= 0)
+                    {
+                        mWriter.Write(value.Replace("\"", "\"\""));
+                    } else
+                    {
+                        mWriter.Write(value);
+                    }
+                    mWriter.Write('"');
+                } else
+                {
+                    mWriter.Write(value);
+                }
+                if (i < values.Length - 1)
+                {
+                    mWriter.Write(',');
+                }
+            }
+            mWriter.WriteLine();
         }
 
         ~CsvWriter()
@@ -74,7 +82,10 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
             if (mWriter != null)
             {
 #if DEBUG
-                if (!disposing) Debug.Fail("Failed to dispose CsvWriter");
+                if (!disposing)
+                {
+                    Debug.Fail("Failed to dispose CsvWriter");
+                }
 #endif
                 mWriter.Dispose();
                 mWriter = null;
@@ -85,5 +96,4 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
             }
         }
     }
-
 }

@@ -144,10 +144,10 @@ namespace TabulateSmarterTestAdminPackage
             var nav = doc.CreateNavigator();
 
             // /testspecification
-            var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode("/testspecification"));
+            var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode("/testspecification"), ExpectedPackageType);
             try
             {
-                testSpecificationProcessor.IsExpectedPackagePurpose(ExpectedPackageType);
+                testSpecificationProcessor.IsExpectedPackagePurpose();
             } catch (IncorrectPackageTypeException exception)
             {
                 // If the test package is not what we expect, we should short circuit and return without processing any further
@@ -162,7 +162,7 @@ namespace TabulateSmarterTestAdminPackage
             var testType = nav.Eval(sXp_TestType);
 
             AdminPackageUtility.TestName = testName;
-            testSpecificationProcessor.IsTestSpecificationValid(ExpectedPackageType);
+            testSpecificationProcessor.Process();
 
             // Index the group item info
             Dictionary<string, GroupItemInfo> indexGroupItemInfo = new Dictionary<string,GroupItemInfo>();

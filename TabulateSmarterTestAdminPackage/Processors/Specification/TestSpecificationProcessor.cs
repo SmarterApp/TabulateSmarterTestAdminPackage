@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.AttributeValidation;
-using TabulateSmarterTestAdminPackage.Common.Generic;
+using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Exceptions;
 using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification
 {
-    internal class TestSpecificationProcessor
+    internal class TestSpecificationProcessor : Processor
     {
         internal static readonly XPathExpression sXp_PackagePurpose = XPathExpression.Compile("@purpose");
         internal static readonly XPathExpression sXp_Publisher = XPathExpression.Compile("@publisher");
@@ -19,7 +19,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
 
         internal readonly XPathNavigator Navigator;
 
-        internal TestSpecificationProcessor(XPathNavigator navigator)
+        internal TestSpecificationProcessor(XPathNavigator navigator, PackageType expectedPackageType)
         {
             Navigator = navigator;
             IdentifierProcessor = new IdentifierProcessor(navigator.SelectSingleNode("identifier"));
@@ -30,6 +30,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
             {
                 ((IList)PropertyProcessors).Add(new PropertyProcessor(property));
             }
+            ExpectedPackageType = expectedPackageType;
         }
 
         private IdentifierProcessor IdentifierProcessor { get; }
@@ -38,64 +39,79 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
         public string Publisher { get; set; }
         public string PublishDate { get; set; }
         public string Version { get; set; }
+        public PackageType ExpectedPackageType { get; set; }
 
-        internal bool IsTestSpecificationValid(PackageType expectedPackageType)
+        public override bool Process()
         {
-            return IsExpectedPackagePurpose(expectedPackageType)
+            return IsExpectedPackagePurpose()
                    && IsValidPublisher()
                    && IsValidPublishDate()
                    && IsValidVersion()
-                   && IdentifierProcessor.IsIdentifierValid()
-                   && PropertyProcessors.All(x => x.IsPropertyValid());
+                   && IdentifierProcessor.Process()
+                   && PropertyProcessors.All(x => x.Process());
         }
 
         // Must match explicit package purpose as defined by enum
-        internal bool IsExpectedPackagePurpose(PackageType expectedPackageType)
+        internal bool IsExpectedPackagePurpose()
         {
             Purpose = Navigator.Eval(sXp_PackagePurpose);
             if (Purpose.Length < 100
-                && string.Equals(Purpose, expectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
+                && string.Equals(Purpose, ExpectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
-            throw new IncorrectPackageTypeException($"  Skipping package. Type is '{Purpose}' but processing '{expectedPackageType}'.");
+            throw new IncorrectPackageTypeException($"  Skipping package. Type is '{Purpose}' but processing '{ExpectedPackageType}'.");
         }
 
         // One or more printable ASCII characters
         internal bool IsValidPublisher()
         {
+            var validators = new ValidatorCollection(new List<Validator>
+            {
+                new RequiredStringValidator(ErrorSeverity.Degraded, null),
+                new MaxLengthValidator(ErrorSeverity.Degraded, 255)
+            });
             Publisher = Navigator.Eval(sXp_Publisher);
-            if (Publisher.NonemptyStringLessThanEqual(255))
+            if (validators.ObjectPassesValidation(Publisher))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Publisher.Expression, "string required [length<=255]");
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Publisher.Expression, validators.ObjectValidationErrors(Publisher));
             return false;
         }
 
         // Valid date and time
         internal bool IsValidPublishDate()
         {
+            var validators = new ValidatorCollection(new List<Validator>
+            {
+                new RequiredDateTimeValidator(ErrorSeverity.Degraded, null),
+                new MaxLengthValidator(ErrorSeverity.Degraded, 200)
+            });
             PublishDate = Navigator.Eval(sXp_PublishDate);
-            var publishDateTime = new DateTime();
-            if (PublishDate.Length < 200
-                && DateTime.TryParse(PublishDate, out publishDateTime))
+            if (validators.ObjectPassesValidation(PublishDate))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_PublishDate.Expression, "datetime required [length<=200]");
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_PublishDate.Expression, validators.ObjectValidationErrors(PublishDate));
             return false;
         }
 
         // Version must be a positive decimal number
         internal bool IsValidVersion()
         {
+            var validators = new ValidatorCollection(new List<Validator>
+            {
+                new RequiredDecimalValidator(ErrorSeverity.Degraded, null),
+                new MaxLengthValidator(ErrorSeverity.Degraded, 10),
+                new MinDecimalValueValidator(ErrorSeverity.Degraded, 0)
+            });
             Version = Navigator.Eval(sXp_Version);
-            if (VersionValidation.IsValidVersionDecimal(Version))
+            if (validators.ObjectPassesValidation(Version))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Version.Expression, "decimal required [positive][length<=20]");
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Version.Expression, validators.ObjectValidationErrors(Version));
             return false;
         }
     }

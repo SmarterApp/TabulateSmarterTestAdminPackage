@@ -4,6 +4,7 @@ namespace TabulateSmarterTestAdminPackage.Exceptions
 {
     public class IncorrectPackageTypeException : Exception
     {
-        public IncorrectPackageTypeException(string message) : base(message) {}
+        public IncorrectPackageTypeException(string message) : base(message)
+        {}
     }
 }
