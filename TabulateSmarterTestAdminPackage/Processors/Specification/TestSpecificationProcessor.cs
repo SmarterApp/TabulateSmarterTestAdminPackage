@@ -54,9 +54,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
         // Must match explicit package purpose as defined by enum
         internal bool IsExpectedPackagePurpose()
         {
+            var validators = new ValidatorCollection
+            {
+                new RequiredStringValidator(ErrorSeverity.Degraded),
+                new MaxLengthValidator(ErrorSeverity.Degraded, 100),
+                new StringMatchValidator(ErrorSeverity.Degraded, ExpectedPackageType.ToString())
+            };
             Purpose = Navigator.Eval(sXp_PackagePurpose);
-            if (Purpose.Length < 100
-                && string.Equals(Purpose, ExpectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
+            if (validators.IsValid(Purpose))
             {
                 return true;
             }

@@ -47,6 +47,7 @@
     <Compile Include="Validators\RequiredDateTimeValidator.cs" />
     <Compile Include="Validators\RequiredDecimalValidator.cs" />
     <Compile Include="Validators\RequiredIntValidator.cs" />
+    <Compile Include="Validators\StringMatchValidator.cs" />
     <Compile Include="Validators\Validator.cs" />
     <Compile Include="Validators\RequiredStringValidator.cs" />
     <Compile Include="Validators\ValidatorCollection.cs" />
