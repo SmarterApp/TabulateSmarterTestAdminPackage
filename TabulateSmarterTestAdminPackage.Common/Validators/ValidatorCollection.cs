@@ -3,53 +3,32 @@ using System.Linq;
 
 namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
-    public class ValidatorCollection
+    public class ValidatorCollection : List<Validator>, IValidator
     {
-        private readonly Queue<Validator> _validators;
+        private string _message;
 
-        public ValidatorCollection()
+        public string GetMessage()
         {
-            _validators = new Queue<Validator>();
+            return _message;
         }
 
-        public ValidatorCollection(Validator validator)
+        public bool IsValid(object value)
         {
-            _validators = new Queue<Validator>();
-            _validators.Enqueue(validator);
-        }
+            var isValid = this.All(x => x.IsValid(value));
 
-        public ValidatorCollection(IEnumerable<Validator> validators)
-        {
-            _validators = new Queue<Validator>();
-            Add(validators);
-        }
-
-        public ValidatorCollection Add(Validator validator)
-        {
-            _validators.Enqueue(validator);
-            return this;
-        }
-
-        public ValidatorCollection Add(IEnumerable<Validator> validators)
-        {
-            foreach (var validator in validators)
+            if (!isValid)
             {
-                _validators.Enqueue(validator);
+                _message = this.Where(x => !x.IsValid(value))
+                    .Select(x => x.GetMessage())
+                    .Aggregate((i, j) => i + j);
             }
-            return this;
-        }
+            else
+            {
+                _message = null;
+            }
 
-        public bool ObjectPassesValidation(object value)
-        {
-            return _validators.All(x => x.IsValid(value));
-        }
 
-        public string ObjectValidationErrors(object value)
-        {
-            return _validators
-                .Where(x => !x.IsValid(value))
-                .Select(x => x.GetMessage())
-                .Aggregate((i, j) => i + j);
+            return isValid;
         }
     }
 }

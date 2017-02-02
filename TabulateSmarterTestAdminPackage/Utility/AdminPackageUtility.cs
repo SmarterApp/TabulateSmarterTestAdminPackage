@@ -61,12 +61,10 @@ namespace TabulateSmarterTestAdminPackage.Utility
         {
             if (ItemWriter != null)
             {
-#if DEBUG
                 if (!disposing)
                 {
                     Debug.Fail("Failed to dispose TestPackageProcessor");
                 }
-#endif
                 ItemWriter.Dispose();
                 ItemWriter = null;
             }

@@ -40,6 +40,7 @@
     <Compile Include="Enums\ItemFieldNames.cs" />
     <Compile Include="Enums\StimFieldNames.cs" />
     <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
+    <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Validators\MaxLengthValidator.cs" />
     <Compile Include="Validators\MinDecimalValueValidator.cs" />
     <Compile Include="Validators\MinIntValueValidator.cs" />

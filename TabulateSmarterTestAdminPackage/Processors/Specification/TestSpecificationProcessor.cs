@@ -66,52 +66,52 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
         // One or more printable ASCII characters
         internal bool IsValidPublisher()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded, null),
+                new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 255)
-            });
+            };
             Publisher = Navigator.Eval(sXp_Publisher);
-            if (validators.ObjectPassesValidation(Publisher))
+            if (validators.IsValid(Publisher))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Publisher.Expression, validators.ObjectValidationErrors(Publisher));
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Publisher.Expression, validators.GetMessage());
             return false;
         }
 
         // Valid date and time
         internal bool IsValidPublishDate()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredDateTimeValidator(ErrorSeverity.Degraded, null),
+                new RequiredDateTimeValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
-            });
+            };
             PublishDate = Navigator.Eval(sXp_PublishDate);
-            if (validators.ObjectPassesValidation(PublishDate))
+            if (validators.IsValid(PublishDate))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_PublishDate.Expression, validators.ObjectValidationErrors(PublishDate));
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_PublishDate.Expression, validators.GetMessage());
             return false;
         }
 
         // Version must be a positive decimal number
         internal bool IsValidVersion()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredDecimalValidator(ErrorSeverity.Degraded, null),
+                new RequiredDecimalValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 10),
                 new MinDecimalValueValidator(ErrorSeverity.Degraded, 0)
-            });
+            };
             Version = Navigator.Eval(sXp_Version);
-            if (validators.ObjectPassesValidation(Version))
+            if (validators.IsValid(Version))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Version.Expression, validators.ObjectValidationErrors(Version));
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Version.Expression, validators.GetMessage());
             return false;
         }
     }

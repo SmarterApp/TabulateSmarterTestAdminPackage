@@ -4,14 +4,12 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class RequiredIntValidator : Validator
     {
-        public RequiredIntValidator(ErrorSeverity errorSeverity, object parameter) : base(errorSeverity, parameter)
-        {}
+        public RequiredIntValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {
             int intValue;
-            var valueString = value as string;
-            return int.TryParse(valueString, out intValue);
+            return int.TryParse(value as string, out intValue);
         }
 
         public override string GetMessage()

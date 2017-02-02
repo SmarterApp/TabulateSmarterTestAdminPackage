@@ -2,9 +2,9 @@
 
 namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
-    public abstract class Validator
+    public abstract class Validator : IValidator
     {
-        protected Validator(ErrorSeverity errorSeverity, object parameter)
+        protected Validator(ErrorSeverity errorSeverity, object parameter = null)
         {
             ErrorSeverity = errorSeverity;
             Parameter = parameter;

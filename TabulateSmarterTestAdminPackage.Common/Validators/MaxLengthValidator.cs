@@ -4,8 +4,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class MaxLengthValidator : Validator
     {
-        public MaxLengthValidator(ErrorSeverity errorSeverity, object parameter) : base(errorSeverity, parameter)
-        {}
+        public MaxLengthValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {
@@ -16,7 +15,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 
         public override string GetMessage()
         {
-            return $"[Length<={(Parameter is int ? Parameter.ToString() : string.Empty)}]";
+            return $"[Length<={(Parameter is int ? Parameter : string.Empty)}]";
         }
     }
 }

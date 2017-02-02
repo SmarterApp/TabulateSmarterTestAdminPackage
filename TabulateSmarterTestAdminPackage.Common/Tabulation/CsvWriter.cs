@@ -49,18 +49,16 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
                 if (value == null)
                 {
                     // Do nothing
-                } else if (value.IndexOfAny(sCsvSpecialChars) >= 0)
+                }
+                else if (value.IndexOfAny(sCsvSpecialChars) >= 0)
                 {
                     mWriter.Write('"');
-                    if (value.IndexOf('"') >= 0)
-                    {
-                        mWriter.Write(value.Replace("\"", "\"\""));
-                    } else
-                    {
-                        mWriter.Write(value);
-                    }
+                    mWriter.Write(value.IndexOf('"') >= 0
+                        ? value.Replace("\"", "\"\"")
+                        : value);
                     mWriter.Write('"');
-                } else
+                }
+                else
                 {
                     mWriter.Write(value);
                 }
@@ -81,12 +79,10 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
         {
             if (mWriter != null)
             {
-#if DEBUG
                 if (!disposing)
                 {
                     Debug.Fail("Failed to dispose CsvWriter");
                 }
-#endif
                 mWriter.Dispose();
                 mWriter = null;
             }

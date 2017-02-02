@@ -21,8 +21,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
         private string Label { get; set; }
         private string ItemCount { get; set; }
 
-        public void Dispose()
-        {}
+        public void Dispose() {}
 
         public override bool Process()
         {

@@ -1,4 +1,5 @@
-﻿using TabulateSmarterTestAdminPackage.Common.Enums;
+﻿using System.Diagnostics;
+using TabulateSmarterTestAdminPackage.Common.Enums;
 
 namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 {
@@ -14,9 +15,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 
             var outMessage = string.Format(message, args);
             writer.Write(new[] {testName, severity.ToString(), itemId, outMessage});
-#if DEBUG1
             Debug.Fail(outMessage);
-#endif
         }
     }
 }

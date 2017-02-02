@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
@@ -32,49 +31,49 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
 
         internal bool IsValidName()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded, null),
+                new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
-            });
+            };
             Name = _navigator.Eval(sXp_Name);
-            if (validators.ObjectPassesValidation(Name))
+            if (validators.IsValid(Name))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.ObjectValidationErrors(Name));
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
             return false;
         }
 
         internal bool IsValidValue()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded, null),
+                new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
-            });
+            };
             Value = _navigator.Eval(sXp_Value);
-            if (validators.ObjectPassesValidation(200))
+            if (validators.IsValid(200))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Value.Expression, validators.ObjectValidationErrors(Value));
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Value.Expression, validators.GetMessage());
             return false;
         }
 
         internal bool IsValidLabel()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded, null),
+                new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
-            });
+            };
             Label = _navigator.Eval(sXp_Label);
-            if (validators.ObjectPassesValidation(200))
+            if (validators.IsValid(200))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.ObjectValidationErrors(Label));
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
             return false;
         }
     }

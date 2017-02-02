@@ -4,25 +4,22 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class MinDecimalValueValidator : Validator
     {
-        public MinDecimalValueValidator(ErrorSeverity errorSeverity, object parameter) : base(errorSeverity, parameter)
-        {}
+        public MinDecimalValueValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {
             decimal decimalValue;
             decimal decimalParameter;
-            var valueString = value as string;
-            var parameterString = Parameter as string;
-            return !string.IsNullOrEmpty(valueString)
-                   && !string.IsNullOrEmpty(parameterString)
-                   && decimal.TryParse(valueString, out decimalValue)
-                   && decimal.TryParse(parameterString, out decimalParameter)
+            return !string.IsNullOrEmpty(value as string)
+                   && !string.IsNullOrEmpty(Parameter as string)
+                   && decimal.TryParse((string)value, out decimalValue)
+                   && decimal.TryParse((string)Parameter, out decimalParameter)
                    && decimalParameter <= decimalValue;
         }
 
         public override string GetMessage()
         {
-            return "[MinDecimal]";
+            return $"[MinDecimal>{Parameter}]";
         }
     }
 }

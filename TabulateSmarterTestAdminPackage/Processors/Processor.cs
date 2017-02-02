@@ -4,8 +4,7 @@ namespace TabulateSmarterTestAdminPackage.Processors
 {
     public abstract class Processor : IDisposable
     {
-        public void Dispose()
-        { }
+        public void Dispose() {}
 
         public abstract bool Process();
     }

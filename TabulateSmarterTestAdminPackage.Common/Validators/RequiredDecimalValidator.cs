@@ -4,14 +4,12 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class RequiredDecimalValidator : Validator
     {
-        public RequiredDecimalValidator(ErrorSeverity errorSeverity, object parameter) : base(errorSeverity, parameter)
-        {}
+        public RequiredDecimalValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {
             decimal decimalValue;
-            var valueString = value as string;
-            return decimal.TryParse(valueString, out decimalValue);
+            return decimal.TryParse(value as string, out decimalValue);
         }
 
         public override string GetMessage()

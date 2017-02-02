@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
@@ -35,69 +34,69 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
 
         internal bool IsValidUniqueId()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded, null),
+                new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 255)
-            });
+            };
             UniqueId = _navigator.Eval(sXp_UniqueId);
-            if (validators.ObjectPassesValidation(UniqueId))
+            if (validators.IsValid(UniqueId))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_UniqueId.Expression, validators.ObjectValidationErrors(UniqueId));
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
             return false;
         }
 
         internal bool IsValidName()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded, null),
+                new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
-            });
+            };
             Name = _navigator.Eval(sXp_Name);
-            if (validators.ObjectPassesValidation(Name))
+            if (validators.IsValid(Name))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.ObjectValidationErrors(Name));
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
             return false;
         }
 
         internal bool IsValidLabel()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded, null),
+                new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
-            });
+            };
             Label = _navigator.Eval(sXp_Label);
-            if (validators.ObjectPassesValidation(Label))
+            if (validators.IsValid(Label))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Label.Expression, validators.ObjectValidationErrors(Label));
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
             return false;
         }
 
         internal bool IsValidVersion()
         {
-            var validators = new ValidatorCollection(new List<Validator>
+            var validators = new ValidatorCollection
             {
-                new RequiredIntValidator(ErrorSeverity.Degraded, null),
+                new RequiredIntValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 10),
                 new MinIntValueValidator(ErrorSeverity.Degraded, 0)
-            });
+            };
             Version = _navigator.Eval(sXp_Version);
-            if (validators.ObjectPassesValidation(Version))
+            if (validators.IsValid(Version))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_UniqueId.Expression, validators.ObjectValidationErrors(Version));
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
             return false;
         }
     }
