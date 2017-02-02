@@ -26,10 +26,10 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
 
         public override bool Process()
         {
-            return IsValidProperty() 
-                && IsValidValue() 
-                && IsValidLabel() 
-                && IsValidItemCount();
+            return IsValidProperty()
+                   && IsValidValue()
+                   && IsValidLabel()
+                   && IsValidItemCount();
         }
 
         internal bool IsValidProperty()

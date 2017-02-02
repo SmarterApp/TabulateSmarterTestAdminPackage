@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
@@ -30,11 +29,15 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
             {
                 ((IList)PropertyProcessors).Add(new PropertyProcessor(property));
             }
+
+            AdministrationProcessor = new AdministrationProcessor(navigator.SelectSingleNode("administration"));
+
             ExpectedPackageType = expectedPackageType;
         }
 
         private IdentifierProcessor IdentifierProcessor { get; }
         private IEnumerable<PropertyProcessor> PropertyProcessors { get; }
+        private AdministrationProcessor AdministrationProcessor { get; }
         private string Purpose { get; set; }
         public string Publisher { get; set; }
         public string PublishDate { get; set; }
@@ -48,7 +51,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
                    && IsValidPublishDate()
                    && IsValidVersion()
                    && IdentifierProcessor.Process()
-                   && PropertyProcessors.All(x => x.Process());
+                   && PropertyProcessors.All(x => x.Process())
+                   && AdministrationProcessor.Process();
         }
 
         // Must match explicit package purpose as defined by enum

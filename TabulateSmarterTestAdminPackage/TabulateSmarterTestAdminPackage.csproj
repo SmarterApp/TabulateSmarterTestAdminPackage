@@ -43,6 +43,7 @@
     <Compile Include="Processors\Processor.cs" />
     <Compile Include="Processors\Specification\AdministrationProcessor.cs" />
     <Compile Include="Processors\Specification\AdminSegmentProcessor.cs" />
+    <Compile Include="Processors\Specification\BlueprintElementProcessor.cs" />
     <Compile Include="Processors\Specification\IdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\ItemPoolProcessor.cs" />
     <Compile Include="Processors\Specification\PoolPropertyProcessor.cs" />

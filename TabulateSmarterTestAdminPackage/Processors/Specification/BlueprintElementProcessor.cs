@@ -3,11 +3,11 @@ using System.Xml.XPath;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification
 {
-    internal class ItemPoolProcessor : Processor
+    internal class BlueprintElementProcessor : Processor
     {
-        private readonly XPathNavigator _navigator;
+        private XPathNavigator _navigator;
 
-        internal ItemPoolProcessor(XPathNavigator navigator)
+        internal BlueprintElementProcessor(XPathNavigator navigator)
         {
             _navigator = navigator;
         }
