@@ -7,10 +7,10 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
 {
     internal class IdentifierProcessor : Processor
     {
-        private static readonly XPathExpression sXp_Name = XPathExpression.Compile("@name");
-        private static readonly XPathExpression sXp_UniqueId = XPathExpression.Compile("@uniqueid");
-        private static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
+        internal static readonly XPathExpression sXp_Name = XPathExpression.Compile("@name");
+        internal static readonly XPathExpression sXp_UniqueId = XPathExpression.Compile("@uniqueid");
         private static readonly XPathExpression sXp_Version = XPathExpression.Compile("@version");
+        private static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
 
         private readonly XPathNavigator _navigator;
 
@@ -19,10 +19,10 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
             _navigator = navigator;
         }
 
-        private string Name { get; set; }
+        internal string Name { get; set; }
         private string Version { get; set; }
+        internal string UniqueId { get; set; }
         private string Label { get; set; }
-        private string UniqueId { get; set; }
 
         public override bool Process()
         {
@@ -66,23 +66,6 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
             return false;
         }
 
-        internal bool IsValidLabel()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 200)
-            };
-            Label = _navigator.Eval(sXp_Label);
-            if (validators.IsValid(Label))
-            {
-                return true;
-            }
-
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
-            return false;
-        }
-
         internal bool IsValidVersion()
         {
             var validators = new ValidatorCollection
@@ -97,6 +80,23 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
                 return true;
             }
             AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
+            return false;
+        }
+
+        internal bool IsValidLabel()
+        {
+            var validators = new ValidatorCollection
+            {
+                new RequiredStringValidator(ErrorSeverity.Degraded),
+                new MaxLengthValidator(ErrorSeverity.Degraded, 200)
+            };
+            Label = _navigator.Eval(sXp_Label);
+            if (validators.IsValid(Label))
+            {
+                return true;
+            }
+
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
             return false;
         }
     }

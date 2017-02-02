@@ -9,6 +9,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
     {
         internal TestBlueprintProcessor(XPathNavigator navigator)
         {
+            BlueprintElementProcessors = new List<BlueprintElementProcessor>();
             var blueprintElements = navigator.Select("bpelement");
             foreach (XPathNavigator bpelement in blueprintElements)
             {
