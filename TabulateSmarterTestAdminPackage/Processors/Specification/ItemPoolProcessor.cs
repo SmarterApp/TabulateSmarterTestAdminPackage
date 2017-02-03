@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
@@ -25,13 +24,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
             }
         }
 
+        private IList<PassageProcessor> PassageProcessors { get; }
+        private IList<TestItemProcessor> TestItemProcessors { get; }
+
         public override bool Process()
         {
-            return PassageProcessors.All(x => x.Process()) 
-                && TestItemProcessors.All(x => x.Process());
+            return PassageProcessors.All(x => x.Process())
+                   && TestItemProcessors.All(x => x.Process());
         }
-
-        private IList<PassageProcessor> PassageProcessors { get; }
-        private IList<TestItemProcessor> TestItemProcessors { get; }  
     }
 }

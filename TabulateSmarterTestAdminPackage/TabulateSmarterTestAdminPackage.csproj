@@ -53,6 +53,7 @@
     <Compile Include="Processors\Specification\PropertyProcessor.cs" />
     <Compile Include="Processors\Loader\TestSpecificationErrorProcessor.cs" />
     <Compile Include="Processors\Specification\TestBlueprintProcessor.cs" />
+    <Compile Include="Processors\Specification\TestItemProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecificationProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

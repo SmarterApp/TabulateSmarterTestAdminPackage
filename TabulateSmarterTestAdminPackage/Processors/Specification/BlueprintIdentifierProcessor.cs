@@ -7,9 +7,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
 {
     internal class BlueprintIdentifierProcessor : IdentifierProcessor
     {
-        public BlueprintIdentifierProcessor(XPathNavigator navigator) : base(navigator)
-        {
-        }
+        public BlueprintIdentifierProcessor(XPathNavigator navigator) : base(navigator) {}
 
         public override bool Process()
         {
