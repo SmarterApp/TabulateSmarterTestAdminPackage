@@ -47,6 +47,8 @@
     <Compile Include="Processors\Specification\BlueprintIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\IdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\ItemPoolProcessor.cs" />
+    <Compile Include="Processors\Specification\PassageIdentifierProcessor.cs" />
+    <Compile Include="Processors\Specification\PassageProcessor.cs" />
     <Compile Include="Processors\Specification\PoolPropertyProcessor.cs" />
     <Compile Include="Processors\Specification\PropertyProcessor.cs" />
     <Compile Include="Processors\Loader\TestSpecificationErrorProcessor.cs" />

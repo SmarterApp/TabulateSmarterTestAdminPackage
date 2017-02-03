@@ -1,20 +1,37 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.XPath;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification
 {
     internal class ItemPoolProcessor : Processor
     {
-        private readonly XPathNavigator _navigator;
-
         internal ItemPoolProcessor(XPathNavigator navigator)
         {
-            _navigator = navigator;
+            PassageProcessors = new List<PassageProcessor>();
+            var passages = navigator.Select("passage");
+            foreach (XPathNavigator passage in passages)
+            {
+                ((IList)PassageProcessors).Add(new PropertyProcessor(passage));
+            }
+
+            TestItemProcessors = new List<TestItemProcessor>();
+            var testItems = navigator.Select("testitem");
+            foreach (XPathNavigator testItem in testItems)
+            {
+                ((IList)TestItemProcessors).Add(new PropertyProcessor(testItem));
+            }
         }
 
         public override bool Process()
         {
-            throw new NotImplementedException();
+            return PassageProcessors.All(x => x.Process()) 
+                && TestItemProcessors.All(x => x.Process());
         }
+
+        private IList<PassageProcessor> PassageProcessors { get; }
+        private IList<TestItemProcessor> TestItemProcessors { get; }  
     }
 }

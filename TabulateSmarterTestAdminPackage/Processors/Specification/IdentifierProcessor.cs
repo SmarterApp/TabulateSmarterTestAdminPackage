@@ -12,11 +12,11 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
         private static readonly XPathExpression sXp_Version = XPathExpression.Compile("@version");
         private static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
 
-        private readonly XPathNavigator _navigator;
+        internal readonly XPathNavigator Navigator;
 
         internal IdentifierProcessor(XPathNavigator navigator)
         {
-            _navigator = navigator;
+            Navigator = navigator;
         }
 
         internal string Name { get; set; }
@@ -39,13 +39,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 255)
             };
-            UniqueId = _navigator.Eval(sXp_UniqueId);
+            UniqueId = Navigator.Eval(sXp_UniqueId);
             if (validators.IsValid(UniqueId))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
             return false;
         }
 
@@ -56,13 +56,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
             };
-            Name = _navigator.Eval(sXp_Name);
+            Name = Navigator.Eval(sXp_Name);
             if (validators.IsValid(Name))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
             return false;
         }
 
@@ -74,12 +74,12 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
                 new MaxLengthValidator(ErrorSeverity.Degraded, 10),
                 new MinIntValueValidator(ErrorSeverity.Degraded, 0)
             };
-            Version = _navigator.Eval(sXp_Version);
+            Version = Navigator.Eval(sXp_Version);
             if (validators.IsValid(Version))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
             return false;
         }
 
@@ -90,13 +90,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
             };
-            Label = _navigator.Eval(sXp_Label);
+            Label = Navigator.Eval(sXp_Label);
             if (validators.IsValid(Label))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
             return false;
         }
     }
