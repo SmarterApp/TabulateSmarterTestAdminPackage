@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("TabulateSmarterTestAdminPackage.Tests")]
+[assembly: AssemblyTitle("TabulateSmarterTestAdminPackage.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TabulateSmarterTestAdminPackage.Tests")]
+[assembly: AssemblyProduct("TabulateSmarterTestAdminPackage.Common")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -22,7 +23,7 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: Guid("11ee9b6a-df6c-4247-ac88-07c9a627627b")]
+[assembly: Guid("6f9a6238-72c4-4389-b23e-b687c4542281")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -37,3 +38,4 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: InternalsVisibleTo("TabulateSmarterTestAdminPackage.Tests")]

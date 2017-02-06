@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 
-namespace Parse
+namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 {
-    class CsvWriter : IDisposable
+    public class CsvWriter : IDisposable
     {
-        static readonly UTF8Encoding sUTF8_NoBom = new UTF8Encoding(false);
-        static readonly char[] sCsvSpecialChars = new char[] { ',', '"', '\r', '\n', '\t' };
-
-        const int cBufSize = 8192;
-        TextWriter mWriter;
+        private const int cBufSize = 8192;
+        private static readonly UTF8Encoding sUTF8_NoBom = new UTF8Encoding(false);
+        private static readonly char[] sCsvSpecialChars = {',', '"', '\r', '\n', '\t'};
+        private TextWriter mWriter;
 
 
         public CsvWriter(TextWriter Writer)
@@ -22,21 +20,32 @@ namespace Parse
 
         public CsvWriter(Stream stream, Encoding encoding = null, bool leaveOpen = false)
         {
-            if (encoding == null) encoding = sUTF8_NoBom;
+            if (encoding == null)
+            {
+                encoding = sUTF8_NoBom;
+            }
             mWriter = new StreamWriter(stream, encoding, cBufSize, leaveOpen);
         }
 
-        public CsvWriter(String path, bool append, Encoding encoding = null)
+        public CsvWriter(string path, bool append, Encoding encoding = null)
         {
-            if (encoding == null) encoding = sUTF8_NoBom;
+            if (encoding == null)
+            {
+                encoding = sUTF8_NoBom;
+            }
             mWriter = new StreamWriter(path, append, encoding, cBufSize);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
 
         public void Write(string[] values)
         {
-            for (int i = 0; i < values.Length; ++i)
+            for (var i = 0; i < values.Length; ++i)
             {
-                string value = values[i];
+                var value = values[i];
                 if (value == null)
                 {
                     // Do nothing
@@ -44,10 +53,9 @@ namespace Parse
                 else if (value.IndexOfAny(sCsvSpecialChars) >= 0)
                 {
                     mWriter.Write('"');
-                    if (value.IndexOf('"') >= 0)
-                        mWriter.Write(value.Replace("\"", "\"\""));
-                    else
-                        mWriter.Write(value);
+                    mWriter.Write(value.IndexOf('"') >= 0
+                        ? value.Replace("\"", "\"\"")
+                        : value);
                     mWriter.Write('"');
                 }
                 else
@@ -55,14 +63,11 @@ namespace Parse
                     mWriter.Write(value);
                 }
                 if (i < values.Length - 1)
+                {
                     mWriter.Write(',');
+                }
             }
             mWriter.WriteLine();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
 
         ~CsvWriter()
@@ -74,9 +79,10 @@ namespace Parse
         {
             if (mWriter != null)
             {
-#if DEBUG
-                if (!disposing) Debug.Fail("Failed to dispose CsvWriter");
-#endif
+                if (!disposing)
+                {
+                    Debug.Fail("Failed to dispose CsvWriter");
+                }
                 mWriter.Dispose();
                 mWriter = null;
             }
@@ -86,5 +92,4 @@ namespace Parse
             }
         }
     }
-
 }

@@ -36,22 +36,45 @@
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
-    <Compile Include="CsvWriter.cs" />
+    <Compile Include="Processors\Processor.cs" />
+    <Compile Include="Processors\Specification\AdministrationProcessor.cs" />
+    <Compile Include="Processors\Specification\AdminSegmentProcessor.cs" />
+    <Compile Include="Processors\Specification\BlueprintElementProcessor.cs" />
+    <Compile Include="Processors\Specification\BlueprintIdentifierProcessor.cs" />
+    <Compile Include="Processors\Specification\BPrefProcessor.cs" />
+    <Compile Include="Processors\Specification\IdentifierProcessor.cs" />
+    <Compile Include="Processors\Specification\ItemPoolProcessor.cs" />
+    <Compile Include="Processors\Specification\ItemScoredDimensionProcessor.cs" />
+    <Compile Include="Processors\Specification\ItemScoreParameterProcessor.cs" />
+    <Compile Include="Processors\Specification\PassageIdentifierProcessor.cs" />
+    <Compile Include="Processors\Specification\PassageProcessor.cs" />
+    <Compile Include="Processors\Specification\PoolPropertyProcessor.cs" />
+    <Compile Include="Processors\Specification\PropertyProcessor.cs" />
+    <Compile Include="Processors\Loader\TestSpecificationErrorProcessor.cs" />
+    <Compile Include="Processors\Specification\TestBlueprintProcessor.cs" />
+    <Compile Include="Processors\Specification\TestItemIdentifierProcessor.cs" />
+    <Compile Include="Processors\Specification\TestItemPoolPropertyProcessor.cs" />
+    <Compile Include="Processors\Specification\TestItemProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecificationProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestPackageProcessor.cs" />
+    <Compile Include="Utility\AdminPackageUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestAdminPackage.Common.csproj">
+      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
+      <Name>TabulateSmarterTestAdminPackage.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

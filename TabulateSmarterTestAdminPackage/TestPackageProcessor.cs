@@ -3,83 +3,21 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml.XPath;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
+using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Exceptions;
+using TabulateSmarterTestAdminPackage.Processors.Specification;
+using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage
 {
-
-    class TestPackageProcessor : ITestResultProcessor
+    internal class TestPackageProcessor : ITestResultProcessor
     {
-        enum ItemFieldNames : int
-        {
-            TestName,
-            TestSubject,
-            TestGrade,
-            TestType, // PT or Summative
-            ItemId, // Strip the "200-" bankId prefix
-            Filename,
-            Version,
-            ItemType,
-            Grade,
-            Standard,
-            Claim,
-            Target,
-            PassageRef,
-            PassageLength,
-            HearingImpaired,
-            ASL,
-            Braille,
-            LanguageBraille,
-            DOK,
-            Language,
-            Calculator,
-            Glossary,
-            ScoringEngine,
-            Spanish,
-            TDSPoolFilter,
-            IsFieldTest,
-            IsActive,
-            ResponseRequired,
-            AdminRequired,
-            FormPosition,
-            MeasurementModel,
-            Weight,
-            ScorePoints,
-            a,
-            b0_b,
-            b1_c,
-            b2,
-            b3,
-            bpref1,
-            bpref2,
-            bpref3,
-            bpref4,
-            bpref5,
-            bpref6,
-            bpref7
-        }
+       
         static readonly int ItemFieldNamesCount = Enum.GetNames(typeof(ItemFieldNames)).Length;
         const int MaxBpRefs = 7;
 
-        enum StimFieldNames : int
-        {
-            TestName,
-            TestSubject,
-            TestGrade,
-            TestType, // PT or Summative
-            StimId, // Strip the "200-" bankId prefix
-            Filename,
-            Version
-        };
         static readonly int StimFieldNamesCount = Enum.GetNames(typeof(StimFieldNames)).Length;
-
-        enum ErrorSeverity : int
-        {
-            Benign,
-            Degraded,
-            Severe
-        }
 
         private class GroupItemInfo
         {
@@ -91,7 +29,6 @@ namespace TabulateSmarterTestAdminPackage
         }
 
         // Test Info
-        static XPathExpression sXp_PackagePurpose = XPathExpression.Compile("/testspecification/@purpose");
         static XPathExpression sXp_TestName = XPathExpression.Compile("/testspecification/identifier/@name");
         static XPathExpression sXp_TestSubject = XPathExpression.Compile("/testspecification/property[@name='subject']/@value");
         static XPathExpression sXp_TestGrade = XPathExpression.Compile("/testspecification/property[@name='grade']/@value");
@@ -183,28 +120,18 @@ namespace TabulateSmarterTestAdminPackage
             sKnownMeasurementParameters.Add("b3");
         }
 
-        Parse.CsvWriter m_itemWriter;
-        Parse.CsvWriter m_stimWriter;
-        string m_errFilename;
-        Parse.CsvWriter m_errWriter;
-
         public TestPackageProcessor(string oFilename)
         {
-            string itemFilename = oFilename + ".items.csv";
-            string stimFilename = oFilename + ".stims.csv";
-            m_errFilename = oFilename + ".errors.csv";
-#if DEBUG
-            if (File.Exists(m_errFilename)) File.Delete(m_errFilename);
+            AdminPackageUtility.SetFileName(oFilename);
+#if DEBUG 
+            if (File.Exists(AdminPackageUtility.ErrorFileName)) File.Delete(AdminPackageUtility.ErrorFileName);
 #else
             if (File.Exists(itemFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", itemFilename));
             if (File.Exists(stimFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", stimFilename));
             if (File.Exists(m_errFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", m_errFilename));
 #endif
-            m_itemWriter = new Parse.CsvWriter(itemFilename, false);
-            m_itemWriter.Write(Enum.GetNames(typeof(ItemFieldNames)));
-
-            m_stimWriter = new Parse.CsvWriter(stimFilename, false);
-            m_stimWriter.Write(Enum.GetNames(typeof(StimFieldNames)));
+            AdminPackageUtility.GetItemWriter().Write(Enum.GetNames(typeof(ItemFieldNames)));
+            AdminPackageUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
         }
 
         public PackageType ExpectedPackageType { get; set; }
@@ -213,22 +140,29 @@ namespace TabulateSmarterTestAdminPackage
 
         public void ProcessResult(Stream input)
         {
-            XPathDocument doc = new XPathDocument(input);
-            XPathNavigator nav = doc.CreateNavigator();
+            var doc = new XPathDocument(input);
+            var nav = doc.CreateNavigator();
 
-            // Get the package purpose
-            string purpose = nav.Eval(sXp_PackagePurpose);
-            if (!string.Equals(purpose, ExpectedPackageType.ToString(), StringComparison.OrdinalIgnoreCase))
+            // /testspecification
+            var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode("/testspecification"), ExpectedPackageType);
+            try
             {
-                Console.WriteLine("  Skipping package. Type is '{0}' but processing '{1}'.", purpose, ExpectedPackageType);
+                testSpecificationProcessor.IsExpectedPackagePurpose();
+            } catch (IncorrectPackageTypeException exception)
+            {
+                // If the test package is not what we expect, we should short circuit and return without processing any further
+                Console.WriteLine(exception.Message);
                 return;
             }
 
             // Get the test info
-            string testName = nav.Eval(sXp_TestName);
-            string testSubject = nav.Eval(sXp_TestSubject);
-            string testGrade = nav.Eval(sXp_TestGrade);
-            string testType = nav.Eval(sXp_TestType);
+            var testName = nav.Eval(sXp_TestName);
+            var testSubject = nav.Eval(sXp_TestSubject);
+            var testGrade = nav.Eval(sXp_TestGrade);
+            var testType = nav.Eval(sXp_TestType);
+
+            AdminPackageUtility.TestName = testName;
+            testSpecificationProcessor.Process();
 
             // Index the group item info
             Dictionary<string, GroupItemInfo> indexGroupItemInfo = new Dictionary<string,GroupItemInfo>();
@@ -249,23 +183,23 @@ namespace TabulateSmarterTestAdminPackage
                     {
                         if (!string.Equals(gii.IsFieldTest, isFieldTest, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isfieldtest info: '{0}' <> '{1}'", isFieldTest, gii.IsFieldTest);
+                            AdminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isfieldtest info: '{0}' <> '{1}'", isFieldTest, gii.IsFieldTest);
                         }
                         if (!string.Equals(gii.IsActive, isActive, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isactive info: '{0}' <> '{1}'", isActive, gii.IsActive);
+                            AdminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isactive info: '{0}' <> '{1}'", isActive, gii.IsActive);
                         }
                         if (!string.Equals(gii.ResponseRequired, responseRequired, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting responserequired info: '{0}' <> '{1}'", responseRequired, gii.ResponseRequired);
+                            AdminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting responserequired info: '{0}' <> '{1}'", responseRequired, gii.ResponseRequired);
                         }
                         if (!string.Equals(gii.AdminRequired, adminRequired, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
+                            AdminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
                         }
                         if (!string.Equals(gii.FormPosition, formPosition, StringComparison.Ordinal))
                         {
-                            ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
+                            AdminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
                         }
                     }
                     else
@@ -285,7 +219,7 @@ namespace TabulateSmarterTestAdminPackage
 
             // Report the item fields
             int itemCount = 0;
-            if (m_itemWriter != null)
+            if (AdminPackageUtility.GetItemWriter() != null)
             {
                 XPathNodeIterator nodes = nav.Select(sXp_Item);                
                 while (nodes.MoveNext())
@@ -346,13 +280,13 @@ namespace TabulateSmarterTestAdminPackage
                                 if (fieldIndex != 0)
                                 {
                                     if (!string.IsNullOrEmpty(itemFields[fieldIndex]))
-                                        ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
+                                        AdminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
                                     itemFields[fieldIndex] = ppValue;
                                 }
                             }
                             else
                             {
-                                ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
+                                AdminPackageUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
                             }
                         }
                     }
@@ -370,7 +304,7 @@ namespace TabulateSmarterTestAdminPackage
 
                     // Check known measurement model
                     if (!sKnownMeasurementModels.Contains(itemFields[(int)ItemFieldNames.MeasurementModel]))
-                        ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Model", itemFields[(int)ItemFieldNames.MeasurementModel]);
+                        AdminPackageUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Model", itemFields[(int)ItemFieldNames.MeasurementModel]);
 
                     // Check known parameters
                     XPathNodeIterator pnNodes = node.Select(sXp_ParameterName);
@@ -378,7 +312,7 @@ namespace TabulateSmarterTestAdminPackage
                     {
                         string name = pnNodes.Current.Value;
                         if (!sKnownMeasurementParameters.Contains(name))
-                            ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Parameter", name);
+                            AdminPackageUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Parameter", name);
                     }
 
                     // bprefs
@@ -388,7 +322,7 @@ namespace TabulateSmarterTestAdminPackage
                     {
                         string bpref = bpNodes.Current.Value;
                         if (bpIndex >= MaxBpRefs)
-                            ReportError(testName, ErrorSeverity.Benign, itemId, "More than {0} bpref nodes", MaxBpRefs);
+                            AdminPackageUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "More than {0} bpref nodes", MaxBpRefs);
                         else
                             itemFields[(int)ItemFieldNames.bpref1 + bpIndex++] = bpref;
 
@@ -443,12 +377,12 @@ namespace TabulateSmarterTestAdminPackage
                     }
 
                     // Write one line to the CSV
-                    m_itemWriter.Write(itemFields);
+                    AdminPackageUtility.GetItemWriter().Write(itemFields);
                 }
             }
 
             // Report the stimuli fields
-            if (m_stimWriter != null)
+            if (AdminPackageUtility.GetStimuliWriter() != null)
             {
                 XPathNodeIterator nodes = nav.Select(sXp_Stim);
                 while (nodes.MoveNext())
@@ -466,7 +400,7 @@ namespace TabulateSmarterTestAdminPackage
                     stimFields[(int)StimFieldNames.Version] = node.Eval(sXp_Version);
 
                     // Write one line to the CSV
-                    m_stimWriter.Write(stimFields);
+                    AdminPackageUtility.GetStimuliWriter().Write(stimFields);
                 }
             }
 
@@ -481,22 +415,6 @@ namespace TabulateSmarterTestAdminPackage
             //Console.WriteLine("  opitemcount/maxopitems = {0}/{1} = {2}", opitemcount, maxopitems, ((double)opitemcount) / ((double)maxopitems));
             //Debug.WriteLine("{0},{1},{2}", testName, opitemcount, maxopitems);
         } // ProcessPackage
-
-        void ReportError(string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
-        {
-            if (m_errWriter == null)
-            {
-                m_errWriter = new Parse.CsvWriter(m_errFilename, false);
-                m_errWriter.Write(new string[] { "TestName", "Severity", "ItemId", "Message" });
-            }
-
-            string outMessage = string.Format(message, args);
-            m_errWriter.Write(new string[] { testName, severity.ToString(), itemId, outMessage });
-            //Console.WriteLine("    " + outMessage);
-#if DEBUG1
-            Debug.Fail(outMessage);
-#endif
-        }
 
         static string Strip200(string val)
         {
@@ -523,24 +441,7 @@ namespace TabulateSmarterTestAdminPackage
 
         void Dispose(bool disposing)
         {
-            if (m_itemWriter != null)
-            {
-#if DEBUG
-                if (!disposing) Debug.Fail("Failed to dispose TestPackageProcessor");
-#endif
-                m_itemWriter.Dispose();
-                m_itemWriter = null;
-            }
-            if (m_stimWriter != null)
-            {
-                m_stimWriter.Dispose();
-                m_stimWriter = null;
-            }
-            if (m_errWriter != null)
-            {
-                m_errWriter.Dispose();
-                m_errWriter = null;
-            }
+            AdminPackageUtility.Dispose(disposing);
             if (disposing)
             {
                 GC.SuppressFinalize(this);
