@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
+using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool;
+using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.TestBlueprint;
 
-namespace TabulateSmarterTestAdminPackage.Processors.Specification
+namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration
 {
     internal class AdministrationProcessor : Processor
     {

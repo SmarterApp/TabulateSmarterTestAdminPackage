@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 
-namespace TabulateSmarterTestAdminPackage.Processors.Specification
+namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.TestBlueprint
 {
     internal class TestBlueprintProcessor : Processor
     {

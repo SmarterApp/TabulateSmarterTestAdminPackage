@@ -1,6 +1,6 @@
 ﻿using System.Xml.XPath;
 
-namespace TabulateSmarterTestAdminPackage.Processors.Specification
+namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
     internal class TestItemPoolPropertyProcessor : PoolPropertyProcessor
     {

@@ -2,6 +2,7 @@
 using System.Xml.XPath;
 using NUnit.Framework;
 using TabulateSmarterTestAdminPackage.Processors.Specification;
+using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification;
 using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Tests.Processors

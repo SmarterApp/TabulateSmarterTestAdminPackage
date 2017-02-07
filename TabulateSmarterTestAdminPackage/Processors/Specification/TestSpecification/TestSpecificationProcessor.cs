@@ -5,9 +5,10 @@ using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Exceptions;
+using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration;
 using TabulateSmarterTestAdminPackage.Utility;
 
-namespace TabulateSmarterTestAdminPackage.Processors.Specification
+namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification
 {
     internal class TestSpecificationProcessor : Processor
     {
