@@ -1,12 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.XPath;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    class SegmentPoolProcessor
+    internal class SegmentPoolProcessor : Processor
     {
+        private readonly XPathNavigator _navigator;
+
+        internal SegmentPoolProcessor(XPathNavigator navigator)
+        {
+            _navigator = navigator;
+        }
+
+        public override bool Process()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

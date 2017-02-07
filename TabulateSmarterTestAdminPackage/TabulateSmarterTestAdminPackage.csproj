@@ -42,10 +42,18 @@
     <Compile Include="ConsoleHelper.cs" />
     <Compile Include="Processors\Processor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdministrationProcessor.cs" />
-    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegmentProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\AdminSegmentProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectionParameterProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectionParameterPropertyProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectorIdentifierProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectorProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentBlueprintProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentFormProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentPoolProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\BlueprintElementProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\BlueprintIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\BPrefProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\TestForm\TestFormProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\IdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\ItemPoolProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\ItemScoredDimensionProcessor.cs" />
@@ -75,9 +83,7 @@
       <Name>TabulateSmarterTestAdminPackage.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Processors\Specification\TestSpecification\Administration\AdminSegment\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

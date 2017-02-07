@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.TestForm
 {
-    class TestFormProcessor
+    internal class TestFormProcessor : Processor
     {
+        public override bool Process()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

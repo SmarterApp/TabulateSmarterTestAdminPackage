@@ -9,7 +9,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
     {
         internal static readonly XPathExpression sXp_Name = XPathExpression.Compile("@name");
         internal static readonly XPathExpression sXp_UniqueId = XPathExpression.Compile("@uniqueid");
-        private static readonly XPathExpression sXp_Version = XPathExpression.Compile("@version");
+        internal static readonly XPathExpression sXp_Version = XPathExpression.Compile("@version");
         private static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
 
         internal readonly XPathNavigator Navigator;
@@ -20,7 +20,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         }
 
         internal string Name { get; set; }
-        private string Version { get; set; }
+        internal string Version { get; set; }
         internal string UniqueId { get; set; }
         private string Label { get; set; }
 

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Security.Policy;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    public class AdminSegmentProcessor : Processor
+    internal class AdminSegmentProcessor : Processor
     {
         private static readonly XPathExpression sXp_SegmentId = XPathExpression.Compile("@segmentid");
         private static readonly XPathExpression sXp_Position = XPathExpression.Compile("@position");
@@ -18,16 +16,31 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         internal AdminSegmentProcessor(XPathNavigator navigator)
         {
             _navigator = navigator;
-        }
 
-        public override bool Process()
-        {
-            throw new NotImplementedException();
+            SegmentBlueprintProcessor = new SegmentBlueprintProcessor(navigator.SelectSingleNode("segmentblueprint"));
+
+            ItemSelectorProcessor = new ItemSelectorProcessor(navigator.SelectSingleNode("itemselector"));
+
+            SegmentPoolProcessor = new SegmentPoolProcessor(navigator.SelectSingleNode("segmentpool"));
         }
 
         private string SegmentId { get; set; }
         private string Position { get; set; }
         private string ItemSelection { get; set; }
+
+        private SegmentBlueprintProcessor SegmentBlueprintProcessor { get; }
+        private ItemSelectorProcessor ItemSelectorProcessor { get; }
+        private SegmentPoolProcessor SegmentPoolProcessor { get; }
+
+        public override bool Process()
+        {
+            return IsValidSegmentId()
+                   && IsValidPosition()
+                   && IsValidItemSelection()
+                   && SegmentBlueprintProcessor.Process()
+                   && ItemSelectorProcessor.Process()
+                   && SegmentPoolProcessor.Process();
+        }
 
         internal bool IsValidSegmentId()
         {

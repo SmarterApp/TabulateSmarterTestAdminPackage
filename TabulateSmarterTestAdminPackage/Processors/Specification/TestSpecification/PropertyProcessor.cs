@@ -8,19 +8,19 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
     internal class PropertyProcessor : Processor
     {
         private static readonly XPathExpression sXp_Name = XPathExpression.Compile("@name");
-        private static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
-        private static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
+        internal static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
+        internal static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
 
-        private readonly XPathNavigator _navigator;
+        internal readonly XPathNavigator Navigator;
 
         internal PropertyProcessor(XPathNavigator navigator)
         {
-            _navigator = navigator;
+            Navigator = navigator;
         }
 
         private string Name { get; set; }
-        private string Value { get; set; }
-        private string Label { get; set; }
+        internal string Value { get; set; }
+        internal string Label { get; set; }
 
         public override bool Process()
         {
@@ -36,12 +36,12 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
             };
-            Name = _navigator.Eval(sXp_Name);
+            Name = Navigator.Eval(sXp_Name);
             if (validators.IsValid(Name))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
             return false;
         }
 
@@ -52,12 +52,12 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
             };
-            Value = _navigator.Eval(sXp_Value);
+            Value = Navigator.Eval(sXp_Value);
             if (validators.IsValid(200))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Value.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Value.Expression, validators.GetMessage());
             return false;
         }
 
@@ -68,12 +68,12 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200)
             };
-            Label = _navigator.Eval(sXp_Label);
+            Label = Navigator.Eval(sXp_Label);
             if (validators.IsValid(200))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
             return false;
         }
     }
