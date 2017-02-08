@@ -40,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
-    <Compile Include="Processors\Processor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdministrationProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\AdminSegmentProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectionParameterProcessor.cs" />

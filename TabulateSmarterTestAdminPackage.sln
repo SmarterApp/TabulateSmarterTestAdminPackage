@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30110.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabulateSmarterTestAdminPackage", "TabulateSmarterTestAdminPackage\TabulateSmarterTestAdminPackage.csproj", "{8B1C74F6-8534-45E9-AE12-2ED0EAA5545E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabulateSmarterTestAdminPackage.Tests", "TabulateSmarterTestAdminPackage.Tests\TabulateSmarterTestAdminPackage.Tests.csproj", "{11EE9B6A-DF6C-4247-AC88-07C9A627627B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabulateSmarterTestAdminPackage.Common", "TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestAdminPackage.Common.csproj", "{6F9A6238-72C4-4389-B23E-B687C4542281}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabulateSmarterTestScoringPackage", "TabulateSmarterTestScoringPackage\TabulateSmarterTestScoringPackage.csproj", "{14AF4A55-AE62-4865-9BFA-5D7C7F9C3C62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{6F9A6238-72C4-4389-B23E-B687C4542281}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F9A6238-72C4-4389-B23E-B687C4542281}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F9A6238-72C4-4389-B23E-B687C4542281}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14AF4A55-AE62-4865-9BFA-5D7C7F9C3C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14AF4A55-AE62-4865-9BFA-5D7C7F9C3C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14AF4A55-AE62-4865-9BFA-5D7C7F9C3C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14AF4A55-AE62-4865-9BFA-5D7C7F9C3C62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

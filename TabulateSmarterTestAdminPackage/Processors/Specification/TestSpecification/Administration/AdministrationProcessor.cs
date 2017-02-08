@@ -10,7 +10,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     internal class AdministrationProcessor : Processor
     {
-        internal AdministrationProcessor(XPathNavigator navigator)
+        internal AdministrationProcessor(XPathNavigator navigator) : base(navigator)
         {
             TestBlueprintProcessor = new TestBlueprintProcessor(navigator.SelectSingleNode("testblueprint"));
 

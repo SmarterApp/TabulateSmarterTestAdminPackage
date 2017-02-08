@@ -7,12 +7,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     internal class BPrefProcessor : Processor
     {
-        private readonly XPathNavigator _navigator;
-
-        internal BPrefProcessor(XPathNavigator navigator)
-        {
-            _navigator = navigator;
-        }
+        internal BPrefProcessor(XPathNavigator navigator) : base(navigator) {}
 
         private string BPref { get; set; }
 
@@ -28,13 +23,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 150)
             };
-            BPref = _navigator.Value;
+            BPref = Navigator.Value;
             if (validators.IsValid(BPref))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, _navigator.BaseURI, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, Navigator.BaseURI,
+                validators.GetMessage());
             return false;
         }
     }

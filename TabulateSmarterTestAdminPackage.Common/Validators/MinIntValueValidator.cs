@@ -4,7 +4,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class MinIntValueValidator : Validator
     {
-        public MinIntValueValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
+        public MinIntValueValidator(ErrorSeverity errorSeverity, object parameter = null)
+            : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {
@@ -12,8 +13,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
             int intParameter;
             return !string.IsNullOrEmpty(value as string)
                    && !string.IsNullOrEmpty(Parameter as string)
-                   && int.TryParse((string)value, out intValue)
-                   && int.TryParse((string)Parameter, out intParameter)
+                   && int.TryParse((string) value, out intValue)
+                   && int.TryParse((string) Parameter, out intParameter)
                    && intParameter <= intValue;
         }
 

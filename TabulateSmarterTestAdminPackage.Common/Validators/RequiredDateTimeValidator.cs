@@ -5,7 +5,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class RequiredDateTimeValidator : Validator
     {
-        public RequiredDateTimeValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
+        public RequiredDateTimeValidator(ErrorSeverity errorSeverity, object parameter = null)
+            : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {

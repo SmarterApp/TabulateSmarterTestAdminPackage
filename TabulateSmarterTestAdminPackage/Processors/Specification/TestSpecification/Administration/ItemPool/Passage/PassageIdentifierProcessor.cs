@@ -1,5 +1,6 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -29,7 +30,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_UniqueId.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -47,7 +49,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression,
+                validators.GetMessage());
             return false;
         }
     }

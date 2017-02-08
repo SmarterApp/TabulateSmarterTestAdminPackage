@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -11,12 +12,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
     {
         private static readonly XPathExpression sXp_Length = XPathExpression.Compile("@length");
 
-        private readonly XPathNavigator _navigator;
-
-        internal TestFormProcessor(XPathNavigator navigator)
+        internal TestFormProcessor(XPathNavigator navigator) : base(navigator)
         {
-            _navigator = navigator;
-
             TestFormIdentifierProcessor = new TestFormIdentifierProcessor(navigator.SelectSingleNode("identifier"));
 
             TestFormPropertyProcessors = new List<PropertyProcessor>();
@@ -65,13 +62,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Degraded, 10),
                 new MinIntValueValidator(ErrorSeverity.Degraded, 1)
             };
-            Length = _navigator.Eval(sXp_Length);
+            Length = Navigator.Eval(sXp_Length);
             if (validators.IsValid(Length))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Length.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Length.Expression,
+                validators.GetMessage());
             return false;
         }
     }

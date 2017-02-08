@@ -1,5 +1,6 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -11,12 +12,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         internal static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
         internal static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
 
-        internal readonly XPathNavigator Navigator;
-
-        internal PropertyProcessor(XPathNavigator navigator)
-        {
-            Navigator = navigator;
-        }
+        internal PropertyProcessor(XPathNavigator navigator) : base(navigator) {}
 
         private string Name { get; set; }
         internal string Value { get; set; }
@@ -41,7 +37,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -57,7 +54,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Value.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Value.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -73,7 +71,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression,
+                validators.GetMessage());
             return false;
         }
     }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -11,13 +12,10 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
     {
         private static readonly XPathExpression sXp_Type = XPathExpression.Compile("@type");
 
-        private readonly XPathNavigator _navigator;
-
-        internal ItemSelectorProcessor(XPathNavigator navigator)
+        internal ItemSelectorProcessor(XPathNavigator navigator) : base(navigator)
         {
-            _navigator = navigator;
-
-            ItemSelectorIdentifierProcessor = new ItemSelectorIdentifierProcessor(navigator.SelectSingleNode("identifier"));
+            ItemSelectorIdentifierProcessor =
+                new ItemSelectorIdentifierProcessor(navigator.SelectSingleNode("identifier"));
 
             ItemSelectionParameterProcessors = new List<ItemSelectionParameterProcessor>();
             var itemSelectionParameters = navigator.Select("itemselectionparameter");
@@ -45,13 +43,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 100)
             };
-            Type = _navigator.Eval(sXp_Type);
+            Type = Navigator.Eval(sXp_Type);
             if (validators.IsValid(Type))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Type.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Type.Expression,
+                validators.GetMessage());
             return false;
         }
     }

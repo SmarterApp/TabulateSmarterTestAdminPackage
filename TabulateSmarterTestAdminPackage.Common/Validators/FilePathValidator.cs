@@ -13,7 +13,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
             try
             {
                 new FileInfo(value as string);
-            } catch (Exception e)
+            }
+            catch (Exception)
             {
                 return false;
             }

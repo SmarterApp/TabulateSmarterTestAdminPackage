@@ -6,9 +6,10 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     internal class TestFormPartitionProcessor : Processor
     {
-        internal TestFormPartitionProcessor(XPathNavigator navigator)
+        internal TestFormPartitionProcessor(XPathNavigator navigator) : base(navigator)
         {
-            TestFormPartitionIdentifierProcessor = new TestFormPartitionIdentifierProcessor(navigator.SelectSingleNode("identifier"));
+            TestFormPartitionIdentifierProcessor =
+                new TestFormPartitionIdentifierProcessor(navigator.SelectSingleNode("identifier"));
 
             TestFormPartitionItemGroupProcessors = new List<TestFormPartitionItemGroupProcessor>();
             var itemGroups = navigator.Select("itemgroup");

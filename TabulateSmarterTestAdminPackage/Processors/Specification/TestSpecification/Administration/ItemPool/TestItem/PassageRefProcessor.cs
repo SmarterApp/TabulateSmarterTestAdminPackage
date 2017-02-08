@@ -7,12 +7,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     internal class PassageRefProcessor : Processor
     {
-        private readonly XPathNavigator _navigator;
-
-        internal PassageRefProcessor(XPathNavigator navigator)
-        {
-            _navigator = navigator;
-        }
+        internal PassageRefProcessor(XPathNavigator navigator) : base(navigator) {}
 
         private string PassageRef { get; set; }
 
@@ -29,13 +24,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Benign),
                 new MaxLengthValidator(ErrorSeverity.Benign, 100)
             };
-            PassageRef = _navigator.Value;
+            PassageRef = Navigator.Value;
             if (validators.IsValid(PassageRef))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, _navigator.BaseURI, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, Navigator.BaseURI,
+                validators.GetMessage());
             return false;
         }
     }

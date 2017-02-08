@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -12,12 +13,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         internal static readonly XPathExpression sXp_MaxItems = XPathExpression.Compile("@maxitems");
         internal static readonly XPathExpression sXp_MaxResponses = XPathExpression.Compile("@maxresponses");
 
-        internal readonly XPathNavigator Navigator;
-
-        internal SegmentPoolItemGroupProcessor(XPathNavigator navigator)
+        internal SegmentPoolItemGroupProcessor(XPathNavigator navigator) : base(navigator)
         {
-            Navigator = navigator;
-
             GroupItemProcessors = new List<GroupItemProcessor>();
             var groupItems = navigator.Select("groupitem");
             foreach (XPathNavigator groupItem in groupItems)
@@ -53,7 +50,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxItems.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxItems.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -69,7 +67,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxResponses.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxResponses.Expression,
+                validators.GetMessage());
             return false;
         }
     }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Xml.XPath;
 using System.Text.RegularExpressions;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Exceptions;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification;
 using TabulateSmarterTestAdminPackage.Utility;
@@ -445,29 +446,6 @@ namespace TabulateSmarterTestAdminPackage
             if (disposing)
             {
                 GC.SuppressFinalize(this);
-            }
-        }
-    }
-
-    static class XPathNavitagorHelper
-    {
-        public static string Eval(this XPathNavigator nav, XPathExpression expression)
-        {
-            if (expression.ReturnType == XPathResultType.NodeSet)
-            {
-                XPathNodeIterator nodes = nav.Select(expression);
-                if (nodes.MoveNext())
-                {
-                    return nodes.Current.ToString();
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-            else
-            {
-                return nav.Evaluate(expression).ToString();
             }
         }
     }

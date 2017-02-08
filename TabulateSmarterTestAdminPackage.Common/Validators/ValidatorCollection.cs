@@ -30,5 +30,10 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 
             return isValid;
         }
+
+        public bool IsValid(object value, bool isRequired)
+        {
+            return IsValid(value) || !isRequired && value == null;
+        }
     }
 }

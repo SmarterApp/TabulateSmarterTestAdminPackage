@@ -10,7 +10,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
         {
             return value is string
                    && Parameter is int
-                   && ((string)value).Length <= (int)Parameter;
+                   && ((string) value).Length <= (int) Parameter;
         }
 
         public override string GetMessage()

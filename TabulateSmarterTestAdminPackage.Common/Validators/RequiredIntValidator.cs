@@ -4,7 +4,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class RequiredIntValidator : Validator
     {
-        public RequiredIntValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
+        public RequiredIntValidator(ErrorSeverity errorSeverity, object parameter = null)
+            : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {

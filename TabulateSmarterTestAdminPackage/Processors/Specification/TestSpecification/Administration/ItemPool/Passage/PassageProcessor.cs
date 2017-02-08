@@ -1,5 +1,6 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -9,11 +10,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
     {
         internal static readonly XPathExpression sXp_FileName = XPathExpression.Compile("@filename");
 
-        private readonly XPathNavigator _navigator;
-
-        internal PassageProcessor(XPathNavigator navigator)
+        internal PassageProcessor(XPathNavigator navigator) : base(navigator)
         {
-            _navigator = navigator;
             PassageIdentifierProcessor = new PassageIdentifierProcessor(navigator.SelectSingleNode("identifier"));
         }
 
@@ -34,12 +32,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Degraded, 50),
                 new FilePathValidator(ErrorSeverity.Degraded)
             };
-            FileName = _navigator.Eval(sXp_FileName);
+            FileName = Navigator.Eval(sXp_FileName);
             if (validators.IsValid(FileName))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_FileName.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FileName.Expression,
+                validators.GetMessage());
             return false;
         }
     }

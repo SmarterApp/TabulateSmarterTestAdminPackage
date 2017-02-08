@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F9A6238-72C4-4389-B23E-B687C4542281}</ProjectGuid>
+    <ProjectGuid>{14AF4A55-AE62-4865-9BFA-5D7C7F9C3C62}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TabulateSmarterTestAdminPackage.Common</RootNamespace>
-    <AssemblyName>TabulateSmarterTestAdminPackage.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>TabulateSmarterTestScoringPackage</RootNamespace>
+    <AssemblyName>TabulateSmarterTestScoringPackage</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,36 +32,19 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\ErrorSeverity.cs" />
-    <Compile Include="Enums\ItemFieldNames.cs" />
-    <Compile Include="Enums\PackageType.cs" />
-    <Compile Include="Enums\StimFieldNames.cs" />
-    <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
-    <Compile Include="Processors\Processor.cs" />
-    <Compile Include="Utilities\AttributeValidationDictionary.cs" />
-    <Compile Include="Utilities\ValidatedAttribute.cs" />
-    <Compile Include="Utilities\XPathNavigatorHelper.cs" />
-    <Compile Include="Validators\FilePathValidator.cs" />
-    <Compile Include="Validators\IValidator.cs" />
-    <Compile Include="Validators\MaxLengthValidator.cs" />
-    <Compile Include="Validators\MinDecimalValueValidator.cs" />
-    <Compile Include="Validators\MinIntValueValidator.cs" />
-    <Compile Include="Validators\RequiredBooleanValidator.cs" />
-    <Compile Include="Validators\RequiredDateTimeValidator.cs" />
-    <Compile Include="Validators\RequiredDecimalValidator.cs" />
-    <Compile Include="Validators\RequiredIntValidator.cs" />
-    <Compile Include="Validators\StringMatchValidator.cs" />
-    <Compile Include="Validators\Validator.cs" />
-    <Compile Include="Validators\RequiredStringValidator.cs" />
-    <Compile Include="Validators\ValidatorCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tabulation\CsvWriter.cs" />
-    <Compile Include="Tabulation\ErrorHandling.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Tabulators\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

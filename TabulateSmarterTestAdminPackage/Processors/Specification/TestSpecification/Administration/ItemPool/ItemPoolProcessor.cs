@@ -8,7 +8,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     internal class ItemPoolProcessor : Processor
     {
-        internal ItemPoolProcessor(XPathNavigator navigator)
+        internal ItemPoolProcessor(XPathNavigator navigator) : base(navigator)
         {
             PassageProcessors = new List<PassageProcessor>();
             var passages = navigator.Select("passage");

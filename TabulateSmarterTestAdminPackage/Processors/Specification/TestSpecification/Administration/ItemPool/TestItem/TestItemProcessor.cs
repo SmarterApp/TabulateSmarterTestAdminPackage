@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -11,11 +12,9 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
     {
         private static readonly XPathExpression sXp_FileName = XPathExpression.Compile("@filename");
         private static readonly XPathExpression sXp_ItemType = XPathExpression.Compile("@itemtype");
-        private readonly XPathNavigator _navigator;
 
-        internal TestItemProcessor(XPathNavigator navigator)
+        internal TestItemProcessor(XPathNavigator navigator) : base(navigator)
         {
-            _navigator = navigator;
             TestItemIdentifierProcessor = new TestItemIdentifierProcessor(navigator.SelectSingleNode("identifier"));
 
             BPrefProcessors = new List<BPrefProcessor>();
@@ -75,13 +74,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Degraded, 200),
                 new FilePathValidator(ErrorSeverity.Degraded)
             };
-            FileName = _navigator.Eval(sXp_FileName);
+            FileName = Navigator.Eval(sXp_FileName);
             if (validators.IsValid(FileName))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_FileName.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FileName.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -92,13 +92,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 50)
             };
-            ItemType = _navigator.Eval(sXp_ItemType);
+            ItemType = Navigator.Eval(sXp_ItemType);
             if (validators.IsValid(ItemType))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_ItemType.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ItemType.Expression,
+                validators.GetMessage());
             return false;
         }
     }

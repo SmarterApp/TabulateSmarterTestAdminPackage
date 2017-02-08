@@ -1,5 +1,6 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -12,12 +13,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         internal static readonly XPathExpression sXp_Version = XPathExpression.Compile("@version");
         private static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
 
-        internal readonly XPathNavigator Navigator;
-
-        internal IdentifierProcessor(XPathNavigator navigator)
-        {
-            Navigator = navigator;
-        }
+        internal IdentifierProcessor(XPathNavigator navigator) : base(navigator) {}
 
         internal string Name { get; set; }
         internal string Version { get; set; }
@@ -45,7 +41,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_UniqueId.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -62,7 +59,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -79,7 +77,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_UniqueId.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_UniqueId.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -96,7 +95,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression,
+                validators.GetMessage());
             return false;
         }
     }

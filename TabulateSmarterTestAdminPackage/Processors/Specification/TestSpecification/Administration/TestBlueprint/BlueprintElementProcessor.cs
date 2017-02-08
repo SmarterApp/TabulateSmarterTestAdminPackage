@@ -1,5 +1,6 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
@@ -16,11 +17,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         internal static readonly XPathExpression sXp_FtItemCount = XPathExpression.Compile("@ftitemcount");
         internal static readonly XPathExpression sXp_ParentId = XPathExpression.Compile("@parentid");
 
-        private readonly XPathNavigator _navigator;
-
-        internal BlueprintElementProcessor(XPathNavigator navigator)
+        internal BlueprintElementProcessor(XPathNavigator navigator) : base(navigator)
         {
-            _navigator = navigator;
             IdentifierProcessor = new BlueprintIdentifierProcessor(navigator.SelectSingleNode("identifier"));
         }
 
@@ -57,13 +55,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 100)
             };
-            ElementType = _navigator.Eval(sXp_ElementType);
+            ElementType = Navigator.Eval(sXp_ElementType);
             if (validators.IsValid(ElementType))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_ElementType.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ElementType.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -76,13 +75,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Benign),
                 new MaxLengthValidator(ErrorSeverity.Benign, 150)
             };
-            ParentId = _navigator.Eval(sXp_ParentId);
+            ParentId = Navigator.Eval(sXp_ParentId);
             if (ParentId == null || validators.IsValid(ParentId))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_ParentId.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ParentId.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -94,13 +94,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Degraded, 4),
                 new MinIntValueValidator(ErrorSeverity.Degraded, 0)
             };
-            MinOpItems = _navigator.Eval(sXp_MinOpItems);
+            MinOpItems = Navigator.Eval(sXp_MinOpItems);
             if (validators.IsValid(MinOpItems))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_MinOpItems.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MinOpItems.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -112,13 +113,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Degraded, 4),
                 new MinIntValueValidator(ErrorSeverity.Degraded, 1)
             };
-            MaxOpItems = _navigator.Eval(sXp_MaxOpItems);
+            MaxOpItems = Navigator.Eval(sXp_MaxOpItems);
             if (validators.IsValid(MaxOpItems))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_MaxOpItems.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxOpItems.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -134,7 +136,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_MaxOpItems.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxOpItems.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -147,13 +150,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Benign, 4),
                 new MinIntValueValidator(ErrorSeverity.Benign, 0)
             };
-            MinFtItems = _navigator.Eval(sXp_MinFtItems);
+            MinFtItems = Navigator.Eval(sXp_MinFtItems);
             if (MinFtItems == null || validators.IsValid(MinFtItems))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_MinFtItems.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MinFtItems.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -166,13 +170,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Benign, 4),
                 new MinIntValueValidator(ErrorSeverity.Benign, 1)
             };
-            MaxFtItems = _navigator.Eval(sXp_MaxFtItems);
+            MaxFtItems = Navigator.Eval(sXp_MaxFtItems);
             if (MaxFtItems == null || validators.IsValid(MaxFtItems))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_MaxFtItems.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxFtItems.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -186,13 +191,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MinIntValueValidator(ErrorSeverity.Degraded, MinFtItems)
             };
             // If they're both null, they weren't included and are valid
-            if ((string.IsNullOrEmpty(MinFtItems)
-                 && string.IsNullOrEmpty(MaxFtItems))
+            if (string.IsNullOrEmpty(MinFtItems)
+                && string.IsNullOrEmpty(MaxFtItems)
                 || validators.IsValid(MaxFtItems))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_MaxFtItems.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxFtItems.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -204,13 +210,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Degraded, 4),
                 new MinIntValueValidator(ErrorSeverity.Degraded, 1)
             };
-            OpItemCount = _navigator.Eval(sXp_OpItemCount);
+            OpItemCount = Navigator.Eval(sXp_OpItemCount);
             if (validators.IsValid(OpItemCount))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_OpItemCount.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_OpItemCount.Expression,
+                validators.GetMessage());
             return false;
         }
 
@@ -223,13 +230,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Degraded, 4),
                 new MinIntValueValidator(ErrorSeverity.Degraded, 0)
             };
-            FtItemCount = _navigator.Eval(sXp_FtItemCount);
+            FtItemCount = Navigator.Eval(sXp_FtItemCount);
             if (validators.IsValid(FtItemCount))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_FtItemCount.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FtItemCount.Expression,
+                validators.GetMessage());
             return false;
         }
     }

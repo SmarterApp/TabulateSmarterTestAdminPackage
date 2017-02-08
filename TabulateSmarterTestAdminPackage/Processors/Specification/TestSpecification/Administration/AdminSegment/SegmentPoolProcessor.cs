@@ -6,7 +6,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     internal class SegmentPoolProcessor : Processor
     {
-        internal SegmentPoolProcessor(XPathNavigator navigator)
+        internal SegmentPoolProcessor(XPathNavigator navigator) : base(navigator)
         {
             SegmentPoolItemGroupProcessors = new List<SegmentPoolItemGroupProcessor>();
             var itemGroups = navigator.Select("itemgroup");

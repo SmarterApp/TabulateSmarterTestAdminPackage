@@ -6,7 +6,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     internal class SegmentBlueprintProcessor : Processor
     {
-        internal SegmentBlueprintProcessor(XPathNavigator navigator)
+        internal SegmentBlueprintProcessor(XPathNavigator navigator) : base(navigator)
         {
             SegmentBlueprintElementProcessors = new List<SegmentBlueprintElementProcessor>();
             var blueprintElements = navigator.Select("segmentbpelement");

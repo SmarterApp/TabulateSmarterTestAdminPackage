@@ -1,5 +1,6 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification;
 using TabulateSmarterTestAdminPackage.Utility;
@@ -8,7 +9,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Loader
 {
     internal class TestSpecificationErrorProcessor : TestSpecificationProcessor
     {
-        internal TestSpecificationErrorProcessor(XPathNavigator navigator, PackageType expectedPackageType) : base(navigator, expectedPackageType) {}
+        internal TestSpecificationErrorProcessor(XPathNavigator navigator, PackageType expectedPackageType)
+            : base(navigator, expectedPackageType) {}
 
         internal new bool IsValidPublisher()
         {
@@ -25,7 +27,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Loader
                 return true;
             }
 
-            AdminPackageUtility.ReportLoadError(Navigator.NamespaceURI, sXp_Publisher.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportLoadError(Navigator.NamespaceURI, sXp_Publisher.Expression,
+                validators.GetMessage());
             // If it fails loader enforcement we're going to check if it meets spec enforcement.
             base.IsValidPublisher();
             return false;
