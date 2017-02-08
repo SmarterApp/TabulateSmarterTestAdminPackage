@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
@@ -28,7 +27,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var properties = navigator.Select("property");
             foreach (XPathNavigator property in properties)
             {
-                ((IList)PropertyProcessors).Add(new PropertyProcessor(property));
+                PropertyProcessors.Add(new PropertyProcessor(property));
             }
 
             AdministrationProcessor = new AdministrationProcessor(navigator.SelectSingleNode("administration"));
@@ -37,7 +36,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         }
 
         private IdentifierProcessor IdentifierProcessor { get; }
-        private IEnumerable<PropertyProcessor> PropertyProcessors { get; }
+        private IList<PropertyProcessor> PropertyProcessors { get; }
         private AdministrationProcessor AdministrationProcessor { get; }
         private string Purpose { get; set; }
         public string Publisher { get; set; }
@@ -113,8 +112,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var validators = new ValidatorCollection
             {
                 new RequiredDecimalValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 10),
-                new MinDecimalValueValidator(ErrorSeverity.Degraded, 0)
+                new MaxLengthValidator(ErrorSeverity.Degraded, 20),
+                new MinDecimalValueValidator(ErrorSeverity.Degraded, "0")
             };
             Version = Navigator.Eval(sXp_Version);
             if (validators.IsValid(Version))

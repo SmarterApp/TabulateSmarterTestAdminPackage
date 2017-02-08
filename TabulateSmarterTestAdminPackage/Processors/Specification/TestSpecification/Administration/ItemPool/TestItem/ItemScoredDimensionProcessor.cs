@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
@@ -25,7 +24,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var itemScoreParameters = navigator.Select("itemscoreparameter");
             foreach (XPathNavigator itemScoreParameter in itemScoreParameters)
             {
-                ((IList)ItemScoreParameterProcessors).Add(new PropertyProcessor(itemScoreParameter));
+                ItemScoreParameterProcessors.Add(new ItemScoreParameterProcessor(itemScoreParameter));
             }
         }
 
@@ -86,7 +85,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 new RequiredDecimalValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 30),
-                new MinDecimalValueValidator(ErrorSeverity.Degraded, 0)
+                new MinDecimalValueValidator(ErrorSeverity.Degraded, "0")
             };
             Weight = _navigator.Eval(sXp_Weight);
             if (validators.IsValid(Weight))

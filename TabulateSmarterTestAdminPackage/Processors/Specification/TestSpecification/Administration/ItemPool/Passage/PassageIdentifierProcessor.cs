@@ -9,6 +9,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
     {
         public PassageIdentifierProcessor(XPathNavigator navigator) : base(navigator) {}
 
+        public new bool Process()
+        {
+            return IsValidUniqueId()
+                   && IsValidName()
+                   && IsValidVersion();
+        }
+
         internal new bool IsValidUniqueId()
         {
             var validators = new ValidatorCollection

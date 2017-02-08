@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment;
@@ -19,7 +18,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var poolProperties = navigator.Select("poolproperty");
             foreach (XPathNavigator poolProperty in poolProperties)
             {
-                ((IList)PoolPropertyProcessors).Add(new PropertyProcessor(poolProperty));
+                PoolPropertyProcessors.Add(new PoolPropertyProcessor(poolProperty));
             }
 
             ItemPoolProcessor = new ItemPoolProcessor(navigator.SelectSingleNode("itempool"));
@@ -28,22 +27,22 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var adminSegments = navigator.Select("adminsegment");
             foreach (XPathNavigator adminSegment in adminSegments)
             {
-                ((IList)AdminSegmentProcessors).Add(new AdminSegmentProcessor(adminSegment));
+                AdminSegmentProcessors.Add(new AdminSegmentProcessor(adminSegment));
             }
 
             TestFormProcessors = new List<TestFormProcessor>();
             var testForms = navigator.Select("testform");
             foreach (XPathNavigator testForm in testForms)
             {
-                ((IList)TestFormProcessors).Add(new TestFormProcessor(testForm));
+                TestFormProcessors.Add(new TestFormProcessor(testForm));
             }
         }
 
         private TestBlueprintProcessor TestBlueprintProcessor { get; }
-        private IEnumerable<PoolPropertyProcessor> PoolPropertyProcessors { get; }
+        private IList<PoolPropertyProcessor> PoolPropertyProcessors { get; }
         private ItemPoolProcessor ItemPoolProcessor { get; }
-        private IEnumerable<AdminSegmentProcessor> AdminSegmentProcessors { get; }
-        private IEnumerable<TestFormProcessor> TestFormProcessors { get; }
+        private IList<AdminSegmentProcessor> AdminSegmentProcessors { get; }
+        private IList<TestFormProcessor> TestFormProcessors { get; }
 
         public override bool Process()
         {

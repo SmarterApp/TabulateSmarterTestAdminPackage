@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
@@ -23,28 +22,28 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var bPrefs = navigator.Select("bpref");
             foreach (XPathNavigator bPref in bPrefs)
             {
-                ((IList)BPrefProcessors).Add(new BPrefProcessor(bPref));
+                BPrefProcessors.Add(new BPrefProcessor(bPref));
             }
 
             TestItemPassageRefProcessors = new List<PassageRefProcessor>();
             var testItemPassageRefProcessors = navigator.Select("passageref");
             foreach (XPathNavigator testItemPassageRefProcessor in testItemPassageRefProcessors)
             {
-                ((IList)TestItemPassageRefProcessors).Add(new PassageRefProcessor(testItemPassageRefProcessor));
+                TestItemPassageRefProcessors.Add(new PassageRefProcessor(testItemPassageRefProcessor));
             }
 
             TestItemPoolPropertyProcessors = new List<TestItemPoolPropertyProcessor>();
             var testItemPoolProperties = navigator.Select("poolproperty");
             foreach (XPathNavigator testItemPoolProperty in testItemPoolProperties)
             {
-                ((IList)TestItemPoolPropertyProcessors).Add(new TestItemPoolPropertyProcessor(testItemPoolProperty));
+                TestItemPoolPropertyProcessors.Add(new TestItemPoolPropertyProcessor(testItemPoolProperty));
             }
 
             ItemScoredDimensionProcessors = new List<ItemScoredDimensionProcessor>();
             var testItemScoredDimensions = navigator.Select("itemscoreddimension");
             foreach (XPathNavigator testItemScoredDimension in testItemScoredDimensions)
             {
-                ((IList)ItemScoredDimensionProcessors).Add(new ItemScoredDimensionProcessor(testItemScoredDimension));
+                ItemScoredDimensionProcessors.Add(new ItemScoredDimensionProcessor(testItemScoredDimension));
             }
         }
 

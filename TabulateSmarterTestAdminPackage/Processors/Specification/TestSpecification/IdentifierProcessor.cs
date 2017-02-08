@@ -37,7 +37,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var validators = new ValidatorCollection
             {
                 new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 255)
+                new MaxLengthValidator(ErrorSeverity.Degraded, 250)
             };
             UniqueId = Navigator.Eval(sXp_UniqueId);
             if (validators.IsValid(UniqueId))

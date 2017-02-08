@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Validators;
@@ -23,19 +23,19 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var itemSelectionParameters = navigator.Select("itemselectionparameter");
             foreach (XPathNavigator selectionParameter in itemSelectionParameters)
             {
-                ((IList)ItemSelectionParameterProcessors).Add(new ItemSelectionParameterProcessor(selectionParameter));
+                ItemSelectionParameterProcessors.Add(new ItemSelectionParameterProcessor(selectionParameter));
             }
         }
 
         private string Type { get; set; }
         private ItemSelectorIdentifierProcessor ItemSelectorIdentifierProcessor { get; }
-        private List<ItemSelectionParameterProcessor> ItemSelectionParameterProcessors { get; }
+        private IList<ItemSelectionParameterProcessor> ItemSelectionParameterProcessors { get; }
 
         public override bool Process()
         {
             return IsValidType()
                    && ItemSelectorIdentifierProcessor.Process()
-                   && ItemSelectionParameterProcessors.TrueForAll(x => x.Process());
+                   && ItemSelectionParameterProcessors.All(x => x.Process());
         }
 
         internal bool IsValidType()

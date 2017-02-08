@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.Passage;
@@ -15,14 +14,14 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var passages = navigator.Select("passage");
             foreach (XPathNavigator passage in passages)
             {
-                ((IList)PassageProcessors).Add(new PropertyProcessor(passage));
+                PassageProcessors.Add(new PassageProcessor(passage));
             }
 
             TestItemProcessors = new List<TestItemProcessor>();
             var testItems = navigator.Select("testitem");
             foreach (XPathNavigator testItem in testItems)
             {
-                ((IList)TestItemProcessors).Add(new PropertyProcessor(testItem));
+                TestItemProcessors.Add(new TestItemProcessor(testItem));
             }
         }
 

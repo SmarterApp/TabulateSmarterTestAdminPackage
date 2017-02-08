@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
@@ -22,13 +21,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var properties = navigator.Select("property");
             foreach (XPathNavigator property in properties)
             {
-                ((IList)ItemSelectionParameterPropertyProcessors).Add(new ItemSelectionParameterPropertyProcessor(property));
+                ItemSelectionParameterPropertyProcessors.Add(new ItemSelectionParameterPropertyProcessor(property));
             }
         }
 
         private string BpElementId { get; set; }
 
-        private List<ItemSelectionParameterPropertyProcessor> ItemSelectionParameterPropertyProcessors { get; }
+        private IList<ItemSelectionParameterPropertyProcessor> ItemSelectionParameterPropertyProcessors { get; }
 
         public override bool Process()
         {

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
 
@@ -13,11 +12,11 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             var blueprintElements = navigator.Select("bpelement");
             foreach (XPathNavigator bpelement in blueprintElements)
             {
-                ((IList)BlueprintElementProcessors).Add(new BlueprintElementProcessor(bpelement));
+                BlueprintElementProcessors.Add(new BlueprintElementProcessor(bpelement));
             }
         }
 
-        private IEnumerable<BlueprintElementProcessor> BlueprintElementProcessors { get; }
+        private IList<BlueprintElementProcessor> BlueprintElementProcessors { get; }
 
         public override bool Process()
         {
