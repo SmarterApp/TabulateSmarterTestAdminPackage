@@ -1,15 +1,15 @@
-﻿using System;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    internal class SegmentGroupItemProcessor : Processor
+    internal class GroupItemProcessor : Processor
     {
         internal static readonly XPathExpression sXp_ItemId = XPathExpression.Compile("@itemid");
         internal static readonly XPathExpression sXp_GroupPosition = XPathExpression.Compile("@groupposition");
+        internal static readonly XPathExpression sXp_FormPosition = XPathExpression.Compile("@formposition");
         internal static readonly XPathExpression sXp_AdminRequired = XPathExpression.Compile("@adminrequired");
         private static readonly XPathExpression sXp_ResponseRequired = XPathExpression.Compile("@responserequired");
         internal static readonly XPathExpression sXp_IsActive = XPathExpression.Compile("@isactive");
@@ -18,7 +18,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 
         private readonly XPathNavigator _navigator;
 
-        internal SegmentGroupItemProcessor(XPathNavigator navigator)
+        internal GroupItemProcessor(XPathNavigator navigator)
         {
             _navigator = navigator;
         }
@@ -30,10 +30,18 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         private string IsActive { get; set; }
         private string IsFieldTest { get; set; }
         private string BlockId { get; set; }
+        private string FormPosition { get; set; }
 
         public override bool Process()
         {
-            throw new NotImplementedException();
+            return IsValidItemId()
+                   && IsValidGroupPosition()
+                   && IsValidFormPosition()
+                   && IsValidAdminRequired()
+                   && IsValidResponseRequired()
+                   && IsValidIsActive()
+                   && IsValidIsFieldTest()
+                   && IsValidBlockId();
         }
 
         internal bool IsValidItemId()
@@ -52,7 +60,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             return false;
         }
 
-        internal bool IsValidGroupPositionn()
+        internal bool IsValidGroupPosition()
         {
             var validators = new ValidatorCollection
             {
@@ -66,6 +74,24 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
             AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_GroupPosition.Expression, validators.GetMessage());
+            return false;
+        }
+
+        // Optional
+        internal bool IsValidFormPosition()
+        {
+            var validators = new ValidatorCollection
+            {
+                new RequiredIntValidator(ErrorSeverity.Degraded),
+                new MaxLengthValidator(ErrorSeverity.Degraded, 10),
+                new MinIntValueValidator(ErrorSeverity.Degraded, 1)
+            };
+            FormPosition = _navigator.Eval(sXp_FormPosition);
+            if (FormPosition == null || validators.IsValid(FormPosition))
+            {
+                return true;
+            }
+            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_FormPosition.Expression, validators.GetMessage());
             return false;
         }
 

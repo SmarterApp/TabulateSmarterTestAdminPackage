@@ -11,9 +11,9 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 
         public override bool Process()
         {
-            return IsValidUniqueId() 
-                && IsValidName() 
-                && IsValidVersion();
+            return IsValidUniqueId()
+                   && IsValidName()
+                   && IsValidVersion();
         }
 
         internal new bool IsValidUniqueId()

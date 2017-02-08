@@ -18,18 +18,18 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         {
             Navigator = navigator;
 
-            SegmentGroupItemProcessors = new List<SegmentGroupItemProcessor>();
+            GroupItemProcessors = new List<GroupItemProcessor>();
             var groupItems = navigator.Select("groupitem");
             foreach (XPathNavigator groupItem in groupItems)
             {
-                SegmentGroupItemProcessors.Add(new SegmentGroupItemProcessor(groupItem));
+                GroupItemProcessors.Add(new GroupItemProcessor(groupItem));
             }
 
-            SegmentItemGroupIdentifierProcessor = new ItemGroupIdentifierProcessor(navigator.SelectSingleNode("identifier"));
+            ItemGroupIdentifierProcessor = new ItemGroupIdentifierProcessor(navigator.SelectSingleNode("identifier"));
         }
 
-        private ItemGroupIdentifierProcessor SegmentItemGroupIdentifierProcessor { get; }
-        private IList<SegmentGroupItemProcessor> SegmentGroupItemProcessors { get; }
+        internal ItemGroupIdentifierProcessor ItemGroupIdentifierProcessor { get; }
+        internal IList<GroupItemProcessor> GroupItemProcessors { get; }
         internal string MaxItems { get; set; }
         internal string MaxResponses { get; set; }
 
@@ -37,8 +37,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         {
             return IsValidMaxItems()
                    && IsValidMaxResponses()
-                   && SegmentItemGroupIdentifierProcessor.Process()
-                   && SegmentGroupItemProcessors.All(x => x.Process());
+                   && ItemGroupIdentifierProcessor.Process()
+                   && GroupItemProcessors.All(x => x.Process());
         }
 
         internal bool IsValidMaxItems()

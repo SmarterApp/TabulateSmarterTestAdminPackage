@@ -26,11 +26,11 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 ((IList)BPrefProcessors).Add(new BPrefProcessor(bPref));
             }
 
-            TestItemPassageRefProcessors = new List<TestItemPassageRefProcessor>();
+            TestItemPassageRefProcessors = new List<PassageRefProcessor>();
             var testItemPassageRefProcessors = navigator.Select("passageref");
             foreach (XPathNavigator testItemPassageRefProcessor in testItemPassageRefProcessors)
             {
-                ((IList)TestItemPassageRefProcessors).Add(new TestItemPassageRefProcessor(testItemPassageRefProcessor));
+                ((IList)TestItemPassageRefProcessors).Add(new PassageRefProcessor(testItemPassageRefProcessor));
             }
 
             TestItemPoolPropertyProcessors = new List<TestItemPoolPropertyProcessor>();
@@ -50,7 +50,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 
         private TestItemIdentifierProcessor TestItemIdentifierProcessor { get; }
         private IList<BPrefProcessor> BPrefProcessors { get; }
-        private IList<TestItemPassageRefProcessor> TestItemPassageRefProcessors { get; }
+        private IList<PassageRefProcessor> TestItemPassageRefProcessors { get; }
         private IList<TestItemPoolPropertyProcessor> TestItemPoolPropertyProcessors { get; }
         private IList<ItemScoredDimensionProcessor> ItemScoredDimensionProcessors { get; }
 

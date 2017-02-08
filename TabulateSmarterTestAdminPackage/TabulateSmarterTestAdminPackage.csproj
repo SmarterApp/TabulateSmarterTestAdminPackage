@@ -50,7 +50,7 @@
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentBlueprintElementProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentBlueprintProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentFormProcessor.cs" />
-    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentGroupItemProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\GroupItemProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemGroupIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentPoolItemGroupProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentPoolProcessor.cs" />
@@ -74,7 +74,7 @@
     <Compile Include="Processors\Loader\TestSpecificationErrorProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\TestBlueprintProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\TestItemIdentifierProcessor.cs" />
-    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\TestItemPassageRefProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\PassageRefProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\TestItemPoolPropertyProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\TestItemProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\TestSpecificationProcessor.cs" />

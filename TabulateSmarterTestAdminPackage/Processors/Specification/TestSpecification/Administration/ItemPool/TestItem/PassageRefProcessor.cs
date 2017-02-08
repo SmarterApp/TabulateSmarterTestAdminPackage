@@ -5,11 +5,11 @@ using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
-    internal class TestItemPassageRefProcessor : Processor
+    internal class PassageRefProcessor : Processor
     {
         private readonly XPathNavigator _navigator;
 
-        internal TestItemPassageRefProcessor(XPathNavigator navigator)
+        internal PassageRefProcessor(XPathNavigator navigator)
         {
             _navigator = navigator;
         }
