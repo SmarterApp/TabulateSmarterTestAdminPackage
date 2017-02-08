@@ -47,8 +47,12 @@
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectionParameterPropertyProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectorIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectorProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentBlueprintElementProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentBlueprintProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentFormProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentGroupItemProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentItemGroupIdentifierProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentPoolItemGroupProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentPoolProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\BlueprintElementProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\BlueprintIdentifierProcessor.cs" />

@@ -39,12 +39,20 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 ((IList)TestItemPoolPropertyProcessors).Add(new TestItemPoolPropertyProcessor(testItemPoolProperty));
             }
+
+            ItemScoredDimensionProcessors = new List<ItemScoredDimensionProcessor>();
+            var testItemScoredDimensions = navigator.Select("itemscoreddimension");
+            foreach (XPathNavigator testItemScoredDimension in testItemScoredDimensions)
+            {
+                ((IList)ItemScoredDimensionProcessors).Add(new ItemScoredDimensionProcessor(testItemScoredDimension));
+            }
         }
 
         private TestItemIdentifierProcessor TestItemIdentifierProcessor { get; }
         private IList<BPrefProcessor> BPrefProcessors { get; }
         private IList<TestItemPassageRefProcessor> TestItemPassageRefProcessors { get; }
         private IList<TestItemPoolPropertyProcessor> TestItemPoolPropertyProcessors { get; }
+        private IList<ItemScoredDimensionProcessor> ItemScoredDimensionProcessors { get; }
 
         private string FileName { get; set; }
         private string ItemType { get; set; }
@@ -56,7 +64,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                    && TestItemIdentifierProcessor.Process()
                    && BPrefProcessors.All(x => x.Process())
                    && TestItemPassageRefProcessors.All(x => x.Process())
-                   && TestItemPoolPropertyProcessors.All(x => x.Process());
+                   && TestItemPoolPropertyProcessors.All(x => x.Process())
+                   && ItemScoredDimensionProcessors.All(x => x.Process());
         }
 
         internal bool IsValidFileName()

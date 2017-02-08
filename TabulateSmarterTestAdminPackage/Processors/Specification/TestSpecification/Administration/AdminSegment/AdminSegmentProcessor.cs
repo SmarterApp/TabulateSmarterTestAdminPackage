@@ -22,6 +22,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             ItemSelectorProcessor = new ItemSelectorProcessor(navigator.SelectSingleNode("itemselector"));
 
             SegmentPoolProcessor = new SegmentPoolProcessor(navigator.SelectSingleNode("segmentpool"));
+
+            SegmentFormProcessor = new SegmentFormProcessor(navigator.SelectSingleNode("segmentform"));
         }
 
         private string SegmentId { get; set; }
@@ -31,6 +33,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         private SegmentBlueprintProcessor SegmentBlueprintProcessor { get; }
         private ItemSelectorProcessor ItemSelectorProcessor { get; }
         private SegmentPoolProcessor SegmentPoolProcessor { get; }
+        private SegmentFormProcessor SegmentFormProcessor { get; }
 
         public override bool Process()
         {
@@ -39,7 +42,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                    && IsValidItemSelection()
                    && SegmentBlueprintProcessor.Process()
                    && ItemSelectorProcessor.Process()
-                   && SegmentPoolProcessor.Process();
+                   && SegmentPoolProcessor.Process()
+                   && SegmentFormProcessor.Process();
         }
 
         internal bool IsValidSegmentId()

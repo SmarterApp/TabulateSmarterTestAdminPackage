@@ -1,20 +1,26 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.XPath;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
     internal class SegmentPoolProcessor : Processor
     {
-        private readonly XPathNavigator _navigator;
-
         internal SegmentPoolProcessor(XPathNavigator navigator)
         {
-            _navigator = navigator;
+            SegmentPoolItemGroupProcessors = new List<SegmentPoolItemGroupProcessor>();
+            var itemGroups = navigator.Select("itemgroup");
+            foreach (XPathNavigator itemGroup in itemGroups)
+            {
+                SegmentPoolItemGroupProcessors.Add(new SegmentPoolItemGroupProcessor(itemGroup));
+            }
         }
+
+        private IList<SegmentPoolItemGroupProcessor> SegmentPoolItemGroupProcessors { get; }
 
         public override bool Process()
         {
-            throw new NotImplementedException();
+            return SegmentPoolItemGroupProcessors.All(x => x.Process());
         }
     }
 }

@@ -45,6 +45,7 @@
     <Compile Include="Validators\MaxLengthValidator.cs" />
     <Compile Include="Validators\MinDecimalValueValidator.cs" />
     <Compile Include="Validators\MinIntValueValidator.cs" />
+    <Compile Include="Validators\RequiredBooleanValidator.cs" />
     <Compile Include="Validators\RequiredDateTimeValidator.cs" />
     <Compile Include="Validators\RequiredDecimalValidator.cs" />
     <Compile Include="Validators\RequiredIntValidator.cs" />
