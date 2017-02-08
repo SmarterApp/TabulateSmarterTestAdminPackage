@@ -5,9 +5,9 @@ using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    internal class SegmentItemGroupIdentifierProcessor : IdentifierProcessor
+    internal class ItemGroupIdentifierProcessor : IdentifierProcessor
     {
-        public SegmentItemGroupIdentifierProcessor(XPathNavigator navigator) : base(navigator) {}
+        public ItemGroupIdentifierProcessor(XPathNavigator navigator) : base(navigator) {}
 
         internal new bool IsValidUniqueId()
         {

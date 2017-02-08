@@ -12,11 +12,11 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         internal static readonly XPathExpression sXp_MaxItems = XPathExpression.Compile("@maxitems");
         internal static readonly XPathExpression sXp_MaxResponses = XPathExpression.Compile("@maxresponses");
 
-        private readonly XPathNavigator _navigator;
+        internal readonly XPathNavigator Navigator;
 
         internal SegmentPoolItemGroupProcessor(XPathNavigator navigator)
         {
-            _navigator = navigator;
+            Navigator = navigator;
 
             SegmentGroupItemProcessors = new List<SegmentGroupItemProcessor>();
             var groupItems = navigator.Select("groupitem");
@@ -25,13 +25,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 SegmentGroupItemProcessors.Add(new SegmentGroupItemProcessor(groupItem));
             }
 
-            SegmentItemGroupIdentifierProcessor = new SegmentItemGroupIdentifierProcessor(navigator.SelectSingleNode("identifier"));
+            SegmentItemGroupIdentifierProcessor = new ItemGroupIdentifierProcessor(navigator.SelectSingleNode("identifier"));
         }
 
-        private SegmentItemGroupIdentifierProcessor SegmentItemGroupIdentifierProcessor { get; }
+        private ItemGroupIdentifierProcessor SegmentItemGroupIdentifierProcessor { get; }
         private IList<SegmentGroupItemProcessor> SegmentGroupItemProcessors { get; }
-        private string MaxItems { get; set; }
-        private string MaxResponses { get; set; }
+        internal string MaxItems { get; set; }
+        internal string MaxResponses { get; set; }
 
         public override bool Process()
         {
@@ -45,16 +45,15 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         {
             var validators = new ValidatorCollection
             {
-                new RequiredIntValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 10),
-                new MinIntValueValidator(ErrorSeverity.Degraded, 1)
+                new RequiredStringValidator(ErrorSeverity.Degraded),
+                new MaxLengthValidator(ErrorSeverity.Degraded, 10)
             };
-            MaxItems = _navigator.Eval(sXp_MaxItems);
+            MaxItems = Navigator.Eval(sXp_MaxItems);
             if (validators.IsValid(MaxItems))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_MaxItems.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxItems.Expression, validators.GetMessage());
             return false;
         }
 
@@ -62,16 +61,15 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
         {
             var validators = new ValidatorCollection
             {
-                new RequiredIntValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 10),
-                new MinIntValueValidator(ErrorSeverity.Degraded, 1)
+                new RequiredStringValidator(ErrorSeverity.Degraded),
+                new MaxLengthValidator(ErrorSeverity.Degraded, 10)
             };
-            MaxResponses = _navigator.Eval(sXp_MaxResponses);
+            MaxResponses = Navigator.Eval(sXp_MaxResponses);
             if (validators.IsValid(MaxResponses))
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_MaxResponses.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxResponses.Expression, validators.GetMessage());
             return false;
         }
     }

@@ -7,21 +7,21 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     internal class PoolPropertyProcessor : Processor
     {
-        private static readonly XPathExpression sXp_Property = XPathExpression.Compile("@property");
-        private static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
-        private static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
+        internal static readonly XPathExpression sXp_Property = XPathExpression.Compile("@property");
+        internal static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
+        internal static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
         private static readonly XPathExpression sXp_ItemCount = XPathExpression.Compile("@itemcount");
 
-        private readonly XPathNavigator _navigator;
+        internal readonly XPathNavigator Navigator;
 
         internal PoolPropertyProcessor(XPathNavigator navigator)
         {
-            _navigator = navigator;
+            Navigator = navigator;
         }
 
-        private string Property { get; set; }
-        private string Value { get; set; }
-        private string Label { get; set; }
+        internal string Property { get; set; }
+        internal string Value { get; set; }
+        internal string Label { get; set; }
         private string ItemCount { get; set; }
 
         public override bool Process()
@@ -39,13 +39,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 50)
             };
-            Property = _navigator.Eval(sXp_Property);
+            Property = Navigator.Eval(sXp_Property);
             if (validators.IsValid(Property))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Property.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Property.Expression, validators.GetMessage());
             return false;
         }
 
@@ -57,13 +57,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 128)
             };
-            Value = _navigator.Eval(sXp_Value);
+            Value = Navigator.Eval(sXp_Value);
             if (validators.IsValid(Value))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Value.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Value.Expression, validators.GetMessage());
             return false;
         }
 
@@ -74,13 +74,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new RequiredStringValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, 150)
             };
-            Label = _navigator.Eval(sXp_Label);
+            Label = Navigator.Eval(sXp_Label);
             if (validators.IsValid(Label))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression, validators.GetMessage());
             return false;
         }
 
@@ -92,13 +92,13 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 new MaxLengthValidator(ErrorSeverity.Degraded, 10),
                 new MinIntValueValidator(ErrorSeverity.Degraded, 0)
             };
-            ItemCount = _navigator.Eval(sXp_ItemCount);
+            ItemCount = Navigator.Eval(sXp_ItemCount);
             if (validators.IsValid(ItemCount))
             {
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(_navigator.NamespaceURI, sXp_ItemCount.Expression, validators.GetMessage());
+            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ItemCount.Expression, validators.GetMessage());
             return false;
         }
     }
