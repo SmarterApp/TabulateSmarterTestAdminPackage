@@ -40,10 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Processors\TestSpecificationProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tabulators\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestAdminPackage.Common.csproj">
+      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
+      <Name>TabulateSmarterTestAdminPackage.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

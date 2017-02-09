@@ -10,16 +10,16 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
     {
         public PackageType PackageType { get; set; }
 
-        public IList<KeyValuePair<string, ValidatedAttribute>> Validate(XPathNavigator navigator)
+        public IDictionary<string, ValidatedAttribute> Validate(XPathNavigator navigator)
         {
             return this.Select(
-                x => new KeyValuePair<string, ValidatedAttribute>(
-                    x.Key,
+                x => 
                     new ValidatedAttribute
                     {
+                        Name = x.Key,
                         IsValid = x.Value.IsValid(navigator.Eval(XPathExpression.Compile($"@{x.Key}"))),
                         Value = navigator.Eval(XPathExpression.Compile($"@{x.Key}"))
-                    })).ToList();
+                    }).ToDictionary(x => x.Name);
         }
     }
 }
