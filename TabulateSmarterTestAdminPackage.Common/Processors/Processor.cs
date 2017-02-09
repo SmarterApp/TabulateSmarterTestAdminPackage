@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.XPath;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 
-namespace TabulateSmarterTestAdminPackage.Processors
+namespace TabulateSmarterTestAdminPackage.Common.Processors
 {
     public abstract class Processor : IDisposable
     {
-        public readonly XPathNavigator Navigator;
+        protected readonly XPathNavigator Navigator;
+        protected IList<Processor> Processors { get; } = new List<Processor>();
 
-        public Processor(XPathNavigator navigator)
+        protected AttributeValidationDictionary Attributes { get; set; }
+
+        protected Processor(XPathNavigator navigator)
         {
             Navigator = navigator;
         }

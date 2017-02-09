@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
-using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
@@ -54,7 +54,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MeasurementModel.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MeasurementModel.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -73,7 +73,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ScorePoints.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ScorePoints.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -92,7 +92,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Weight.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Weight.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -111,7 +111,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Dimension.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Dimension.Expression,
                 validators.GetMessage());
             return false;
         }

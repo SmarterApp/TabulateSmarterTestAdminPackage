@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
-using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
@@ -49,7 +49,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Type.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Type.Expression,
                 validators.GetMessage());
             return false;
         }

@@ -3,7 +3,6 @@ using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification;
-using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Loader
 {
@@ -27,7 +26,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Loader
                 return true;
             }
 
-            AdminPackageUtility.ReportLoadError(Navigator.NamespaceURI, sXp_Publisher.Expression,
+            ReportingUtility.ReportLoadError(Navigator.NamespaceURI, sXp_Publisher.Expression,
                 validators.GetMessage());
             // If it fails loader enforcement we're going to check if it meets spec enforcement.
             base.IsValidPublisher();

@@ -1,4 +1,6 @@
-﻿using System.Xml.XPath;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.XPath;
 
 namespace TabulateSmarterTestAdminPackage.Common.Utilities
 {
@@ -16,6 +18,14 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
                 return string.Empty;
             }
             return nav.Evaluate(expression).ToString();
+        }
+
+        public static List<XPathNavigator> GenerateList(this XPathNavigator navigator, string path)
+        {
+            return navigator
+                .Select(path)
+                .Cast<XPathNavigator>()
+                .ToList();
         }
     }
 }

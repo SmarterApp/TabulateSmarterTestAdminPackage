@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TabulateSmarterTestAdminPackage.Common</RootNamespace>
     <AssemblyName>TabulateSmarterTestAdminPackage.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -42,6 +42,8 @@
     <Compile Include="Enums\StimFieldNames.cs" />
     <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
     <Compile Include="Processors\Processor.cs" />
+    <Compile Include="Processors\PropertyProcessor.cs" />
+    <Compile Include="Utilities\ReportingUtility.cs" />
     <Compile Include="Utilities\AttributeValidationDictionary.cs" />
     <Compile Include="Utilities\ValidatedAttribute.cs" />
     <Compile Include="Utilities\XPathNavigatorHelper.cs" />

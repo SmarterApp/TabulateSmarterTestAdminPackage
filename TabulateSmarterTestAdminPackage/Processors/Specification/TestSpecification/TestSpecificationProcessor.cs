@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Exceptions;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration;
-using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification
 {
@@ -84,7 +84,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Publisher.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Publisher.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -102,7 +102,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_PublishDate.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_PublishDate.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -121,7 +121,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Version.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Version.Expression,
                 validators.GetMessage());
             return false;
         }

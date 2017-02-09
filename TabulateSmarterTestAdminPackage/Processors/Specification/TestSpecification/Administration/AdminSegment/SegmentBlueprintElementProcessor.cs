@@ -1,8 +1,8 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
-using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
@@ -39,7 +39,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MinOpItems.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MinOpItems.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -58,7 +58,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxOpItems.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxOpItems.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -75,7 +75,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_BpElementId.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_BpElementId.Expression,
                 validators.GetMessage());
             return false;
         }

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Xml.XPath;
 using NUnit.Framework;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification;
-using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Tests.Processors
 {
@@ -12,11 +12,11 @@ namespace TabulateSmarterTestAdminPackage.Tests.Processors
         [SetUp]
         public void Setup()
         {
-            AdminPackageUtility.SetFileName("UnitTests");
-            AdminPackageUtility.TestName = "UnitTests";
-            if (File.Exists(AdminPackageUtility.ErrorFileName))
+            ReportingUtility.SetFileName("UnitTests");
+            ReportingUtility.TestName = "UnitTests";
+            if (File.Exists(ReportingUtility.ErrorFileName))
             {
-                File.Delete(AdminPackageUtility.ErrorFileName);
+                File.Delete(ReportingUtility.ErrorFileName);
             }
         }
 
@@ -32,7 +32,7 @@ namespace TabulateSmarterTestAdminPackage.Tests.Processors
 
             // Act
             var result = subject.IsValidUniqueId();
-            AdminPackageUtility.Dispose(true);
+            ReportingUtility.Dispose(true);
 
             // Assert
             Assert.IsTrue(result);
@@ -48,7 +48,7 @@ namespace TabulateSmarterTestAdminPackage.Tests.Processors
 
             // Act
             var result = subject.IsValidVersion();
-            AdminPackageUtility.Dispose(true);
+            ReportingUtility.Dispose(true);
 
             // Assert
             Assert.IsTrue(result);

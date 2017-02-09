@@ -2,40 +2,40 @@
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Tabulation;
 
-namespace TabulateSmarterTestAdminPackage.Utility
+namespace TabulateSmarterTestAdminPackage.Common.Utilities
 {
-    public static class AdminPackageUtility
+    public static class ReportingUtility
     {
-        static AdminPackageUtility()
+        static ReportingUtility()
         {
             ErrorHandling = new ErrorHandling();
         }
 
-        internal static string ErrorFileName { get; set; }
-        internal static string ItemFileName { get; set; }
-        internal static string StimuliFileName { get; set; }
+        public static string ErrorFileName { get; set; }
+        public static string ItemFileName { get; set; }
+        public static string StimuliFileName { get; set; }
         internal static CsvWriter ErrorWriter;
         internal static CsvWriter ItemWriter;
         internal static CsvWriter StimuliWriter;
-        internal static ErrorHandling ErrorHandling { get; set; }
-        internal static string TestName { get; set; }
+        public static ErrorHandling ErrorHandling { get; set; }
+        public static string TestName { get; set; }
 
-        internal static CsvWriter GetItemWriter()
+        public static CsvWriter GetItemWriter()
         {
             return ItemWriter ?? (ItemWriter = new CsvWriter(ItemFileName, false));
         }
 
-        internal static CsvWriter GetStimuliWriter()
+        public static CsvWriter GetStimuliWriter()
         {
             return StimuliWriter ?? (StimuliWriter = new CsvWriter(StimuliFileName, false));
         }
 
-        internal static CsvWriter GetErrorWriter()
+        public static CsvWriter GetErrorWriter()
         {
             return ErrorWriter ?? (ErrorWriter = new CsvWriter(ErrorFileName, false));
         }
 
-        internal static void SetFileName(string fileName)
+        public static void SetFileName(string fileName)
         {
             ErrorFileName = fileName + ".errors.csv";
             ItemFileName = fileName + ".items.csv";

@@ -2,21 +2,20 @@
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
-using TabulateSmarterTestAdminPackage.Utility;
 
-namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification
+namespace TabulateSmarterTestAdminPackage.Common.Processors
 {
-    internal class PropertyProcessor : Processor
+    public class PropertyProcessor : Processor
     {
-        private static readonly XPathExpression sXp_Name = XPathExpression.Compile("@name");
-        internal static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
-        internal static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
+        public static readonly XPathExpression sXp_Name = XPathExpression.Compile("@name");
+        public static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
+        public static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
 
-        internal PropertyProcessor(XPathNavigator navigator) : base(navigator) {}
+        public PropertyProcessor(XPathNavigator navigator) : base(navigator) {}
 
-        private string Name { get; set; }
-        internal string Value { get; set; }
-        internal string Label { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public string Label { get; set; }
 
         public override bool Process()
         {
@@ -25,7 +24,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                    && IsValidLabel();
         }
 
-        internal bool IsValidName()
+        public bool IsValidName()
         {
             var validators = new ValidatorCollection
             {
@@ -37,12 +36,12 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Name.Expression,
                 validators.GetMessage());
             return false;
         }
 
-        internal bool IsValidValue()
+        public bool IsValidValue()
         {
             var validators = new ValidatorCollection
             {
@@ -54,12 +53,12 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Value.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Value.Expression,
                 validators.GetMessage());
             return false;
         }
 
-        internal bool IsValidLabel()
+        public bool IsValidLabel()
         {
             var validators = new ValidatorCollection
             {
@@ -71,7 +70,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression,
                 validators.GetMessage());
             return false;
         }

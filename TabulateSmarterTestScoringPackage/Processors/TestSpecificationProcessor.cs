@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
-using TabulateSmarterTestAdminPackage.Processors;
 
 namespace TabulateSmarterTestScoringPackage.Processors
 {
@@ -14,7 +14,7 @@ namespace TabulateSmarterTestScoringPackage.Processors
         {
             ExpectedPackageType = expectedPackageType;
 
-            AttributeValidationDictionary = new AttributeValidationDictionary
+            Attributes = new AttributeValidationDictionary
             {
                 {
                     "purpose", StringValidator.IsValidNonEmptyWithLength(100).AddAndReturn(
@@ -42,6 +42,10 @@ namespace TabulateSmarterTestScoringPackage.Processors
                     }
                 }
             };
+
+            Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x)));
+            Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new PropertyProcessor(x)));
+            Navigator.GenerateList("scoring").ForEach(x => Processors.Add(new PropertyProcessor(x)));
         }
 
         private string Purpose { get; set; }
@@ -50,13 +54,9 @@ namespace TabulateSmarterTestScoringPackage.Processors
         public string Version { get; set; }
         public PackageType ExpectedPackageType { get; set; }
 
-        // TODO: This property would move to the Processor class. 
-        // TODO: I would write a method that takes IDictionary<string, ValidatedAttribute> and submits any errors to be tabulated.
-        public AttributeValidationDictionary AttributeValidationDictionary { get; set; }
-
         public override bool Process()
         {
-            var validationResults = AttributeValidationDictionary.Validate(Navigator);
+            var validationResults = Attributes.Validate(Navigator);
             Purpose = validationResults["purpose"].Value;
             Publisher = validationResults["publisher"].Value;
             PublishDate = validationResults["publishdate"].Value;

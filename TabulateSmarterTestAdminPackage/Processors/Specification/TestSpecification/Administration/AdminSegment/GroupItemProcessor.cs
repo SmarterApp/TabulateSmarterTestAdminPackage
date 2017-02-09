@@ -1,8 +1,8 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
-using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
@@ -52,7 +52,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ItemId.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ItemId.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -70,7 +70,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_GroupPosition.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_GroupPosition.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -89,7 +89,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FormPosition.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FormPosition.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -106,7 +106,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_AdminRequired.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_AdminRequired.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -123,7 +123,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ResponseRequired.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ResponseRequired.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -140,7 +140,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_IsActive.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_IsActive.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -157,7 +157,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_IsFieldTest.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_IsFieldTest.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -174,7 +174,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_BlockId.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_BlockId.Expression,
                 validators.GetMessage());
             return false;
         }

@@ -1,8 +1,8 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
-using TabulateSmarterTestAdminPackage.Utility;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.TestBlueprint
 {
@@ -61,7 +61,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ElementType.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ElementType.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -81,7 +81,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ParentId.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ParentId.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -100,7 +100,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MinOpItems.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MinOpItems.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -119,7 +119,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxOpItems.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxOpItems.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -136,7 +136,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxOpItems.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxOpItems.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -156,7 +156,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MinFtItems.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MinFtItems.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -176,7 +176,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxFtItems.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxFtItems.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -197,7 +197,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 return true;
             }
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxFtItems.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MaxFtItems.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -216,7 +216,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_OpItemCount.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_OpItemCount.Expression,
                 validators.GetMessage());
             return false;
         }
@@ -236,7 +236,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                 return true;
             }
 
-            AdminPackageUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FtItemCount.Expression,
+            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FtItemCount.Expression,
                 validators.GetMessage());
             return false;
         }
