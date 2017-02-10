@@ -23,7 +23,9 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
                     )
                 },
                 {
-                    "publisher", StringValidator.IsValidNonEmptyWithLength(255)
+                    "publisher", StringValidator.IsValidNonEmptyWithLength(255).AddAndReturn(
+                        new RequiredStringValidator(ErrorSeverity.Severe)).AddAndReturn(
+                        new MaxLengthValidator(ErrorSeverity.Severe, 100))
                 },
                 {
                     "publishdate", DateTimeValidator.IsValidNonEmptyWithLength(200)
