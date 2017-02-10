@@ -18,7 +18,22 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
                     {
                         Name = x.Key,
                         IsValid = x.Value.IsValid(navigator.Eval(XPathExpression.Compile($"@{x.Key}"))),
-                        Value = navigator.Eval(XPathExpression.Compile($"@{x.Key}"))
+                        Value = navigator.Eval(XPathExpression.Compile($"@{x.Key}")),
+                        Validator = x.Value
+                    }).ToDictionary(x => x.Name);
+        }
+
+        public IDictionary<string, ValidatedAttribute> ValidateAttribute(XPathNavigator navigator, string attribute)
+        {
+            return this.Where(x => x.Key.Equals(attribute))
+                .Select(
+                x =>
+                    new ValidatedAttribute
+                    {
+                        Name = x.Key,
+                        IsValid = x.Value.IsValid(navigator.Eval(XPathExpression.Compile($"@{x.Key}"))),
+                        Value = navigator.Eval(XPathExpression.Compile($"@{x.Key}")),
+                        Validator = x.Value
                     }).ToDictionary(x => x.Name);
         }
     }

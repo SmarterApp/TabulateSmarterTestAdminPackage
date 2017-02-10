@@ -20,26 +20,18 @@ namespace TabulateSmarterTestScoringPackage.Processors
                     "purpose", StringValidator.IsValidNonEmptyWithLength(100).AddAndReturn(
                         new StringMatchValidator(ErrorSeverity.Degraded, ExpectedPackageType.ToString())
                     )
-                    // Added a method to the ValidatorCollection that returns the collection after an add so convenience methods can be used as a base
                 },
                 {
-                    "publisher", StringValidator.IsValidNonEmptyWithLength(255)
-                    // This is the most common type of validation by far and should get a convenience method.
+                    "publisher", StringValidator.IsValidNonEmptyWithLength(255).AddAndReturn(
+                        new RequiredStringValidator(ErrorSeverity.Severe)).AddAndReturn(
+                        new MaxLengthValidator(ErrorSeverity.Severe, 100))
+                    // These Values will be rejected by the database loader script if their length exceeds 100 characters
                 },
                 {
-                    "publishdate", new ValidatorCollection
-                    {
-                        new RequiredDateTimeValidator(ErrorSeverity.Degraded),
-                        new MaxLengthValidator(ErrorSeverity.Degraded, 200)
-                    }
+                    "publishdate", DateTimeValidator.IsValidNonEmptyWithLength(200)
                 },
                 {
-                    "version", new ValidatorCollection
-                    {
-                        new RequiredDecimalValidator(ErrorSeverity.Degraded),
-                        new MaxLengthValidator(ErrorSeverity.Degraded, 20),
-                        new MinDecimalValueValidator(ErrorSeverity.Degraded, "0")
-                    }
+                    "version", DecimalValidator.IsValidPositiveNonEmptyWithLength(20)
                 }
             };
 
@@ -61,7 +53,16 @@ namespace TabulateSmarterTestScoringPackage.Processors
             Publisher = validationResults["publisher"].Value;
             PublishDate = validationResults["publishdate"].Value;
             Version = validationResults["version"].Value;
-            return validationResults.Values.All(x => x.IsValid);
+            validationResults
+                .Where(x => !x.Value.IsValid)
+                .ToList()
+                .ForEach(x =>
+                    ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, x.Key,
+                        x.Value.Validator.GetMessage()));
+
+            var badProcessors = Processors.Count(x => !x.Process());
+            return validationResults.Values.Count(x => !x.IsValid) == 0
+                   && badProcessors == 0;
         }
     }
 }

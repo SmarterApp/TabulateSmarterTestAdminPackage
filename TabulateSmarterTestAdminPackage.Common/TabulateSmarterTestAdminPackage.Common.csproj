@@ -40,13 +40,15 @@
     <Compile Include="Enums\ItemFieldNames.cs" />
     <Compile Include="Enums\PackageType.cs" />
     <Compile Include="Enums\StimFieldNames.cs" />
-    <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
     <Compile Include="Processors\Processor.cs" />
     <Compile Include="Processors\PropertyProcessor.cs" />
     <Compile Include="Utilities\ReportingUtility.cs" />
     <Compile Include="Utilities\AttributeValidationDictionary.cs" />
     <Compile Include="Utilities\ValidatedAttribute.cs" />
     <Compile Include="Utilities\XPathNavigatorHelper.cs" />
+    <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
+    <Compile Include="Validators\Convenience\DecimalValidator.cs" />
+    <Compile Include="Validators\Convenience\IntValidator.cs" />
     <Compile Include="Validators\Convenience\StringValidator.cs" />
     <Compile Include="Validators\FilePathValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />

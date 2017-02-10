@@ -17,7 +17,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 
         public bool IsValid(object value, bool isRequired)
         {
-            return IsValid(value) || !isRequired && value == null;
+            return IsValid(value)
+                || !isRequired && value == null;
         }
 
         public abstract string GetMessage();

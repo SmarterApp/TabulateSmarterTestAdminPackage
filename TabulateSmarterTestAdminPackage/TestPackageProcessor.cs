@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Xml.XPath;
 using System.Text.RegularExpressions;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Exceptions;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification;
 
 namespace TabulateSmarterTestAdminPackage
@@ -136,8 +135,6 @@ namespace TabulateSmarterTestAdminPackage
 
         public PackageType ExpectedPackageType { get; set; }
 
-        static readonly UTF8Encoding UTF8NoByteOrderMark = new UTF8Encoding(false);
-
         public void ProcessResult(Stream input)
         {
             var doc = new XPathDocument(input);
@@ -145,14 +142,10 @@ namespace TabulateSmarterTestAdminPackage
 
             // /testspecification
             var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode("/testspecification"), ExpectedPackageType);
-            try
-            {
-                testSpecificationProcessor.IsExpectedPackagePurpose();
-            } catch (IncorrectPackageTypeException exception)
-            {
-                // If the test package is not what we expect, we should short circuit and return without processing any further
-                Console.WriteLine(exception.Message);
-                return;
+
+            if(testSpecificationProcessor.Attributes.ValidateAttribute(testSpecificationProcessor.Navigator, "package").Any(x => !x.Value.IsValid)) { 
+                Console.WriteLine("Incorrect package type assigned");
+                return; // If the test package is not what we expect, we should short circuit and return without processing any further
             }
 
             // Get the test info

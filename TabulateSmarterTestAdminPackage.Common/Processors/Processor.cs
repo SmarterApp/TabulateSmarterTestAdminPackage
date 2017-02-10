@@ -7,10 +7,10 @@ namespace TabulateSmarterTestAdminPackage.Common.Processors
 {
     public abstract class Processor : IDisposable
     {
-        protected readonly XPathNavigator Navigator;
-        protected IList<Processor> Processors { get; } = new List<Processor>();
+        public readonly XPathNavigator Navigator;
+        public IList<Processor> Processors { get; } = new List<Processor>();
 
-        protected AttributeValidationDictionary Attributes { get; set; }
+        public AttributeValidationDictionary Attributes { get; set; }
 
         protected Processor(XPathNavigator navigator)
         {

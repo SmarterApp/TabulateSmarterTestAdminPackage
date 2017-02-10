@@ -70,7 +70,6 @@
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\Passage\PassageIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\Passage\PassageProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\PoolPropertyProcessor.cs" />
-    <Compile Include="Processors\Loader\TestSpecificationErrorProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\TestBlueprintProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\TestItemIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\PassageRefProcessor.cs" />
