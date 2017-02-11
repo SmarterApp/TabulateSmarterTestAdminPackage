@@ -12,5 +12,12 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators.Convenience
                 new MaxLengthValidator(ErrorSeverity.Degraded, length)
             };
         }
+
+        public static ValidatorCollection IsValidOptionalNonEmptyWithLength(int length)
+        {
+            var validators = IsValidNonEmptyWithLength(length);
+            validators.ForEach(x => x.ErrorSeverity = ErrorSeverity.Benign);
+            return validators;
+        }
     }
 }

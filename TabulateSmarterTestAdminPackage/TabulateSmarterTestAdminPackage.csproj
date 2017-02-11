@@ -55,7 +55,6 @@
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentPoolItemGroupProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentPoolProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\BlueprintElementProcessor.cs" />
-    <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\BlueprintIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\BPrefProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestForm\TestFormIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestForm\TestFormPartitionIdentifierProcessor.cs" />
@@ -63,11 +62,9 @@
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestForm\TestFormPartitionProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestForm\TestFormPoolPropertyProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestForm\TestFormProcessor.cs" />
-    <Compile Include="Processors\Specification\TestSpecification\IdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\ItemPoolProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\ItemScoredDimensionProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\ItemScoreParameterProcessor.cs" />
-    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\Passage\PassageIdentifierProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\Passage\PassageProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\PoolPropertyProcessor.cs" />
     <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\TestBlueprintProcessor.cs" />

@@ -1,38 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
+using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.Passage;
 using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool
 {
-    internal class ItemPoolProcessor : Processor
+    public class ItemPoolProcessor : Processor
     {
-        internal ItemPoolProcessor(XPathNavigator navigator) : base(navigator)
+        public ItemPoolProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            PassageProcessors = new List<PassageProcessor>();
-            var passages = navigator.Select("passage");
-            foreach (XPathNavigator passage in passages)
-            {
-                PassageProcessors.Add(new PassageProcessor(passage));
-            }
-
-            TestItemProcessors = new List<TestItemProcessor>();
-            var testItems = navigator.Select("testitem");
-            foreach (XPathNavigator testItem in testItems)
-            {
-                TestItemProcessors.Add(new TestItemProcessor(testItem));
-            }
-        }
-
-        private IList<PassageProcessor> PassageProcessors { get; }
-        private IList<TestItemProcessor> TestItemProcessors { get; }
-
-        public override bool Process()
-        {
-            return PassageProcessors.All(x => x.Process())
-                   && TestItemProcessors.All(x => x.Process());
+            Navigator.GenerateList("passage").ForEach(x => Processors.Add(new PassageProcessor(x, packageType)));
+            Navigator.GenerateList("testitem").ForEach(x => Processors.Add(new TestItemProcessor(x, packageType)));
         }
     }
 }

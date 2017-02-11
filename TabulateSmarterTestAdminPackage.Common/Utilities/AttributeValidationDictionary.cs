@@ -17,7 +17,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
                     new ValidatedAttribute
                     {
                         Name = x.Key,
-                        IsValid = x.Value.IsValid(navigator.Eval(XPathExpression.Compile($"@{x.Key}"))),
+                        IsValid = x.Value.IsValid(navigator.Eval(XPathExpression.Compile($"@{x.Key}"))
+                        , x.Value.ErrorSeverity != ErrorSeverity.Benign), // If it's benign, it's an optional field
                         Value = navigator.Eval(XPathExpression.Compile($"@{x.Key}")),
                         Validator = x.Value
                     }).ToDictionary(x => x.Name);

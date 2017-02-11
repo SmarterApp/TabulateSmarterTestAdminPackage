@@ -5,9 +5,9 @@ using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Common.Processors
 {
-    public class PropertyProcessor : Processor
+    public class IdentifierProcessor : Processor
     {
-        public PropertyProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
+        public IdentifierProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
             Attributes = new AttributeValidationDictionary
             {
@@ -15,7 +15,10 @@ namespace TabulateSmarterTestAdminPackage.Common.Processors
                     "name", StringValidator.IsValidNonEmptyWithLength(200)
                 },
                 {
-                    "value", StringValidator.IsValidNonEmptyWithLength(200)
+                    "version", IntValidator.IsValidPositiveNonEmptyWithLength(10)
+                },
+                {
+                    "uniqueid", StringValidator.IsValidNonEmptyWithLength(250)
                 },
                 {
                     "label", StringValidator.IsValidNonEmptyWithLength(200)

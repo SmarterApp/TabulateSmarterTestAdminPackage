@@ -3,62 +3,28 @@ using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
-    internal class ItemScoreParameterProcessor : Processor
+    public class ItemScoreParameterProcessor : Processor
     {
-        private static readonly XPathExpression sXp_MeasurementParameter =
-            XPathExpression.Compile("@measurementparameter");
-
-        private static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
-
-        internal ItemScoreParameterProcessor(XPathNavigator navigator) : base(navigator) {}
-
-        private string MeasurementParameter { get; set; }
-        private string Value { get; set; }
-
-        public override bool Process()
+        public ItemScoreParameterProcessor(XPathNavigator navigator, PackageType packageType)
+            : base(navigator, packageType)
         {
-            return IsValidMeasurementParameter()
-                   && IsValidValue();
-        }
-
-        // TODO: enum
-        internal bool IsValidMeasurementParameter()
-        {
-            var validators = new ValidatorCollection
+            Attributes = new AttributeValidationDictionary
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 50)
+                {
+                    "measurementparameter", StringValidator.IsValidNonEmptyWithLength(50)
+                },
+                {
+                    "value", new ValidatorCollection
+                    {
+                        new RequiredDecimalValidator(ErrorSeverity.Degraded),
+                        new MaxLengthValidator(ErrorSeverity.Degraded, 30)
+                    }
+                }
             };
-            MeasurementParameter = Navigator.Eval(sXp_MeasurementParameter);
-            if (validators.IsValid(MeasurementParameter))
-            {
-                return true;
-            }
-
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_MeasurementParameter.Expression,
-                validators.GetMessage());
-            return false;
-        }
-
-        internal bool IsValidValue()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredDecimalValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 30)
-            };
-            Value = Navigator.Eval(sXp_Value);
-            if (validators.IsValid(Value))
-            {
-                return true;
-            }
-
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Value.Expression,
-                validators.GetMessage());
-            return false;
         }
     }
 }

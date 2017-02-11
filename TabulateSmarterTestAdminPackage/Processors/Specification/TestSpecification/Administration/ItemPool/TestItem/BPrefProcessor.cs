@@ -2,30 +2,29 @@
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
-    internal class BPrefProcessor : Processor
+    public class BPrefProcessor : Processor
     {
-        internal BPrefProcessor(XPathNavigator navigator) : base(navigator) {}
+        public BPrefProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType) {}
 
-        private string BPref { get; set; }
-
-        public override bool Process()
+        // This processor is a special case because the value is in the element instead of an attribute
+        public new bool Process()
         {
-            return IsValidBPref();
-        }
+            var validators = StringValidator.IsValidNonEmptyWithLength(150);
+            var bpref = Navigator.Value;
 
-        internal bool IsValidBPref()
-        {
-            var validators = new ValidatorCollection
+            ValidatedAttributes.Add("bpref", new ValidatedAttribute
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 150)
-            };
-            BPref = Navigator.Value;
-            if (validators.IsValid(BPref))
+                IsValid = validators.IsValid(bpref),
+                Name = "bpref",
+                Value = Navigator.Value,
+                Validator = validators
+            });
+
+            if (ValidatedAttributes["bpref"].IsValid)
             {
                 return true;
             }

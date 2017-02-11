@@ -40,6 +40,7 @@
     <Compile Include="Enums\ItemFieldNames.cs" />
     <Compile Include="Enums\PackageType.cs" />
     <Compile Include="Enums\StimFieldNames.cs" />
+    <Compile Include="Processors\IdentifierProcessor.cs" />
     <Compile Include="Processors\Processor.cs" />
     <Compile Include="Processors\PropertyProcessor.cs" />
     <Compile Include="Utilities\ReportingUtility.cs" />

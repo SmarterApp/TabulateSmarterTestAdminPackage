@@ -2,31 +2,29 @@
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
-    internal class PassageRefProcessor : Processor
+    public class PassageRefProcessor : Processor
     {
-        internal PassageRefProcessor(XPathNavigator navigator) : base(navigator) {}
+        public PassageRefProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType) {}
 
-        private string PassageRef { get; set; }
-
-        public override bool Process()
+        // This processor is a special case because the value is in the element instead of an attribute
+        public new bool Process()
         {
-            return IsValidPassageRef();
-        }
+            var validators = StringValidator.IsValidOptionalNonEmptyWithLength(100);
+            var passageref = Navigator.Value;
 
-        // This is not required, but if the element is there, it should have a value
-        internal bool IsValidPassageRef()
-        {
-            var validators = new ValidatorCollection
+            ValidatedAttributes.Add("passageref", new ValidatedAttribute
             {
-                new RequiredStringValidator(ErrorSeverity.Benign),
-                new MaxLengthValidator(ErrorSeverity.Benign, 100)
-            };
-            PassageRef = Navigator.Value;
-            if (validators.IsValid(PassageRef))
+                IsValid = validators.IsValid(passageref),
+                Name = "passageref",
+                Value = Navigator.Value,
+                Validator = validators
+            });
+
+            if (ValidatedAttributes["passageref"].IsValid)
             {
                 return true;
             }

@@ -1,106 +1,43 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
     internal class TestItemProcessor : Processor
     {
-        private static readonly XPathExpression sXp_FileName = XPathExpression.Compile("@filename");
-        private static readonly XPathExpression sXp_ItemType = XPathExpression.Compile("@itemtype");
-
-        internal TestItemProcessor(XPathNavigator navigator) : base(navigator)
+        internal TestItemProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            TestItemIdentifierProcessor = new TestItemIdentifierProcessor(navigator.SelectSingleNode("identifier"));
-
-            BPrefProcessors = new List<BPrefProcessor>();
-            var bPrefs = navigator.Select("bpref");
-            foreach (XPathNavigator bPref in bPrefs)
+            Attributes = new AttributeValidationDictionary
             {
-                BPrefProcessors.Add(new BPrefProcessor(bPref));
-            }
-
-            TestItemPassageRefProcessors = new List<PassageRefProcessor>();
-            var testItemPassageRefProcessors = navigator.Select("passageref");
-            foreach (XPathNavigator testItemPassageRefProcessor in testItemPassageRefProcessors)
-            {
-                TestItemPassageRefProcessors.Add(new PassageRefProcessor(testItemPassageRefProcessor));
-            }
-
-            TestItemPoolPropertyProcessors = new List<TestItemPoolPropertyProcessor>();
-            var testItemPoolProperties = navigator.Select("poolproperty");
-            foreach (XPathNavigator testItemPoolProperty in testItemPoolProperties)
-            {
-                TestItemPoolPropertyProcessors.Add(new TestItemPoolPropertyProcessor(testItemPoolProperty));
-            }
-
-            ItemScoredDimensionProcessors = new List<ItemScoredDimensionProcessor>();
-            var testItemScoredDimensions = navigator.Select("itemscoreddimension");
-            foreach (XPathNavigator testItemScoredDimension in testItemScoredDimensions)
-            {
-                ItemScoredDimensionProcessors.Add(new ItemScoredDimensionProcessor(testItemScoredDimension));
-            }
-        }
-
-        private TestItemIdentifierProcessor TestItemIdentifierProcessor { get; }
-        private IList<BPrefProcessor> BPrefProcessors { get; }
-        private IList<PassageRefProcessor> TestItemPassageRefProcessors { get; }
-        private IList<TestItemPoolPropertyProcessor> TestItemPoolPropertyProcessors { get; }
-        private IList<ItemScoredDimensionProcessor> ItemScoredDimensionProcessors { get; }
-
-        private string FileName { get; set; }
-        private string ItemType { get; set; }
-
-        public override bool Process()
-        {
-            return IsValidFileName()
-                   && IsValidItemType()
-                   && TestItemIdentifierProcessor.Process()
-                   && BPrefProcessors.All(x => x.Process())
-                   && TestItemPassageRefProcessors.All(x => x.Process())
-                   && TestItemPoolPropertyProcessors.All(x => x.Process())
-                   && ItemScoredDimensionProcessors.All(x => x.Process());
-        }
-
-        internal bool IsValidFileName()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 200),
-                new FilePathValidator(ErrorSeverity.Degraded)
+                {
+                    "filename", StringValidator.IsValidNonEmptyWithLength(200)
+                        .AddAndReturn(new FilePathValidator(ErrorSeverity.Degraded))
+                },
+                {
+                    "itemtype", StringValidator.IsValidNonEmptyWithLength(50)
+                }
             };
-            FileName = Navigator.Eval(sXp_FileName);
-            if (validators.IsValid(FileName))
+            Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+            ReplaceAttributeValidation("identifier", new AttributeValidationDictionary
             {
-                return true;
-            }
+                {
+                    "uniqueid", StringValidator.IsValidNonEmptyWithLength(150)
+                },
+                {
+                    "name", StringValidator.IsValidOptionalNonEmptyWithLength(80)
+                }
+            });
+            RemoveAttributeValidation("identifier", "label");
 
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FileName.Expression,
-                validators.GetMessage());
-            return false;
-        }
-
-        internal bool IsValidItemType()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 50)
-            };
-            ItemType = Navigator.Eval(sXp_ItemType);
-            if (validators.IsValid(ItemType))
-            {
-                return true;
-            }
-
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ItemType.Expression,
-                validators.GetMessage());
-            return false;
+            Navigator.GenerateList("bpref").ForEach(x => Processors.Add(new BPrefProcessor(x, packageType)));
+            Navigator.GenerateList("passageref").ForEach(x => Processors.Add(new PassageRefProcessor(x, packageType)));
+            Navigator.GenerateList("testitempool").ForEach(x => Processors.Add(new TestItemProcessor(x, packageType)));
+            Navigator.GenerateList("itemscoreddimension")
+                .ForEach(x => Processors.Add(new ItemScoredDimensionProcessor(x, packageType)));
         }
     }
 }

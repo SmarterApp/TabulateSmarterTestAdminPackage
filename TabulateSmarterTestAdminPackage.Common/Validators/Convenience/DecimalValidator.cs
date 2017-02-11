@@ -23,5 +23,20 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators.Convenience
                 new MinDecimalValueValidator(ErrorSeverity.Degraded, "0")
             };
         }
+
+        public static ValidatorCollection IsValidOptionalNonEmptyWithLengthAndMinValue(int length, int minValue)
+        {
+            var validators =
+                IsValidNonEmptyWithLengthAndMinValue(length, minValue);
+            validators.ForEach(x => x.ErrorSeverity = ErrorSeverity.Benign);
+            return validators;
+        }
+
+        public static ValidatorCollection IsValidOptionalPositiveNonEmptyWithLength(int length)
+        {
+            var validators = IsValidPositiveNonEmptyWithLength(length);
+            validators.ForEach(x => x.ErrorSeverity = ErrorSeverity.Benign);
+            return validators;
+        }
     }
 }

@@ -3,43 +3,33 @@ using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.Passage
 {
-    internal class PassageProcessor : Processor
+    public class PassageProcessor : Processor
     {
-        internal static readonly XPathExpression sXp_FileName = XPathExpression.Compile("@filename");
-
-        internal PassageProcessor(XPathNavigator navigator) : base(navigator)
+        public PassageProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            PassageIdentifierProcessor = new PassageIdentifierProcessor(navigator.SelectSingleNode("identifier"));
-        }
-
-        private string FileName { get; set; }
-        private PassageIdentifierProcessor PassageIdentifierProcessor { get; }
-
-        public override bool Process()
-        {
-            return IsValidFileName()
-                   && PassageIdentifierProcessor.Process();
-        }
-
-        internal bool IsValidFileName()
-        {
-            var validators = new ValidatorCollection
+            Attributes = new AttributeValidationDictionary
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 50),
-                new FilePathValidator(ErrorSeverity.Degraded)
+                {
+                    "filename", StringValidator.IsValidNonEmptyWithLength(200)
+                    .AddAndReturn(new FilePathValidator(ErrorSeverity.Degraded))
+                }
             };
-            FileName = Navigator.Eval(sXp_FileName);
-            if (validators.IsValid(FileName))
+
+            Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+            ReplaceAttributeValidation("identifier", new AttributeValidationDictionary
             {
-                return true;
-            }
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FileName.Expression,
-                validators.GetMessage());
-            return false;
+                {
+                    "uniqueid", StringValidator.IsValidNonEmptyWithLength(100)
+                },
+                {
+                    "name", StringValidator.IsValidOptionalNonEmptyWithLength(100)
+                }
+            });
+            RemoveAttributeValidation("identifier", "label");
         }
     }
 }

@@ -2,104 +2,29 @@
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration
 {
     internal class PoolPropertyProcessor : Processor
     {
-        internal static readonly XPathExpression sXp_Property = XPathExpression.Compile("@property");
-        internal static readonly XPathExpression sXp_Value = XPathExpression.Compile("@value");
-        internal static readonly XPathExpression sXp_Label = XPathExpression.Compile("@label");
-        private static readonly XPathExpression sXp_ItemCount = XPathExpression.Compile("@itemcount");
-
-        internal PoolPropertyProcessor(XPathNavigator navigator) : base(navigator) {}
-
-        internal string Property { get; set; }
-        internal string Value { get; set; }
-        internal string Label { get; set; }
-        private string ItemCount { get; set; }
-
-        public override bool Process()
+        internal PoolPropertyProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            return IsValidProperty()
-                   && IsValidValue()
-                   && IsValidLabel()
-                   && IsValidItemCount();
-        }
-
-        internal bool IsValidProperty()
-        {
-            var validators = new ValidatorCollection
+            Attributes = new AttributeValidationDictionary
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 50)
+                {
+                    "property", StringValidator.IsValidNonEmptyWithLength(50)
+                },
+                {
+                    "value", StringValidator.IsValidNonEmptyWithLength(128)
+                },
+                {
+                    "label", StringValidator.IsValidNonEmptyWithLength(150)
+                },
+                {
+                    "itemcount", IntValidator.IsValidPositiveNonEmptyWithLength(10)
+                }
             };
-            Property = Navigator.Eval(sXp_Property);
-            if (validators.IsValid(Property))
-            {
-                return true;
-            }
-
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Property.Expression,
-                validators.GetMessage());
-            return false;
-        }
-
-        //TODO: Is there a defined restricted set here we could put into an enum?
-        internal bool IsValidValue()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 128)
-            };
-            Value = Navigator.Eval(sXp_Value);
-            if (validators.IsValid(Value))
-            {
-                return true;
-            }
-
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Value.Expression,
-                validators.GetMessage());
-            return false;
-        }
-
-        internal bool IsValidLabel()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 150)
-            };
-            Label = Navigator.Eval(sXp_Label);
-            if (validators.IsValid(Label))
-            {
-                return true;
-            }
-
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Label.Expression,
-                validators.GetMessage());
-            return false;
-        }
-
-        internal bool IsValidItemCount()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredIntValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 10),
-                new MinIntValueValidator(ErrorSeverity.Degraded, 0)
-            };
-            ItemCount = Navigator.Eval(sXp_ItemCount);
-            if (validators.IsValid(ItemCount))
-            {
-                return true;
-            }
-
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ItemCount.Expression,
-                validators.GetMessage());
-            return false;
         }
     }
 }
