@@ -5,15 +5,16 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class StringMatchValidator : Validator
     {
-        public StringMatchValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
+        public StringMatchValidator(ErrorSeverity errorSeverity, object parameter = null)
+            : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {
             return value is string
                    && Parameter is string
                    && string.Equals(
-                       (string)value, 
-                       (string)Parameter, 
+                       (string) value,
+                       (string) Parameter,
                        StringComparison.OrdinalIgnoreCase);
         }
 

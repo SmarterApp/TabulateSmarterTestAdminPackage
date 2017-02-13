@@ -62,14 +62,15 @@ namespace TabulateSmarterTestAdminPackage.Tests {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///
         ///&lt;testspecification purpose=&quot;administration&quot; publisher=&quot;SBAC_PT&quot; publishdate=&quot;Aug 19 2015  3:44PM&quot; version=&quot;1.0&quot;&gt;
-        ///  &lt;identifier uniqueid=&quot;(SBAC_PT)SBAC-IRP-CAT-ELA-3-Summer-2015-2016&quot; name=&quot;SBAC-IRP-CAT-ELA-3&quot; label=&quot;Grade 3 ELA&quot; version=&quot;8185&quot; /&gt;
+        ///  &lt;identifier uniqueid=&quot;(SBAC_PT)SBAC-IRP-CAT-ELA-3-Summer-2015-2016&quot; name=&quot;SBAC-IRP-CAT-ELA-3&quot; label=&quot;Grade 3 ELA&quot;
+        ///              version=&quot;8185&quot; /&gt;
         ///  &lt;property name=&quot;subject&quot; value=&quot;ELA&quot; label=&quot;ELA&quot; /&gt;
         ///  &lt;property name=&quot;grade&quot; value=&quot;3&quot; label=&quot;grade 3&quot; /&gt;
         ///  &lt;property name=&quot;type&quot; value=&quot;summative&quot; label=&quot;summative&quot; /&gt;
         ///  &lt;administration&gt;
-        ///    &lt;testblueprint&gt;
-        ///      &lt;b [rest of string was truncated]&quot;;.
+        ///    &lt;testblu [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string _SBAC_PT_SBAC_IRP_CAT_ELA_3_Summer_2015_2016 {
             get {

@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+﻿using TabulateSmarterTestAdminPackage.Common.Enums;
 
 namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 {
     public class ErrorHandling
     {
-        public static void ReportError(CsvWriter writer, string errorFileName, string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
+        public static void ReportError(CsvWriter writer, string errorFileName, string testName, ErrorSeverity severity,
+            string itemId, string message, params object[] args)
         {
             if (writer == null)
             {
@@ -15,7 +15,6 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 
             var outMessage = string.Format(message, args);
             writer.Write(new[] {testName, severity.ToString(), itemId, outMessage});
-            Debug.Fail(outMessage);
         }
     }
 }

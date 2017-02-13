@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TabulateSmarterTestAdminPackage.Common</RootNamespace>
     <AssemblyName>TabulateSmarterTestAdminPackage.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -38,13 +38,26 @@
   <ItemGroup>
     <Compile Include="Enums\ErrorSeverity.cs" />
     <Compile Include="Enums\ItemFieldNames.cs" />
+    <Compile Include="Enums\PackageType.cs" />
     <Compile Include="Enums\StimFieldNames.cs" />
-    <Compile Include="Exceptions\IncorrectPackageTypeException.cs" />
+    <Compile Include="Processors\IdentifierProcessor.cs" />
+    <Compile Include="Processors\Processor.cs" />
+    <Compile Include="Processors\PropertyProcessor.cs" />
+    <Compile Include="Utilities\ReportingUtility.cs" />
+    <Compile Include="Utilities\AttributeValidationDictionary.cs" />
+    <Compile Include="Utilities\ValidatedAttribute.cs" />
+    <Compile Include="Utilities\XPathNavigatorHelper.cs" />
+    <Compile Include="Validators\Convenience\BooleanValidator.cs" />
+    <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
+    <Compile Include="Validators\Convenience\DecimalValidator.cs" />
+    <Compile Include="Validators\Convenience\IntValidator.cs" />
+    <Compile Include="Validators\Convenience\StringValidator.cs" />
     <Compile Include="Validators\FilePathValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Validators\MaxLengthValidator.cs" />
     <Compile Include="Validators\MinDecimalValueValidator.cs" />
     <Compile Include="Validators\MinIntValueValidator.cs" />
+    <Compile Include="Validators\RequiredBooleanValidator.cs" />
     <Compile Include="Validators\RequiredDateTimeValidator.cs" />
     <Compile Include="Validators\RequiredDecimalValidator.cs" />
     <Compile Include="Validators\RequiredIntValidator.cs" />
@@ -56,9 +69,7 @@
     <Compile Include="Tabulation\CsvWriter.cs" />
     <Compile Include="Tabulation\ErrorHandling.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Processors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

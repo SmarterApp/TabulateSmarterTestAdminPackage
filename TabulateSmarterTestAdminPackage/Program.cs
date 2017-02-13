@@ -1,21 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
+using TabulateSmarterTestAdminPackage.Common.Enums;
 
 namespace TabulateSmarterTestAdminPackage
 {
-    public enum PackageType : int
-    {
-        Registration,
-        Administration,
-        Scoring,
-        Reporting
-    }
-
     class Program
     {
 

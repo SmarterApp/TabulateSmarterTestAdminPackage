@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TabulateSmarterTestAdminPackage</RootNamespace>
     <AssemblyName>TabulateSmarterTestAdminPackage</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,30 +41,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
-    <Compile Include="Processors\Processor.cs" />
-    <Compile Include="Processors\Specification\AdministrationProcessor.cs" />
-    <Compile Include="Processors\Specification\AdminSegmentProcessor.cs" />
-    <Compile Include="Processors\Specification\BlueprintElementProcessor.cs" />
-    <Compile Include="Processors\Specification\BlueprintIdentifierProcessor.cs" />
-    <Compile Include="Processors\Specification\BPrefProcessor.cs" />
-    <Compile Include="Processors\Specification\IdentifierProcessor.cs" />
-    <Compile Include="Processors\Specification\ItemPoolProcessor.cs" />
-    <Compile Include="Processors\Specification\ItemScoredDimensionProcessor.cs" />
-    <Compile Include="Processors\Specification\ItemScoreParameterProcessor.cs" />
-    <Compile Include="Processors\Specification\PassageIdentifierProcessor.cs" />
-    <Compile Include="Processors\Specification\PassageProcessor.cs" />
-    <Compile Include="Processors\Specification\PoolPropertyProcessor.cs" />
-    <Compile Include="Processors\Specification\PropertyProcessor.cs" />
-    <Compile Include="Processors\Loader\TestSpecificationErrorProcessor.cs" />
-    <Compile Include="Processors\Specification\TestBlueprintProcessor.cs" />
-    <Compile Include="Processors\Specification\TestItemIdentifierProcessor.cs" />
-    <Compile Include="Processors\Specification\TestItemPoolPropertyProcessor.cs" />
-    <Compile Include="Processors\Specification\TestItemProcessor.cs" />
-    <Compile Include="Processors\Specification\TestSpecificationProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdministrationProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\AdminSegmentProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectionParameterProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemSelectorProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentBlueprintElementProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentBlueprintProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentFormProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\GroupItemProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\ItemGroupProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\AdminSegment\SegmentPoolProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\BlueprintElementProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\BpRefProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\TestForm\TestFormPartitionProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\TestForm\TestFormProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\ItemPoolProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\ItemScoredDimensionProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\ItemScoreParameterProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\Passage\PassageProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\PoolPropertyProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\TestBlueprint\TestBlueprintProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\PassageRefProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\Administration\ItemPool\TestItem\TestItemProcessor.cs" />
+    <Compile Include="Processors\Specification\TestSpecification\TestSpecificationProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestPackageProcessor.cs" />
-    <Compile Include="Utility\AdminPackageUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

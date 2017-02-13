@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using System.Xml.XPath;
 using NUnit.Framework;
-using TabulateSmarterTestAdminPackage.Processors.Specification;
-using TabulateSmarterTestAdminPackage.Utility;
+using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.Processors;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 
 namespace TabulateSmarterTestAdminPackage.Tests.Processors
 {
@@ -12,41 +13,27 @@ namespace TabulateSmarterTestAdminPackage.Tests.Processors
         [SetUp]
         public void Setup()
         {
-            AdminPackageUtility.SetFileName("UnitTests");
-            AdminPackageUtility.TestName = "UnitTests";
-            if (File.Exists(AdminPackageUtility.ErrorFileName))
+            ReportingUtility.SetFileName("UnitTests");
+            ReportingUtility.TestName = "UnitTests";
+            if (File.Exists(ReportingUtility.ErrorFileName))
             {
-                File.Delete(AdminPackageUtility.ErrorFileName);
+                File.Delete(ReportingUtility.ErrorFileName);
             }
         }
 
         public IdentifierProcessorTests IdentifierProcessor;
 
         [Test]
-        public void IsValidUniqueIdTest()
-        {
-            // Arrange
-            var doc = new XPathDocument(new StringReader(Resource._SBAC_PT_SBAC_IRP_CAT_ELA_3_Summer_2015_2016));
-            var subject = new IdentifierProcessor(doc.CreateNavigator().SelectSingleNode("/testspecification/identifier"));
-
-            // Act
-            var result = subject.IsValidUniqueId();
-            AdminPackageUtility.Dispose(true);
-
-            // Assert
-            Assert.IsTrue(result);
-        }
-
-        [Test]
         public void IsValidVersionTest()
         {
             // Arrange
             var doc = new XPathDocument(new StringReader(Resource._SBAC_PT_SBAC_IRP_CAT_ELA_3_Summer_2015_2016));
-            var subject = new IdentifierProcessor(doc.CreateNavigator().SelectSingleNode("/testspecification/identifier"));
+            var subject =
+                new IdentifierProcessor(doc.CreateNavigator().SelectSingleNode("/testspecification/identifier"), PackageType.Administration);
 
             // Act
-            var result = subject.IsValidVersion();
-            AdminPackageUtility.Dispose(true);
+            var result = subject.Process();
+            ReportingUtility.Dispose(true);
 
             // Assert
             Assert.IsTrue(result);

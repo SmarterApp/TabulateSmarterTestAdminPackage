@@ -4,7 +4,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
     public class RequiredDecimalValidator : Validator
     {
-        public RequiredDecimalValidator(ErrorSeverity errorSeverity, object parameter = null) : base(errorSeverity, parameter) {}
+        public RequiredDecimalValidator(ErrorSeverity errorSeverity, object parameter = null)
+            : base(errorSeverity, parameter) {}
 
         public override bool IsValid(object value)
         {
