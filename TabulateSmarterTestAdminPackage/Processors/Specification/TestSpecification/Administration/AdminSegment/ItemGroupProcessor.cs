@@ -6,30 +6,33 @@ using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    public class ItemSelectorProcessor : Processor
+    public class ItemGroupProcessor : Processor
     {
-        public ItemSelectorProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
+        public ItemGroupProcessor(XPathNavigator navigator, PackageType packageType)
+            : base(navigator, packageType)
         {
             Attributes = new AttributeValidationDictionary
             {
                 {
-                    "type", StringValidator.IsValidNonEmptyWithLength(100)
+                    "maxitems", StringValidator.IsValidNonEmptyWithLength(10)
+                },
+                {
+                    "maxresponses", StringValidator.IsValidNonEmptyWithLength(10)
                 }
             };
 
-            Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+            Navigator.GenerateList("groupitem")
+                .ForEach(x => Processors.Add(new GroupItemProcessor(x, packageType)));
+
+            Navigator.GenerateList("identifier")
+                .ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
             ReplaceAttributeValidation("identifier", new AttributeValidationDictionary
             {
                 {
                     "uniqueid", StringValidator.IsValidNonEmptyWithLength(200)
-                },
-                {
-                    "version", DecimalValidator.IsValidPositiveNonEmptyWithLength(20)
                 }
             });
-
-            Navigator.GenerateList("itemselectionparameter")
-                .ForEach(x => Processors.Add(new ItemSelectionParameterProcessor(x, packageType)));
+            RemoveAttributeValidation("identifier", "label");
         }
     }
 }

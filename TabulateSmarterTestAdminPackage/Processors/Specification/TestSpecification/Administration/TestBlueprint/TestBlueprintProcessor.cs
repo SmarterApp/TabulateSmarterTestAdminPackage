@@ -5,11 +5,12 @@ using TabulateSmarterTestAdminPackage.Common.Utilities;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.TestBlueprint
 {
-    internal class TestBlueprintProcessor : Processor
+    public class TestBlueprintProcessor : Processor
     {
-        internal TestBlueprintProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
+        public TestBlueprintProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            Navigator.GenerateList("bpelement").ForEach(x => Processors.Add(new BlueprintElementProcessor(x, packageType)));
+            Navigator.GenerateList("bpelement")
+                .ForEach(x => Processors.Add(new BlueprintElementProcessor(x, packageType)));
         }
     }
 }

@@ -1,32 +1,38 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.XPath;
+using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
+using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment;
+using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.TestForm
 {
-    internal class TestFormPartitionProcessor : Processor
+    public class TestFormPartitionProcessor : Processor
     {
-        internal TestFormPartitionProcessor(XPathNavigator navigator) : base(navigator)
+        public TestFormPartitionProcessor(XPathNavigator navigator, PackageType packageType)
+            : base(navigator, packageType)
         {
-            TestFormPartitionIdentifierProcessor =
-                new TestFormPartitionIdentifierProcessor(navigator.SelectSingleNode("identifier"));
-
-            TestFormPartitionItemGroupProcessors = new List<TestFormPartitionItemGroupProcessor>();
-            var itemGroups = navigator.Select("itemgroup");
-            foreach (XPathNavigator itemGroup in itemGroups)
+            Navigator.GenerateList("identifier")
+                .ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+            ReplaceAttributeValidation("identifier", new AttributeValidationDictionary
             {
-                TestFormPartitionItemGroupProcessors.Add(new TestFormPartitionItemGroupProcessor(itemGroup));
-            }
-        }
+                {
+                    "uniqueid", StringValidator.IsValidNonEmptyWithLength(100)
+                }
+            });
+            RemoveAttributeValidation("identifier", "label");
 
-        private TestFormPartitionIdentifierProcessor TestFormPartitionIdentifierProcessor { get; }
-        private IList<TestFormPartitionItemGroupProcessor> TestFormPartitionItemGroupProcessors { get; }
+            Navigator.GenerateList("itemgroup")
+                .ForEach(x => Processors.Add(new ItemGroupProcessor(x, packageType)));
 
-        public override bool Process()
-        {
-            return TestFormPartitionIdentifierProcessor.Process()
-                   && TestFormPartitionItemGroupProcessors.All(x => x.Process());
+            Processors.Where(x => x.Navigator.Name.Equals("itemgroup")).ToList()
+                .ForEach(x => x.Attributes.Add("formposition", IntValidator.IsValidNonEmptyWithLengthAndMinValue(10, 1)));
+
+            Processors.Where(x => x.Navigator.Name.Equals("itemgroup")).ToList()
+                .ForEach(x => x.Navigator.GenerateList("passageref")
+                    .ForEach(y => x.Processors.Add(new PassageRefProcessor(y, packageType))));
         }
     }
 }

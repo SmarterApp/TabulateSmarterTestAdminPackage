@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Xml.XPath;
 using NUnit.Framework;
+using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification;
 
 namespace TabulateSmarterTestAdminPackage.Tests.Processors
 {
@@ -24,31 +24,15 @@ namespace TabulateSmarterTestAdminPackage.Tests.Processors
         public IdentifierProcessorTests IdentifierProcessor;
 
         [Test]
-        public void IsValidUniqueIdTest()
-        {
-            // Arrange
-            var doc = new XPathDocument(new StringReader(Resource._SBAC_PT_SBAC_IRP_CAT_ELA_3_Summer_2015_2016));
-            var subject =
-                new IdentifierProcessor(doc.CreateNavigator().SelectSingleNode("/testspecification/identifier"));
-
-            // Act
-            var result = subject.IsValidUniqueId();
-            ReportingUtility.Dispose(true);
-
-            // Assert
-            Assert.IsTrue(result);
-        }
-
-        [Test]
         public void IsValidVersionTest()
         {
             // Arrange
             var doc = new XPathDocument(new StringReader(Resource._SBAC_PT_SBAC_IRP_CAT_ELA_3_Summer_2015_2016));
             var subject =
-                new IdentifierProcessor(doc.CreateNavigator().SelectSingleNode("/testspecification/identifier"));
+                new IdentifierProcessor(doc.CreateNavigator().SelectSingleNode("/testspecification/identifier"), PackageType.Administration);
 
             // Act
-            var result = subject.IsValidVersion();
+            var result = subject.Process();
             ReportingUtility.Dispose(true);
 
             // Assert

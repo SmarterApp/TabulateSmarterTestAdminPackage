@@ -10,7 +10,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 {
     public class TestSpecificationProcessor : Processor
     {
-        public TestSpecificationProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
+        public TestSpecificationProcessor(XPathNavigator navigator, PackageType packageType)
+            : base(navigator, packageType)
         {
             Attributes = new AttributeValidationDictionary
             {
@@ -32,7 +33,8 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 
             Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
             Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
-            Navigator.GenerateList("administration").ForEach(x => Processors.Add(new AdministrationProcessor(x, packageType)));
+            Navigator.GenerateList("administration")
+                .ForEach(x => Processors.Add(new AdministrationProcessor(x, packageType)));
         }
     }
 }

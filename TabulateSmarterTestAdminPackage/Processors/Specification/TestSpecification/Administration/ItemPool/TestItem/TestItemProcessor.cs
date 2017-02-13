@@ -7,9 +7,9 @@ using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
-    internal class TestItemProcessor : Processor
+    public class TestItemProcessor : Processor
     {
-        internal TestItemProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
+        public TestItemProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
             Attributes = new AttributeValidationDictionary
             {
@@ -35,7 +35,11 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
 
             Navigator.GenerateList("bpref").ForEach(x => Processors.Add(new BPrefProcessor(x, packageType)));
             Navigator.GenerateList("passageref").ForEach(x => Processors.Add(new PassageRefProcessor(x, packageType)));
-            Navigator.GenerateList("testitempool").ForEach(x => Processors.Add(new TestItemProcessor(x, packageType)));
+
+            Navigator.GenerateList("poolproperty")
+                .ForEach(x => Processors.Add(new PoolPropertyProcessor(x, packageType)));
+            RemoveAttributeValidation("poolproperty", "itemcount");
+
             Navigator.GenerateList("itemscoreddimension")
                 .ForEach(x => Processors.Add(new ItemScoredDimensionProcessor(x, packageType)));
         }

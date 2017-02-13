@@ -8,18 +8,15 @@ using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestScoringPackage.Processors
 {
-    internal class TestSpecificationProcessor : Processor
+    public class TestSpecificationProcessor : Processor
     {
-        internal TestSpecificationProcessor(XPathNavigator navigator, PackageType expectedPackageType) : base(navigator)
+        public TestSpecificationProcessor(XPathNavigator navigator, PackageType packageType)
+            : base(navigator, packageType)
         {
-            ExpectedPackageType = expectedPackageType;
-
             Attributes = new AttributeValidationDictionary
             {
                 {
-                    "purpose", StringValidator.IsValidNonEmptyWithLength(100).AddAndReturn(
-                        new StringMatchValidator(ErrorSeverity.Degraded, ExpectedPackageType.ToString())
-                    )
+                    "purpose", StringValidator.IsValidNonEmptyWithLength(100)
                 },
                 {
                     "publisher", StringValidator.IsValidNonEmptyWithLength(255).AddAndReturn(
@@ -35,34 +32,9 @@ namespace TabulateSmarterTestScoringPackage.Processors
                 }
             };
 
-            Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x)));
-            Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new PropertyProcessor(x)));
-            Navigator.GenerateList("scoring").ForEach(x => Processors.Add(new PropertyProcessor(x)));
-        }
-
-        private string Purpose { get; set; }
-        public string Publisher { get; set; }
-        public string PublishDate { get; set; }
-        public string Version { get; set; }
-        public PackageType ExpectedPackageType { get; set; }
-
-        public override bool Process()
-        {
-            var validationResults = Attributes.Validate(Navigator);
-            Purpose = validationResults["purpose"].Value;
-            Publisher = validationResults["publisher"].Value;
-            PublishDate = validationResults["publishdate"].Value;
-            Version = validationResults["version"].Value;
-            validationResults
-                .Where(x => !x.Value.IsValid)
-                .ToList()
-                .ForEach(x =>
-                    ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, x.Key,
-                        x.Value.Validator.GetMessage()));
-
-            var badProcessors = Processors.Count(x => !x.Process());
-            return validationResults.Values.Count(x => !x.IsValid) == 0
-                   && badProcessors == 0;
+            Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
+            Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
+            Navigator.GenerateList("scoring").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
         }
     }
 }

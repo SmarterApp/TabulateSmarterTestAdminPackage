@@ -1,27 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
+using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    internal class SegmentPoolProcessor : Processor
+    public class SegmentPoolProcessor : Processor
     {
-        internal SegmentPoolProcessor(XPathNavigator navigator) : base(navigator)
+        public SegmentPoolProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            SegmentPoolItemGroupProcessors = new List<SegmentPoolItemGroupProcessor>();
-            var itemGroups = navigator.Select("itemgroup");
-            foreach (XPathNavigator itemGroup in itemGroups)
-            {
-                SegmentPoolItemGroupProcessors.Add(new SegmentPoolItemGroupProcessor(itemGroup));
-            }
-        }
-
-        private IList<SegmentPoolItemGroupProcessor> SegmentPoolItemGroupProcessors { get; }
-
-        public override bool Process()
-        {
-            return SegmentPoolItemGroupProcessors.All(x => x.Process());
+            Navigator.GenerateList("itemgroup")
+                .ForEach(x => Processors.Add(new ItemGroupProcessor(x, packageType)));
         }
     }
 }

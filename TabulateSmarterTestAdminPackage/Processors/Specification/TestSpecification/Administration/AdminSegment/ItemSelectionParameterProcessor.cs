@@ -1,52 +1,34 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    internal class ItemSelectionParameterProcessor : Processor
+    public class ItemSelectionParameterProcessor : Processor
     {
-        private static readonly XPathExpression sXp_BpElementId = XPathExpression.Compile("@bpelementid");
-
-        internal ItemSelectionParameterProcessor(XPathNavigator navigator) : base(navigator)
+        public ItemSelectionParameterProcessor(XPathNavigator navigator, PackageType packageType)
+            : base(navigator, packageType)
         {
-            ItemSelectionParameterPropertyProcessors = new List<ItemSelectionParameterPropertyProcessor>();
-            var properties = navigator.Select("property");
-            foreach (XPathNavigator property in properties)
+            Attributes = new AttributeValidationDictionary
             {
-                ItemSelectionParameterPropertyProcessors.Add(new ItemSelectionParameterPropertyProcessor(property));
-            }
-        }
-
-        private string BpElementId { get; set; }
-
-        private IList<ItemSelectionParameterPropertyProcessor> ItemSelectionParameterPropertyProcessors { get; }
-
-        public override bool Process()
-        {
-            return IsValidBpElementId()
-                   && ItemSelectionParameterPropertyProcessors.All(x => x.Process());
-        }
-
-        internal bool IsValidBpElementId()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 150)
+                {
+                    "bpelementid", StringValidator.IsValidNonEmptyWithLength(150)
+                }
             };
-            BpElementId = Navigator.Eval(sXp_BpElementId);
-            if (validators.IsValid(BpElementId))
+
+            Navigator.GenerateList("property")
+                .ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
+            ReplaceAttributeValidation("property", new AttributeValidationDictionary
             {
-                return true;
-            }
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_BpElementId.Expression,
-                validators.GetMessage());
-            return false;
+                {
+                    "value", StringValidator.IsValidNonEmptyWithLength(100)
+                },
+                {
+                    "label", StringValidator.IsValidNonEmptyWithLength(500)
+                }
+            });
         }
     }
 }

@@ -47,6 +47,7 @@
     <Compile Include="Utilities\AttributeValidationDictionary.cs" />
     <Compile Include="Utilities\ValidatedAttribute.cs" />
     <Compile Include="Utilities\XPathNavigatorHelper.cs" />
+    <Compile Include="Validators\Convenience\BooleanValidator.cs" />
     <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
     <Compile Include="Validators\Convenience\DecimalValidator.cs" />
     <Compile Include="Validators\Convenience\IntValidator.cs" />

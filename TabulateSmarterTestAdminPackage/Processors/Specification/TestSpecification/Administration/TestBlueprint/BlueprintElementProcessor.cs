@@ -6,9 +6,9 @@ using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.TestBlueprint
 {
-    internal class BlueprintElementProcessor : Processor
+    public class BlueprintElementProcessor : Processor
     {
-        internal BlueprintElementProcessor(XPathNavigator navigator, PackageType packageType)
+        public BlueprintElementProcessor(XPathNavigator navigator, PackageType packageType)
             : base(navigator, packageType)
         {
             Attributes = new AttributeValidationDictionary

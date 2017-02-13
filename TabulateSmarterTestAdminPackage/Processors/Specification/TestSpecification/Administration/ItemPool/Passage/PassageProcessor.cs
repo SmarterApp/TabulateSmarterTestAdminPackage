@@ -15,7 +15,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             {
                 {
                     "filename", StringValidator.IsValidNonEmptyWithLength(200)
-                    .AddAndReturn(new FilePathValidator(ErrorSeverity.Degraded))
+                        .AddAndReturn(new FilePathValidator(ErrorSeverity.Degraded))
                 }
             };
 

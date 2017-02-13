@@ -2,38 +2,20 @@
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    internal class SegmentFormProcessor : Processor
+    public class SegmentFormProcessor : Processor
     {
-        internal static readonly XPathExpression sXp_FormPartitionId = XPathExpression.Compile("@formpartitionid");
-
-        internal SegmentFormProcessor(XPathNavigator navigator) : base(navigator) {}
-
-        private string FormPartitionId { get; set; }
-
-        public override bool Process()
+        public SegmentFormProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            return IsValidFormPartitionId();
-        }
-
-        internal bool IsValidFormPartitionId()
-        {
-            var validators = new ValidatorCollection
+            Attributes = new AttributeValidationDictionary
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 100)
+                {
+                    "formpartitionid", StringValidator.IsValidNonEmptyWithLength(100)
+                }
             };
-            FormPartitionId = Navigator.Eval(sXp_FormPartitionId);
-            if (validators.IsValid(FormPartitionId))
-            {
-                return true;
-            }
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_FormPartitionId.Expression,
-                validators.GetMessage());
-            return false;
         }
     }
 }

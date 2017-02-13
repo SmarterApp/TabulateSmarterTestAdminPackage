@@ -1,76 +1,52 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.TestForm
 {
-    internal class TestFormProcessor : Processor
+    public class TestFormProcessor : Processor
     {
-        private static readonly XPathExpression sXp_Length = XPathExpression.Compile("@length");
-
-        internal TestFormProcessor(XPathNavigator navigator) : base(navigator)
+        public TestFormProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            TestFormIdentifierProcessor = new TestFormIdentifierProcessor(navigator.SelectSingleNode("identifier"));
-
-            TestFormPropertyProcessors = new List<PropertyProcessor>();
-            var properties = navigator.Select("property");
-            foreach (XPathNavigator property in properties)
+            Attributes = new AttributeValidationDictionary
             {
-                TestFormPropertyProcessors.Add(new PropertyProcessor(property));
-            }
-
-            TestFormPoolPropertyProcessors = new List<TestFormPoolPropertyProcessor>();
-            var poolProperties = navigator.Select("poolproperty");
-            foreach (XPathNavigator poolProperty in poolProperties)
-            {
-                TestFormPoolPropertyProcessors.Add(new TestFormPoolPropertyProcessor(poolProperty));
-            }
-
-            TestFormPartitionProcessors = new List<TestFormPartitionProcessor>();
-            var formPartitions = navigator.Select("formpartition");
-            foreach (XPathNavigator formartition in formPartitions)
-            {
-                TestFormPartitionProcessors.Add(new TestFormPartitionProcessor(formartition));
-            }
-        }
-
-        private TestFormIdentifierProcessor TestFormIdentifierProcessor { get; }
-        private IList<PropertyProcessor> TestFormPropertyProcessors { get; }
-        private IList<TestFormPoolPropertyProcessor> TestFormPoolPropertyProcessors { get; }
-        private IList<TestFormPartitionProcessor> TestFormPartitionProcessors { get; }
-
-        private string Length { get; set; }
-
-        public override bool Process()
-        {
-            return IsValidLength()
-                   && TestFormIdentifierProcessor.Process()
-                   && TestFormPropertyProcessors.All(x => x.Process())
-                   && TestFormPoolPropertyProcessors.All(x => x.Process())
-                   && TestFormPartitionProcessors.All(x => x.Process());
-        }
-
-        internal bool IsValidLength()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredIntValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 10),
-                new MinIntValueValidator(ErrorSeverity.Degraded, 1)
+                {
+                    "length", IntValidator.IsValidNonEmptyWithLengthAndMinValue(10, 1)
+                }
             };
-            Length = Navigator.Eval(sXp_Length);
-            if (validators.IsValid(Length))
-            {
-                return true;
-            }
 
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Length.Expression,
-                validators.GetMessage());
-            return false;
+            Navigator.GenerateList("identifier")
+                .ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+            ReplaceAttributeValidation("identifier", new AttributeValidationDictionary
+            {
+                {
+                    "uniqueid", StringValidator.IsValidNonEmptyWithLength(200)
+                }
+            });
+            RemoveAttributeValidation("identifier", "label");
+
+            Navigator.GenerateList("property")
+                .ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
+
+            Navigator.GenerateList("poolproperty")
+                .ForEach(x => Processors.Add(new PoolPropertyProcessor(x, packageType)));
+            ReplaceAttributeValidation("poolproperty", Attributes = new AttributeValidationDictionary
+            {
+                {
+                    "property", StringValidator.IsValidNonEmptyWithLength(200)
+                },
+                {
+                    "value", StringValidator.IsValidNonEmptyWithLength(200)
+                },
+                {
+                    "label", StringValidator.IsValidNonEmptyWithLength(200)
+                }
+            });
+
+            Navigator.GenerateList("formpartition")
+                .ForEach(x => Processors.Add(new TestFormPartitionProcessor(x, packageType)));
         }
     }
 }

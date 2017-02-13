@@ -2,98 +2,33 @@
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.AdminSegment
 {
-    internal class AdminSegmentProcessor : Processor
+    public class AdminSegmentProcessor : Processor
     {
-        private static readonly XPathExpression sXp_SegmentId = XPathExpression.Compile("@segmentid");
-        private static readonly XPathExpression sXp_Position = XPathExpression.Compile("@position");
-        private static readonly XPathExpression sXp_ItemSelection = XPathExpression.Compile("@itemselection");
-
-        internal AdminSegmentProcessor(XPathNavigator navigator) : base(navigator)
+        public AdminSegmentProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            SegmentBlueprintProcessor = new SegmentBlueprintProcessor(navigator.SelectSingleNode("segmentblueprint"));
-
-            ItemSelectorProcessor = new ItemSelectorProcessor(navigator.SelectSingleNode("itemselector"));
-
-            SegmentPoolProcessor = new SegmentPoolProcessor(navigator.SelectSingleNode("segmentpool"));
-
-            SegmentFormProcessor = new SegmentFormProcessor(navigator.SelectSingleNode("segmentform"));
-        }
-
-        private string SegmentId { get; set; }
-        private string Position { get; set; }
-        private string ItemSelection { get; set; }
-
-        private SegmentBlueprintProcessor SegmentBlueprintProcessor { get; }
-        private ItemSelectorProcessor ItemSelectorProcessor { get; }
-        private SegmentPoolProcessor SegmentPoolProcessor { get; }
-        private SegmentFormProcessor SegmentFormProcessor { get; }
-
-        public override bool Process()
-        {
-            return IsValidSegmentId()
-                   && IsValidPosition()
-                   && IsValidItemSelection()
-                   && SegmentBlueprintProcessor.Process()
-                   && ItemSelectorProcessor.Process()
-                   && SegmentPoolProcessor.Process()
-                   && SegmentFormProcessor.Process();
-        }
-
-        internal bool IsValidSegmentId()
-        {
-            var validators = new ValidatorCollection
+            Attributes = new AttributeValidationDictionary
             {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 250)
+                {
+                    "segmentid", StringValidator.IsValidNonEmptyWithLength(250)
+                },
+                {
+                    "position", IntValidator.IsValidNonEmptyWithLengthAndMinValue(10, 1)
+                },
+                {
+                    "itemselection", StringValidator.IsValidNonEmptyWithLength(100)
+                }
             };
-            SegmentId = Navigator.Eval(sXp_SegmentId);
-            if (validators.IsValid(SegmentId))
-            {
-                return true;
-            }
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_SegmentId.Expression,
-                validators.GetMessage());
-            return false;
-        }
 
-        internal bool IsValidPosition()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredIntValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 10),
-                new MinIntValueValidator(ErrorSeverity.Degraded, 1)
-            };
-            Position = Navigator.Eval(sXp_Position);
-            if (validators.IsValid(Position))
-            {
-                return true;
-            }
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_Position.Expression,
-                validators.GetMessage());
-            return false;
-        }
-
-        //TODO: enum
-        internal bool IsValidItemSelection()
-        {
-            var validators = new ValidatorCollection
-            {
-                new RequiredStringValidator(ErrorSeverity.Degraded),
-                new MaxLengthValidator(ErrorSeverity.Degraded, 100)
-            };
-            ItemSelection = Navigator.Eval(sXp_ItemSelection);
-            if (validators.IsValid(ItemSelection))
-            {
-                return true;
-            }
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, sXp_ItemSelection.Expression,
-                validators.GetMessage());
-            return false;
+            Navigator.GenerateList("segmentblueprint")
+                .ForEach(x => Processors.Add(new SegmentBlueprintProcessor(x, packageType)));
+            Navigator.GenerateList("itemselector")
+                .ForEach(x => Processors.Add(new ItemSelectorProcessor(x, packageType)));
+            Navigator.GenerateList("segmentpool").ForEach(x => Processors.Add(new SegmentPoolProcessor(x, packageType)));
+            Navigator.GenerateList("segmentform").ForEach(x => Processors.Add(new SegmentFormProcessor(x, packageType)));
         }
     }
 }

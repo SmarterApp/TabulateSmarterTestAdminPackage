@@ -6,9 +6,9 @@ using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
-    internal class ItemScoredDimensionProcessor : Processor
+    public class ItemScoredDimensionProcessor : Processor
     {
-        internal ItemScoredDimensionProcessor(XPathNavigator navigator, PackageType packageType)
+        public ItemScoredDimensionProcessor(XPathNavigator navigator, PackageType packageType)
             : base(navigator, packageType)
         {
             Attributes = new AttributeValidationDictionary
