@@ -6,9 +6,9 @@ using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecification.Administration.ItemPool.TestItem
 {
-    public class BPrefProcessor : Processor
+    public class BpRefProcessor : Processor
     {
-        public BPrefProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType) {}
+        public BpRefProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType) {}
 
         // This processor is a special case because the value is in the element instead of an attribute
         public new bool Process()

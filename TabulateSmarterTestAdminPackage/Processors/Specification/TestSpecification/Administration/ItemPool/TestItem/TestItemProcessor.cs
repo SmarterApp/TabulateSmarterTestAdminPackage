@@ -33,7 +33,7 @@ namespace TabulateSmarterTestAdminPackage.Processors.Specification.TestSpecifica
             });
             RemoveAttributeValidation("identifier", "label");
 
-            Navigator.GenerateList("bpref").ForEach(x => Processors.Add(new BPrefProcessor(x, packageType)));
+            Navigator.GenerateList("bpref").ForEach(x => Processors.Add(new BpRefProcessor(x, packageType)));
             Navigator.GenerateList("passageref").ForEach(x => Processors.Add(new PassageRefProcessor(x, packageType)));
 
             Navigator.GenerateList("poolproperty")
