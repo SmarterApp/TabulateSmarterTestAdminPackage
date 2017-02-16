@@ -1,20 +1,27 @@
-﻿using TabulateSmarterTestAdminPackage.Common.Enums;
+﻿using System.IO;
+using TabulateSmarterTestAdminPackage.Common.Enums;
 
 namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 {
     public class ErrorHandling
     {
-        public static void ReportError(CsvWriter writer, string errorFileName, string testName, ErrorSeverity severity,
+        private static bool _printHeaders = true;
+        public static void ReportError(CsvWriter writer, string errorFileName, string testName, string path, ErrorSeverity severity,
             string itemId, string message, params object[] args)
         {
             if (writer == null)
             {
                 writer = new CsvWriter(errorFileName, false);
-                writer.Write(new[] {"TestName", "Severity", "ItemId", "Message"});
+            }
+
+            if (_printHeaders)
+            {
+                writer.Write(new[] { "TestName", "Path", "Severity", "ItemId", "Message" });
+                _printHeaders = false;
             }
 
             var outMessage = string.Format(message, args);
-            writer.Write(new[] {testName, severity.ToString(), itemId, outMessage});
+            writer.Write(new[] {testName, path, severity.ToString(), itemId, outMessage});
         }
     }
 }

@@ -9,7 +9,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 
         public override bool IsValid(object value)
         {
-            return value is bool;
+            bool boolValue;
+            return bool.TryParse((value as string), out boolValue);
         }
 
         public override string GetMessage()

@@ -7,9 +7,9 @@ using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage;
 using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestPackage.Processors.TestSpecification;
+using TabulateSmarterTestPackage.Tabulators;
 
-namespace TabulateSmarterTestPackage
+namespace TabulateSmarterTestPackage.Processors
 {
     internal class TestPackageProcessor : ITestResultProcessor
     {
@@ -76,34 +76,48 @@ namespace TabulateSmarterTestPackage
         const string c_ElaStdPrefix = "SBAC-ELA-v1:";
 
         static Dictionary<string, int> sPoolPropertyMapping;
+        static HashSet<string> sKnownMeasurementModels;
+        static HashSet<string> sKnownMeasurementParameters;
 
         static TestPackageProcessor()
         {
-            sPoolPropertyMapping = new Dictionary<string, int>
-            {
-                {"Appropriate for Hearing Impaired", (int) ItemFieldNames.HearingImpaired},
-                {"ASL", (int) ItemFieldNames.ASL},
-                {"Braille", (int) ItemFieldNames.Braille},
-                {"Depth of Knowledge", (int) ItemFieldNames.DOK},
-                {"Grade", (int) ItemFieldNames.Grade},
-                {"Language", (int) ItemFieldNames.Language},
-                {"Scoring Engine", (int) ItemFieldNames.ScoringEngine},
-                {"Spanish Translation", (int) ItemFieldNames.Spanish},
-                {"Passage Length", (int) ItemFieldNames.PassageLength},
-                {"TDSPoolFilter", (int) ItemFieldNames.TDSPoolFilter},
-                {"Calculator", (int) ItemFieldNames.Calculator},
-                {"Glossary", (int) ItemFieldNames.Glossary},
-                // Ignore these pool properties
-                // Value of zero means suppress
-                {"--ITEMTYPE--", 0},
-                {"Difficulty Category", 0},
-                {"Test Pool", 0},
-                {"Rubric Source", 0},
-                {"Smarter Balanced Item Response Types", 0},
-                {"Answer Key", 0},
-                {"Claim2_Category", 0},
-                {"Revision Sub-category", 0}
-            };
+            sPoolPropertyMapping = new Dictionary<string, int>();
+            sPoolPropertyMapping.Add("Appropriate for Hearing Impaired", (int)ItemFieldNames.HearingImpaired);
+            sPoolPropertyMapping.Add("ASL", (int)ItemFieldNames.ASL);
+            sPoolPropertyMapping.Add("Braille", (int)ItemFieldNames.Braille);
+            sPoolPropertyMapping.Add("Depth of Knowledge", (int)ItemFieldNames.DOK);
+            sPoolPropertyMapping.Add("Grade", (int)ItemFieldNames.Grade);
+            sPoolPropertyMapping.Add("Language", (int)ItemFieldNames.Language);
+            sPoolPropertyMapping.Add("Scoring Engine", (int)ItemFieldNames.ScoringEngine);
+            sPoolPropertyMapping.Add("Spanish Translation", (int)ItemFieldNames.Spanish);
+            sPoolPropertyMapping.Add("Passage Length", (int)ItemFieldNames.PassageLength);
+            sPoolPropertyMapping.Add("TDSPoolFilter", (int)ItemFieldNames.TDSPoolFilter);
+            sPoolPropertyMapping.Add("Calculator", (int)ItemFieldNames.Calculator);
+            sPoolPropertyMapping.Add("Glossary", (int)ItemFieldNames.Glossary);
+
+            // Ignore these pool properties
+            sPoolPropertyMapping.Add("--ITEMTYPE--", 0); // Value of zero means suppress
+            sPoolPropertyMapping.Add("Difficulty Category", 0);
+            sPoolPropertyMapping.Add("Test Pool", 0);
+            sPoolPropertyMapping.Add("Rubric Source", 0);
+            sPoolPropertyMapping.Add("Smarter Balanced Item Response Types", 0);
+            sPoolPropertyMapping.Add("Answer Key", 0);
+            sPoolPropertyMapping.Add("Claim2_Category", 0);
+            sPoolPropertyMapping.Add("Revision Sub-category", 0);
+
+            sKnownMeasurementModels = new HashSet<string>();
+            sKnownMeasurementModels.Add("RAWSCORE");
+            sKnownMeasurementModels.Add("IRT3PLn");
+            sKnownMeasurementModels.Add("IRTGPC");
+
+            sKnownMeasurementParameters = new HashSet<string>();
+            sKnownMeasurementParameters.Add("a");
+            sKnownMeasurementParameters.Add("b");
+            sKnownMeasurementParameters.Add("c");
+            sKnownMeasurementParameters.Add("b0");
+            sKnownMeasurementParameters.Add("b1");
+            sKnownMeasurementParameters.Add("b2");
+            sKnownMeasurementParameters.Add("b3");
         }
 
         public TestPackageProcessor(string oFilename)
@@ -163,35 +177,33 @@ namespace TabulateSmarterTestPackage
                     {
                         if (!string.Equals(gii.IsFieldTest, isFieldTest, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testName, node.NamespaceURI, ErrorSeverity.Degraded, itemId, "Conflicting isfieldtest info: '{0}' <> '{1}'", isFieldTest, gii.IsFieldTest);
+                            ReportingUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isfieldtest info: '{0}' <> '{1}'", isFieldTest, gii.IsFieldTest);
                         }
                         if (!string.Equals(gii.IsActive, isActive, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testName, node.NamespaceURI, ErrorSeverity.Degraded, itemId, "Conflicting isactive info: '{0}' <> '{1}'", isActive, gii.IsActive);
+                            ReportingUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting isactive info: '{0}' <> '{1}'", isActive, gii.IsActive);
                         }
                         if (!string.Equals(gii.ResponseRequired, responseRequired, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testName, node.NamespaceURI, ErrorSeverity.Degraded, itemId, "Conflicting responserequired info: '{0}' <> '{1}'", responseRequired, gii.ResponseRequired);
+                            ReportingUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting responserequired info: '{0}' <> '{1}'", responseRequired, gii.ResponseRequired);
                         }
                         if (!string.Equals(gii.AdminRequired, adminRequired, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testName, node.NamespaceURI, ErrorSeverity.Degraded, itemId, "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
+                            ReportingUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
                         }
                         if (!string.Equals(gii.FormPosition, formPosition, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testName, node.NamespaceURI, ErrorSeverity.Degraded, itemId, "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
+                            ReportingUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
                         }
                     }
                     else
                     {
-                        gii = new GroupItemInfo
-                        {
-                            IsFieldTest = isFieldTest,
-                            IsActive = isActive,
-                            ResponseRequired = responseRequired,
-                            AdminRequired = adminRequired,
-                            FormPosition = formPosition
-                        };
+                        gii = new GroupItemInfo();
+                        gii.IsFieldTest = isFieldTest;
+                        gii.IsActive = isActive;
+                        gii.ResponseRequired = responseRequired;
+                        gii.AdminRequired = adminRequired;
+                        gii.FormPosition = formPosition;
                         indexGroupItemInfo.Add(itemId, gii);
                         //Console.WriteLine(itemId);
                     }
@@ -210,12 +222,12 @@ namespace TabulateSmarterTestPackage
                     XPathNavigator node = nodes.Current;
 
                     // Collect the item fields
-                    var itemFields = new string[ItemFieldNamesCount];
+                    string[] itemFields = new string[ItemFieldNamesCount];
                     itemFields[(int)ItemFieldNames.TestName] = testName;
                     itemFields[(int)ItemFieldNames.TestSubject] = testSubject;
                     itemFields[(int)ItemFieldNames.TestGrade] = testGrade;
                     itemFields[(int)ItemFieldNames.TestType] = testType;
-                    var itemId = Strip200(node.Eval(sXp_ItemId));
+                    string itemId = Strip200(node.Eval(sXp_ItemId));
                     itemFields[(int)ItemFieldNames.ItemId] = itemId;
                     itemFields[(int)ItemFieldNames.Filename] = node.Eval(sXp_Filename);
                     itemFields[(int)ItemFieldNames.Version] = node.Eval(sXp_Version);
@@ -262,13 +274,13 @@ namespace TabulateSmarterTestPackage
                                 if (fieldIndex != 0)
                                 {
                                     if (!string.IsNullOrEmpty(itemFields[fieldIndex]))
-                                        ReportingUtility.ReportError(testName, ppNode.NamespaceURI, ErrorSeverity.Degraded, itemId, "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
+                                        ReportingUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
                                     itemFields[fieldIndex] = ppValue;
                                 }
                             }
                             else
                             {
-                                ReportingUtility.ReportError(testName, ppNode.NamespaceURI, ErrorSeverity.Degraded, itemId, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
+                                ReportingUtility.ReportError(testName, ErrorSeverity.Degraded, itemId, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
                             }
                         }
                     }
@@ -285,24 +297,16 @@ namespace TabulateSmarterTestPackage
                     itemFields[(int)ItemFieldNames.b3] = FormatDouble(node.Eval(sXp_Parameter5));
 
                     // Check known measurement model
-                    if (
-                        !Enum.GetNames(typeof(MeasurementModel))
-                            .Contains(itemFields[(int) ItemFieldNames.MeasurementModel]))
-                    {
-                        ReportingUtility.ReportError(testName, node.NamespaceURI, ErrorSeverity.Benign, itemId,
-                            "'{0}' Unrecognized Measurement Model", itemFields[(int) ItemFieldNames.MeasurementModel]);
-                    }
+                    if (!sKnownMeasurementModels.Contains(itemFields[(int)ItemFieldNames.MeasurementModel]))
+                        ReportingUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Model", itemFields[(int)ItemFieldNames.MeasurementModel]);
 
                     // Check known parameters
                     XPathNodeIterator pnNodes = node.Select(sXp_ParameterName);
                     while (pnNodes.MoveNext())
                     {
                         string name = pnNodes.Current.Value;
-                        if (!Enum.GetNames(typeof(MeasurementParameter)).Contains(name))
-                        {
-                            ReportingUtility.ReportError(testName, pnNodes.Current.NamespaceURI, ErrorSeverity.Benign,
-                                itemId, "'{0}' Unrecognized Measurement Parameter", name);
-                        }
+                        if (!sKnownMeasurementParameters.Contains(name))
+                            ReportingUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "'{0}' Unrecognized Measurement Parameter", name);
                     }
 
                     // bprefs
@@ -312,7 +316,7 @@ namespace TabulateSmarterTestPackage
                     {
                         string bpref = bpNodes.Current.Value;
                         if (bpIndex >= MaxBpRefs)
-                            ReportingUtility.ReportError(testName, bpNodes.Current.NamespaceURI, ErrorSeverity.Benign, itemId, "More than {0} bpref nodes", MaxBpRefs);
+                            ReportingUtility.ReportError(testName, ErrorSeverity.Benign, itemId, "More than {0} bpref nodes", MaxBpRefs);
                         else
                             itemFields[(int)ItemFieldNames.bpref1 + bpIndex++] = bpref;
 

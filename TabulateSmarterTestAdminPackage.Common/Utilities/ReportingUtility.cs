@@ -42,19 +42,19 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
             StimuliFileName = fileName + ".stims.csv";
         }
 
-        public static void ReportError(string testName, ErrorSeverity severity, string itemId, string message, params object[] args)
+        public static void ReportError(string testName, string path, ErrorSeverity severity, string itemId, string message, params object[] args)
         {
-            ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, severity, itemId, message, args);
+            ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, path, severity, itemId, message, args);
         }
 
         public static void ReportSpecificationError(string path, string attribute, string violationMessage)
         {
-            ReportError(TestName, ErrorSeverity.Degraded, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
+            ReportError(TestName, path, ErrorSeverity.Degraded, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
         }
 
         public static void ReportLoadError(string path, string attribute, string violationMessage)
         {
-            ReportError(TestName, ErrorSeverity.Severe, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
+            ReportError(TestName, path, ErrorSeverity.Severe, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
         }
 
         public static void Dispose(bool disposing)

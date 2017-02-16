@@ -38,7 +38,10 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
         public bool IsValid(object value, bool isRequired)
         {
             return IsValid(value) 
-                || !isRequired && value == null;
+                || !isRequired && 
+                (value == null // For nonexistent types
+                || value as string == string.Empty // For string types
+                || (value as string).Equals("0")); // For number types
         }
 
         public ValidatorCollection AddAndReturn(Validator validator)

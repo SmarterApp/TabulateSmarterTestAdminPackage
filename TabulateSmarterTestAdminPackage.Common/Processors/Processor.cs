@@ -32,8 +32,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Processors
                 .Where(x => !x.Value.IsValid)
                 .ToList()
                 .ForEach(x =>
-                    ReportingUtility.ReportError(ReportingUtility.TestName, x.Value.Validator.ErrorSeverity, x.Key,
-                        $"{Navigator.NamespaceURI} attribute {x.Key} violates {x.Value.Validator.GetMessage()}"));
+                    ReportingUtility.ReportError(ReportingUtility.TestName, Navigator.OuterXml, x.Value.Validator.ErrorSeverity, x.Key,
+                        $"{Navigator.Name} attribute {x.Key} violates {x.Value.Validator.GetMessage()}"));
 
             var badProcessors = Processors.Count(x => !x.Process());
             return ValidatedAttributes.Values.Count(x => !x.IsValid) == 0

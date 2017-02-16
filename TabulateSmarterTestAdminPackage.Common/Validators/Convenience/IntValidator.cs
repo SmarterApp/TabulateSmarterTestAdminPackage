@@ -10,7 +10,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators.Convenience
             {
                 new RequiredIntValidator(ErrorSeverity.Degraded),
                 new MaxLengthValidator(ErrorSeverity.Degraded, length),
-                new MinIntValueValidator(ErrorSeverity.Degraded, minValue)
+                new MinIntValueValidator(ErrorSeverity.Degraded, minValue.ToString())
             };
         }
 

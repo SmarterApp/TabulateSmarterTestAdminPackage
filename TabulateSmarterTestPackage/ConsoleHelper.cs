@@ -1,6 +1,8 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
-namespace TabulateSmarterTestPackage
+
+namespace Win32Interop
 {
     static class ConsoleHelper
     {

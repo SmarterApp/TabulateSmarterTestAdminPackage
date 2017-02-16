@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestPackage.Processors;
 
-namespace TabulateSmarterTestPackage
+namespace TabulateSmarterTestAdminPackage
 {
     class Program
     {
@@ -119,7 +120,7 @@ all administration packages and ignores all other package types.
 #endif
             }
 
-            if (ConsoleHelper.IsSoleConsoleOwner)
+            if (Win32Interop.ConsoleHelper.IsSoleConsoleOwner)
             {
                 Console.Write("Press any key to exit.");
                 Console.ReadKey(true);
@@ -196,7 +197,7 @@ all administration packages and ignores all other package types.
         School = 16          // School and districtID or ExternalSSID is unaffected
     }
 
-    interface ITestResultProcessor : IDisposable
+    public interface ITestResultProcessor : IDisposable
     {
         void ProcessResult(Stream input);
     }
