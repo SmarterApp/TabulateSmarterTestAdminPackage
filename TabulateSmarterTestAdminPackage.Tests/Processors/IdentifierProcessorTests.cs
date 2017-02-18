@@ -3,7 +3,7 @@ using System.Xml.XPath;
 using NUnit.Framework;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestPackage.Processors.TestSpecification.Common;
+using TabulateSmarterTestPackage.Processors.Common;
 
 namespace TabulateSmarterTestAdminPackage.Tests.Processors
 {
