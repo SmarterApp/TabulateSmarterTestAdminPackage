@@ -13,6 +13,7 @@
         MeasurementParameter,
         PackageType,
         StimFieldNames,
-        TestType
+        TestType,
+        PoolPropertyName
     }
 }

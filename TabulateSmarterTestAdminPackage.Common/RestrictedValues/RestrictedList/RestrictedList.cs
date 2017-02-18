@@ -122,6 +122,13 @@ namespace TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList
                         "interim",
                         "summative"
                     }
+                },
+                {
+                    RestrictedListItems.PoolPropertyName, new List<string>
+                    {
+                        "--ITEMTYPE--",
+                        "Language"
+                    }
                 }
             };
     }

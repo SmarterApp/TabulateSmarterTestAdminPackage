@@ -1,7 +1,9 @@
 ﻿using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
+using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestPackage.Processors.TestSpecification.Administration.TestBlueprint
@@ -15,6 +17,8 @@ namespace TabulateSmarterTestPackage.Processors.TestSpecification.Administration
             {
                 {
                     "elementtype", StringValidator.IsValidNonEmptyWithLength(100)
+                        .AddAndReturn(new RequiredEnumValidator(ErrorSeverity.Degraded,
+                            RestrictedList.RestrictedLists[RestrictedListItems.BlueprintElementType]))
                 },
                 {
                     "minopitems", IntValidator.IsValidPositiveNonEmptyWithLength(4)

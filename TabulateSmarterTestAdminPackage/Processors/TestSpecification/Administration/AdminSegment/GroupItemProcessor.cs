@@ -2,6 +2,7 @@
 using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
+using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestPackage.Processors.TestSpecification.Administration.AdminSegment
@@ -33,6 +34,7 @@ namespace TabulateSmarterTestPackage.Processors.TestSpecification.Administration
                 },
                 {
                     "blockid", StringValidator.IsValidNonEmptyWithLength(10)
+                        .AddAndReturn(new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, "^[A-Z]$"))
                 },
                 {
                     "formposition", IntValidator.IsValidOptionalNonEmptyWithLengthAndMinValue(10, 1)

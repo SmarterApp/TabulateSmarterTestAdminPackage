@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Validators\RequiredEnumValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\RequiredRegularExpressionValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestPackage.Common.csproj">
