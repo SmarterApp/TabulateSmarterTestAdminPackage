@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage
 {
-    class Program
+    internal class Program
     {
-
-        static string sSyntax =
-@"This tool tabulates the item metadata included in Smarter Balanced
+        private static readonly string sSyntax =
+            @"This tool tabulates the item metadata included in Smarter Balanced
 Test Administration packages. It can also be used with Test Scoring
 packages since they use the same format for the item sections.
 
@@ -44,17 +43,17 @@ package types. If this option is not specified, the tabulator tabulates
 all administration packages and ignores all other package types.
 ";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             try
             {
-                List<string> inputFilenames = new List<string>();
+                var inputFilenames = new List<string>();
                 string oFilename = null;
-                PackageType packageType = PackageType.Administration;
-                
-                bool help = false;
+                var packageType = PackageType.Administration;
 
-                for (int i=0; i<args.Length; ++i)
+                var help = false;
+
+                for (var i = 0; i < args.Length; ++i)
                 {
                     switch (args[i])
                     {
@@ -63,21 +62,35 @@ all administration packages and ignores all other package types.
                             break;
 
                         case "-i":
+                        {
+                            ++i;
+                            if (i >= args.Length)
                             {
-                                ++i;
-                                if (i >= args.Length) throw new ArgumentException("Invalid command line. '-i' option not followed by filename.");
-                                inputFilenames.Add(args[i]);
+                                throw new ArgumentException(
+                                    "Invalid command line. '-i' option not followed by filename.");
                             }
+                            inputFilenames.Add(args[i]);
+                        }
                             break;
 
                         case "-o":
+                        {
+                            ++i;
+                            if (i >= args.Length)
                             {
-                                ++i;
-                                if (i >= args.Length) throw new ArgumentException("Invalid command line. '-o' option not followed by filename.");
-                                if (oFilename != null) throw new ArgumentException("Only one item output filename may be specified.");
-                                oFilename = Path.GetFullPath(args[i]);
-                                if (oFilename.EndsWith(".csv")) oFilename = oFilename.Substring(0, oFilename.Length - 4);
+                                throw new ArgumentException(
+                                    "Invalid command line. '-o' option not followed by filename.");
                             }
+                            if (oFilename != null)
+                            {
+                                throw new ArgumentException("Only one item output filename may be specified.");
+                            }
+                            oFilename = Path.GetFullPath(args[i]);
+                            if (oFilename.EndsWith(".csv"))
+                            {
+                                oFilename = oFilename.Substring(0, oFilename.Length - 4);
+                            }
+                        }
                             break;
 
                         case "-scoring":
@@ -85,7 +98,8 @@ all administration packages and ignores all other package types.
                             break;
 
                         default:
-                            throw new ArgumentException(string.Format("Unknown command line option '{0}'. Use '-h' for syntax help.", args[i]));
+                            throw new ArgumentException(
+                                string.Format("Unknown command line option '{0}'. Use '-h' for syntax help.", args[i]));
                     }
                 }
 
@@ -96,13 +110,17 @@ all administration packages and ignores all other package types.
 
                 else
                 {
-                    if (inputFilenames.Count == 0 || oFilename == null) throw new ArgumentException("Invalid command line. One output filename and at least one input filename must be specified.");
+                    if (inputFilenames.Count == 0 || oFilename == null)
+                    {
+                        throw new ArgumentException(
+                            "Invalid command line. One output filename and at least one input filename must be specified.");
+                    }
 
-                    using (TestPackageProcessor processor = new TestPackageProcessor(oFilename))
+                    using (var processor = new TestPackageProcessor(oFilename))
                     {
                         processor.ExpectedPackageType = packageType;
 
-                        foreach (string filename in inputFilenames)
+                        foreach (var filename in inputFilenames)
                         {
                             ProcessInputFilename(filename, processor);
                         }
@@ -126,13 +144,16 @@ all administration packages and ignores all other package types.
             }
         }
 
-        static void ProcessInputFilename(string filenamePattern, ITestResultProcessor processor)
+        private static void ProcessInputFilename(string filenamePattern, ITestResultProcessor processor)
         {
-            int count = 0;
-            string directory = Path.GetDirectoryName(filenamePattern);
-            if (string.IsNullOrEmpty(directory)) directory = Environment.CurrentDirectory;
-            string pattern = Path.GetFileName(filenamePattern);
-            foreach (string filename in Directory.GetFiles(directory, pattern))
+            var count = 0;
+            var directory = Path.GetDirectoryName(filenamePattern);
+            if (string.IsNullOrEmpty(directory))
+            {
+                directory = Environment.CurrentDirectory;
+            }
+            var pattern = Path.GetFileName(filenamePattern);
+            foreach (var filename in Directory.GetFiles(directory, pattern))
             {
                 switch (Path.GetExtension(filename).ToLower())
                 {
@@ -145,35 +166,41 @@ all administration packages and ignores all other package types.
                         break;
 
                     default:
-                        throw new ArgumentException(string.Format("Input file '{0}' is of unsupported time. Only .xml and .zip are supported.", filename));
+                        throw new ArgumentException(
+                            string.Format("Input file '{0}' is of unsupported time. Only .xml and .zip are supported.",
+                                filename));
                 }
                 ++count;
             }
-            if (count == 0) throw new ArgumentException(string.Format("Input file '{0}' not found!", filenamePattern));
+            if (count == 0)
+            {
+                throw new ArgumentException(string.Format("Input file '{0}' not found!", filenamePattern));
+            }
         }
 
-        static void ProcessInputXmlFile(string filename, ITestResultProcessor processor)
+        private static void ProcessInputXmlFile(string filename, ITestResultProcessor processor)
         {
             Console.WriteLine("Processing: " + filename);
-            using (FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 processor.ProcessResult(stream);
             }
             Console.WriteLine();
         }
 
-        static void ProcessInputZipFile(string filename, ITestResultProcessor processor)
+        private static void ProcessInputZipFile(string filename, ITestResultProcessor processor)
         {
             Console.WriteLine("Processing: " + filename);
-            using (ZipArchive zip = ZipFile.Open(filename, ZipArchiveMode.Read))
+            using (var zip = ZipFile.Open(filename, ZipArchiveMode.Read))
             {
-                foreach(ZipArchiveEntry entry in zip.Entries)
+                foreach (var entry in zip.Entries)
                 {
                     // Must not be folder (empty name) and must have .xml extension
-                    if (!string.IsNullOrEmpty(entry.Name) && Path.GetExtension(entry.Name).Equals(".xml", StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrEmpty(entry.Name) &&
+                        Path.GetExtension(entry.Name).Equals(".xml", StringComparison.OrdinalIgnoreCase))
                     {
                         Console.WriteLine("   Processing: " + entry.FullName);
-                        using (Stream stream = entry.Open())
+                        using (var stream = entry.Open())
                         {
                             processor.ProcessResult(stream);
                         }
@@ -182,21 +209,20 @@ all administration packages and ignores all other package types.
             }
             Console.WriteLine();
         }
-
     }
 
     [Flags]
-    enum DIDFlags : int
+    internal enum DIDFlags
     {
         None = 0,
-        Id = 1,             // Student ID
-        Name = 2,           // Student Name
+        Id = 1, // Student ID
+        Name = 2, // Student Name
         Birthdate = 4,
-        Demographics = 8,   // Sex, Race, Ethnicity
-        School = 16          // School and districtID or ExternalSSID is unaffected
+        Demographics = 8, // Sex, Race, Ethnicity
+        School = 16 // School and districtID or ExternalSSID is unaffected
     }
 
-    interface ITestResultProcessor : IDisposable
+    internal interface ITestResultProcessor : IDisposable
     {
         void ProcessResult(Stream input);
     }

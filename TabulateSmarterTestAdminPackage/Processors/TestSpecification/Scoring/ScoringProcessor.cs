@@ -1,6 +1,6 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage.Processors.TestSpecification.Scoring
 {

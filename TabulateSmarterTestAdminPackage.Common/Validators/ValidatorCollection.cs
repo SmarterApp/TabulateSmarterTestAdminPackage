@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
@@ -37,11 +37,11 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
 
         public bool IsValid(object value, bool isRequired)
         {
-            return IsValid(value) 
-                || !isRequired && 
-                (value == null // For nonexistent types
-                || value as string == string.Empty // For string types
-                || (value as string).Equals("0")); // For number types
+            return IsValid(value)
+                   || !isRequired &&
+                   (value == null // For nonexistent types
+                    || value as string == string.Empty // For string types
+                    || (value as string).Equals("0")); // For number types
         }
 
         public ValidatorCollection AddAndReturn(Validator validator)

@@ -4,8 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestPackage.Processors.TestSpecification;
 

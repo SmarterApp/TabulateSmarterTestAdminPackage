@@ -1,4 +1,4 @@
-﻿namespace TabulateSmarterTestAdminPackage.Common.Enums
+﻿namespace TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums
 {
     public enum MeasurementModel
     {
@@ -6,6 +6,7 @@
         IRT3PLn,
         IRTGPC,
         IRT3pl,
-        IRTPCL
+        IRTPCL,
+        IRTGRL
     }
 }

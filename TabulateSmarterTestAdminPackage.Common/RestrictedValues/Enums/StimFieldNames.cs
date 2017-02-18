@@ -1,4 +1,4 @@
-﻿namespace TabulateSmarterTestAdminPackage.Common.Enums
+﻿namespace TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums
 {
     public enum StimFieldNames
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 
 namespace TabulateSmarterTestAdminPackage.Common.Utilities
@@ -13,12 +13,12 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
         public IDictionary<string, ValidatedAttribute> Validate(XPathNavigator navigator)
         {
             return this.Select(
-                x => 
+                x =>
                     new ValidatedAttribute
                     {
                         Name = x.Key,
                         IsValid = x.Value.IsValid(navigator.Eval(XPathExpression.Compile($"@{x.Key}"))
-                        , x.Value.ErrorSeverity != ErrorSeverity.Benign), // If it's benign, it's an optional field
+                            , x.Value.ErrorSeverity != ErrorSeverity.Benign), // If it's benign, it's an optional field
                         Value = navigator.Eval(XPathExpression.Compile($"@{x.Key}")),
                         Validator = x.Value
                     }).ToDictionary(x => x.Name);
@@ -28,14 +28,14 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
         {
             return this.Where(x => x.Key.Equals(attribute))
                 .Select(
-                x =>
-                    new ValidatedAttribute
-                    {
-                        Name = x.Key,
-                        IsValid = x.Value.IsValid(navigator.Eval(XPathExpression.Compile($"@{x.Key}"))),
-                        Value = navigator.Eval(XPathExpression.Compile($"@{x.Key}")),
-                        Validator = x.Value
-                    }).ToDictionary(x => x.Name);
+                    x =>
+                        new ValidatedAttribute
+                        {
+                            Name = x.Key,
+                            IsValid = x.Value.IsValid(navigator.Eval(XPathExpression.Compile($"@{x.Key}"))),
+                            Value = navigator.Eval(XPathExpression.Compile($"@{x.Key}")),
+                            Validator = x.Value
+                        }).ToDictionary(x => x.Name);
         }
     }
 }

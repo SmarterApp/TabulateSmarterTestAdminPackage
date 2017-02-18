@@ -1,11 +1,15 @@
 ﻿using System.Diagnostics;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Tabulation;
 
 namespace TabulateSmarterTestAdminPackage.Common.Utilities
 {
     public static class ReportingUtility
     {
+        internal static CsvWriter ErrorWriter;
+        internal static CsvWriter ItemWriter;
+        internal static CsvWriter StimuliWriter;
+
         static ReportingUtility()
         {
             ErrorHandling = new ErrorHandling();
@@ -14,9 +18,6 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
         public static string ErrorFileName { get; set; }
         public static string ItemFileName { get; set; }
         public static string StimuliFileName { get; set; }
-        internal static CsvWriter ErrorWriter;
-        internal static CsvWriter ItemWriter;
-        internal static CsvWriter StimuliWriter;
         public static ErrorHandling ErrorHandling { get; set; }
         public static string TestName { get; set; }
 
@@ -42,19 +43,22 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
             StimuliFileName = fileName + ".stims.csv";
         }
 
-        public static void ReportError(string testName, string path, ErrorSeverity severity, string itemId, string message, params object[] args)
+        public static void ReportError(string testName, string path, ErrorSeverity severity, string itemId,
+            string message, params object[] args)
         {
             ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, path, severity, itemId, message, args);
         }
 
         public static void ReportSpecificationError(string path, string attribute, string violationMessage)
         {
-            ReportError(TestName, path, ErrorSeverity.Degraded, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
+            ReportError(TestName, path, ErrorSeverity.Degraded, string.Empty,
+                $"{path} attribute {attribute} violates {violationMessage}");
         }
 
         public static void ReportLoadError(string path, string attribute, string violationMessage)
         {
-            ReportError(TestName, path, ErrorSeverity.Severe, string.Empty, $"{path} attribute {attribute} violates {violationMessage}");
+            ReportError(TestName, path, ErrorSeverity.Severe, string.Empty,
+                $"{path} attribute {attribute} violates {violationMessage}");
         }
 
         public static void Dispose(bool disposing)

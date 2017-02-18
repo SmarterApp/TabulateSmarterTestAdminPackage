@@ -1,4 +1,4 @@
-﻿using TabulateSmarterTestAdminPackage.Common.Enums;
+﻿using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
@@ -10,7 +10,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
         public override bool IsValid(object value)
         {
             bool boolValue;
-            return bool.TryParse((value as string), out boolValue);
+            return bool.TryParse(value as string, out boolValue);
         }
 
         public override string GetMessage()

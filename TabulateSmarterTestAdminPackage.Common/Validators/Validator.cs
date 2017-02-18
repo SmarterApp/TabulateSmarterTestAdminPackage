@@ -1,4 +1,4 @@
-﻿using TabulateSmarterTestAdminPackage.Common.Enums;
+﻿using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
@@ -10,15 +10,16 @@ namespace TabulateSmarterTestAdminPackage.Common.Validators
             Parameter = parameter;
         }
 
-        public ErrorSeverity ErrorSeverity { get; set; }
         public object Parameter { get; set; }
+
+        public ErrorSeverity ErrorSeverity { get; set; }
 
         public abstract bool IsValid(object value);
 
         public bool IsValid(object value, bool isRequired)
         {
             return IsValid(value)
-                || !isRequired && value == null;
+                   || !isRequired && value == null;
         }
 
         public abstract string GetMessage();

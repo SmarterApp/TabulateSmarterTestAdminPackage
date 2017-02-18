@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 
 namespace TabulateSmarterTestAdminPackage.Common.Processors
@@ -21,7 +21,9 @@ namespace TabulateSmarterTestAdminPackage.Common.Processors
         public PackageType PackageType { get; }
 
         public AttributeValidationDictionary Attributes { get; set; } = new AttributeValidationDictionary();
-        public IDictionary<string, ValidatedAttribute> ValidatedAttributes { get; set; } = new Dictionary<string, ValidatedAttribute>();
+
+        public IDictionary<string, ValidatedAttribute> ValidatedAttributes { get; set; } =
+            new Dictionary<string, ValidatedAttribute>();
 
         public void Dispose() {}
 
@@ -32,7 +34,8 @@ namespace TabulateSmarterTestAdminPackage.Common.Processors
                 .Where(x => !x.Value.IsValid)
                 .ToList()
                 .ForEach(x =>
-                    ReportingUtility.ReportError(ReportingUtility.TestName, Navigator.OuterXml, x.Value.Validator.ErrorSeverity, x.Key,
+                    ReportingUtility.ReportError(ReportingUtility.TestName, Navigator.OuterXml,
+                        x.Value.Validator.ErrorSeverity, x.Key,
                         $"{Navigator.Name} attribute {x.Key} violates {x.Value.Validator.GetMessage()}"));
 
             var badProcessors = Processors.Count(x => !x.Process());

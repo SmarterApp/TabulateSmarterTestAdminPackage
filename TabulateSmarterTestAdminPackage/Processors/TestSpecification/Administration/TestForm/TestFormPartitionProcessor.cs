@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Enums;
 using TabulateSmarterTestAdminPackage.Common.Processors;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.AdminSegment;

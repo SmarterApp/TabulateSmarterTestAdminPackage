@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+﻿using TabulateSmarterTestAdminPackage.Common.Validators;
 
 namespace TabulateSmarterTestAdminPackage.Common.Utilities
 {

@@ -1,12 +1,13 @@
-﻿using System.IO;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+﻿using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 {
     public class ErrorHandling
     {
         private static bool _printHeaders = true;
-        public static void ReportError(CsvWriter writer, string errorFileName, string testName, string path, ErrorSeverity severity,
+
+        public static void ReportError(CsvWriter writer, string errorFileName, string testName, string path,
+            ErrorSeverity severity,
             string itemId, string message, params object[] args)
         {
             if (writer == null)
@@ -16,7 +17,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Tabulation
 
             if (_printHeaders)
             {
-                writer.Write(new[] { "TestName", "Path", "Severity", "ItemId", "Message" });
+                writer.Write(new[] {"TestName", "Path", "Severity", "ItemId", "Message"});
                 _printHeaders = false;
             }
 

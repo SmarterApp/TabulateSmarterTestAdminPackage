@@ -1,5 +1,5 @@
 ﻿using System;
-using TabulateSmarterTestAdminPackage.Common.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestAdminPackage.Common.Validators
 {
