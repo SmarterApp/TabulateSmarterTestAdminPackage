@@ -5,6 +5,8 @@ using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.ItemPool;
 using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.TestBlueprint;
 using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.TestForm;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Scoring.PerformanceLevels;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Scoring.ScoringRules;
 
 namespace TabulateSmarterTestPackage.Processors.TestSpecification.Scoring
 {

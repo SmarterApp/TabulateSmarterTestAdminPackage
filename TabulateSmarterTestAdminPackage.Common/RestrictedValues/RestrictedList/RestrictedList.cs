@@ -129,6 +129,14 @@ namespace TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList
                         "--ITEMTYPE--",
                         "Language"
                     }
+                },
+                {
+                    RestrictedListItems.ParameterType, new List<string>
+                    {
+                        "int",
+                        "double",
+                        "string"
+                    }
                 }
             };
     }

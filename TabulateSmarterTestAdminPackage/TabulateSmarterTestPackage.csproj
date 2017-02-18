@@ -81,10 +81,13 @@
     <Compile Include="Processors\TestSpecification\Administration\TestBlueprint\TestBlueprintProcessor.cs" />
     <Compile Include="Processors\TestSpecification\Administration\ItemPool\TestItem\PassageRefProcessor.cs" />
     <Compile Include="Processors\TestSpecification\Administration\ItemPool\TestItem\TestItemProcessor.cs" />
-    <Compile Include="Processors\TestSpecification\Scoring\PerformanceLevelProcessor.cs" />
-    <Compile Include="Processors\TestSpecification\Scoring\PerformanceLevelsProcessor.cs" />
+    <Compile Include="Processors\TestSpecification\Scoring\ScoringRules\ComputationRuleParameterProcessor.cs" />
+    <Compile Include="Processors\TestSpecification\Scoring\ScoringRules\ComputationRuleParameterValueProcessor.cs" />
+    <Compile Include="Processors\TestSpecification\Scoring\ScoringRules\ComputationRuleProcessor.cs" />
+    <Compile Include="Processors\TestSpecification\Scoring\PerformanceLevels\PerformanceLevelProcessor.cs" />
+    <Compile Include="Processors\TestSpecification\Scoring\PerformanceLevels\PerformanceLevelsProcessor.cs" />
     <Compile Include="Processors\TestSpecification\Scoring\ScoringProcessor.cs" />
-    <Compile Include="Processors\TestSpecification\Scoring\ScoringRulesProcessor.cs" />
+    <Compile Include="Processors\TestSpecification\Scoring\ScoringRules\ScoringRulesProcessor.cs" />
     <Compile Include="Processors\TestSpecification\TestSpecificationProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,7 +3,7 @@ using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 
-namespace TabulateSmarterTestPackage.Processors.TestSpecification.Scoring
+namespace TabulateSmarterTestPackage.Processors.TestSpecification.Scoring.PerformanceLevels
 {
     public class PerformanceLevelsProcessor : Processor
     {

@@ -14,6 +14,7 @@
         PackageType,
         StimFieldNames,
         TestType,
-        PoolPropertyName
+        PoolPropertyName,
+        ParameterType
     }
 }
