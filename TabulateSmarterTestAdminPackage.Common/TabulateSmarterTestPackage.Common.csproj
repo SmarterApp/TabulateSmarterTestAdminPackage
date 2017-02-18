@@ -36,20 +36,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RestrictedValues\Enums\BlueprintElementType.cs" />
     <Compile Include="RestrictedValues\Enums\ErrorSeverity.cs" />
     <Compile Include="RestrictedValues\Enums\ItemFieldNames.cs" />
-    <Compile Include="RestrictedValues\Enums\ItemSelectionAlgorithm.cs" />
-    <Compile Include="RestrictedValues\Enums\ItemType.cs" />
-    <Compile Include="RestrictedValues\Enums\MeasurementModel.cs" />
-    <Compile Include="RestrictedValues\Enums\MeasurementParameter.cs" />
     <Compile Include="RestrictedValues\Enums\PackageType.cs" />
     <Compile Include="RestrictedValues\Enums\RestrictedListItems.cs" />
     <Compile Include="RestrictedValues\Enums\StimFieldNames.cs" />
     <Compile Include="Processors\IdentifierProcessor.cs" />
     <Compile Include="Processors\Processor.cs" />
     <Compile Include="Processors\PropertyProcessor.cs" />
-    <Compile Include="RestrictedValues\Enums\TestType.cs" />
     <Compile Include="RestrictedValues\RestrictedList\RestrictedList.cs" />
     <Compile Include="Utilities\ReportingUtility.cs" />
     <Compile Include="Utilities\AttributeValidationDictionary.cs" />

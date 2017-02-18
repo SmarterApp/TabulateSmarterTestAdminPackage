@@ -2,6 +2,17 @@
 {
     public enum RestrictedListItems
     {
-        Subject, Grade
+        Subject,
+        Grade,
+        BlueprintElementType,
+        ErrorSeverity,
+        ItemFieldNames,
+        ItemSelectionAlgorithm,
+        ItemType,
+        MeasurementModel,
+        MeasurementParameter,
+        PackageType,
+        StimFieldNames,
+        TestType
     }
 }

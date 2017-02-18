@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestPackage.Processors.TestSpecification;
 
@@ -161,7 +162,7 @@ namespace TabulateSmarterTestPackage
             {
                 Console.WriteLine("Incorrect package type assigned");
                 return;
-                    // If the test package is not what we expect, we should short circuit and return without processing any further
+                // If the test package is not what we expect, we should short circuit and return without processing any further
             }
 
             // Get the test info
@@ -327,7 +328,7 @@ namespace TabulateSmarterTestPackage
 
                     // Check known measurement model
                     if (
-                        !Enum.GetNames(typeof(MeasurementModel))
+                        !RestrictedList.RestrictedLists[RestrictedListItems.MeasurementModel]
                             .Contains(itemFields[(int) ItemFieldNames.MeasurementModel]))
                     {
                         ReportingUtility.ReportError(testName, node.NamespaceURI, ErrorSeverity.Benign, itemId,
@@ -339,7 +340,7 @@ namespace TabulateSmarterTestPackage
                     while (pnNodes.MoveNext())
                     {
                         var name = pnNodes.Current.Value;
-                        if (!Enum.GetNames(typeof(MeasurementParameter)).Contains(name))
+                        if (!RestrictedList.RestrictedLists[RestrictedListItems.MeasurementParameter].Contains(name))
                         {
                             ReportingUtility.ReportError(testName, pnNodes.Current.NamespaceURI, ErrorSeverity.Benign,
                                 itemId, "'{0}' Unrecognized Measurement Parameter", name);
@@ -388,7 +389,7 @@ namespace TabulateSmarterTestPackage
                                 itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix,
                                     match.Value.Substring(5));
                                 itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value + "\t";
-                                    // Adding tab character prevents Excel from treating these as dates.
+                                // Adding tab character prevents Excel from treating these as dates.
                                 itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value + "\t";
                             }
                         }
