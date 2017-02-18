@@ -1,10 +1,10 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Administration;
 
-namespace TabulateSmarterTestPackage.Processors.TestSpecification.Administration.TestForm
+namespace TabulateSmarterTestPackage.Processors.TestSpecification.Common.TestForm
 {
     public class TestFormProcessor : Processor
     {

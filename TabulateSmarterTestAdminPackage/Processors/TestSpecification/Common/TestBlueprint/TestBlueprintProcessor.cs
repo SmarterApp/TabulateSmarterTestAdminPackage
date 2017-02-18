@@ -1,9 +1,8 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 
-namespace TabulateSmarterTestPackage.Processors.TestSpecification.Administration.TestBlueprint
+namespace TabulateSmarterTestPackage.Processors.TestSpecification.Common.TestBlueprint
 {
     public class TestBlueprintProcessor : Processor
     {

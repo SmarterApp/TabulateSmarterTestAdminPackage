@@ -3,7 +3,7 @@ using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
 
-namespace TabulateSmarterTestAdminPackage.Common.Processors
+namespace TabulateSmarterTestPackage.Processors.TestSpecification.Common
 {
     public class IdentifierProcessor : Processor
     {

@@ -5,7 +5,7 @@ using System.Xml.XPath;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 
-namespace TabulateSmarterTestAdminPackage.Common.Processors
+namespace TabulateSmarterTestPackage.Processors.TestSpecification.Common
 {
     public abstract class Processor : IDisposable
     {

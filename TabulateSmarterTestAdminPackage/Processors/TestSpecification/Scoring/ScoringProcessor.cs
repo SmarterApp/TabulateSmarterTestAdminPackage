@@ -1,10 +1,10 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.ItemPool;
-using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.TestBlueprint;
-using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.TestForm;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Common;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Common.ItemPool;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Common.TestBlueprint;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Common.TestForm;
 using TabulateSmarterTestPackage.Processors.TestSpecification.Scoring.PerformanceLevels;
 using TabulateSmarterTestPackage.Processors.TestSpecification.Scoring.ScoringRules;
 

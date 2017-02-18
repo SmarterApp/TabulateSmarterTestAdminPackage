@@ -1,11 +1,10 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.ItemPool.Passage;
-using TabulateSmarterTestPackage.Processors.TestSpecification.Administration.ItemPool.TestItem;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Common.ItemPool.Passage;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Common.ItemPool.TestItem;
 
-namespace TabulateSmarterTestPackage.Processors.TestSpecification.Administration.ItemPool
+namespace TabulateSmarterTestPackage.Processors.TestSpecification.Common.ItemPool
 {
     public class ItemPoolProcessor : Processor
     {

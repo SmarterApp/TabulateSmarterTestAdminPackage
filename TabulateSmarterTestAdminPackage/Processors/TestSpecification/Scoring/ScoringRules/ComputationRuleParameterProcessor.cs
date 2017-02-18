@@ -1,9 +1,9 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.Processors;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestAdminPackage.Common.Validators;
 using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
+using TabulateSmarterTestPackage.Processors.TestSpecification.Common;
 
 namespace TabulateSmarterTestPackage.Processors.TestSpecification.Scoring.ScoringRules
 {
