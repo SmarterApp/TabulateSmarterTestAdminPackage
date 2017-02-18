@@ -91,9 +91,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestAdminPackage.Common.csproj">
+    <ProjectReference Include="..\TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestPackage.Common.csproj">
       <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
-      <Name>TabulateSmarterTestAdminPackage.Common</Name>
+      <Name>TabulateSmarterTestPackage.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

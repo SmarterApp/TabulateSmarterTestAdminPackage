@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestAdminPackage.Common.Validators;
 
 namespace TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList
 {

@@ -52,9 +52,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestAdminPackage.Common.csproj">
+    <ProjectReference Include="..\TabulateSmarterTestAdminPackage.Common\TabulateSmarterTestPackage.Common.csproj">
       <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
-      <Name>TabulateSmarterTestAdminPackage.Common</Name>
+      <Name>TabulateSmarterTestPackage.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\TabulateSmarterTestAdminPackage\TabulateSmarterTestPackage.csproj">
       <Project>{8b1c74f6-8534-45e9-ae12-2ed0eaa5545e}</Project>
