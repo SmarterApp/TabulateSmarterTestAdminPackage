@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
+    <Compile Include="Tabulators\ITabulator.cs" />
     <Compile Include="Processors\Administration\AdministrationProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\AdminSegmentProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\ItemSelectionParameterProcessor.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="Processors\Common\TestSpecificationProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestPackageProcessor.cs" />
+    <Compile Include="Tabulators\TestPackageTabulator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

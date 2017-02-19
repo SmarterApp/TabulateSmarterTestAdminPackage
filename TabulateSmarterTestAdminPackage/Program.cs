@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestPackage.Tabulators;
 
 namespace TabulateSmarterTestPackage
 {
@@ -10,38 +11,38 @@ namespace TabulateSmarterTestPackage
     {
         private static readonly string sSyntax =
             @"This tool tabulates the item metadata included in Smarter Balanced
-Test Administration packages. It can also be used with Test Scoring
-packages since they use the same format for the item sections.
+            Test Administration packages. It can also be used with Test Scoring
+            packages since they use the same format for the item sections.
 
-Multiple input packages may be specified in which case the output is
-the aggregation of all input files.
+            Multiple input packages may be specified in which case the output is
+            the aggregation of all input files.
 
-By default the tool processes only test administration packages as
-determined by the @purpose attribute on the root <testspecification>
-element in the file. All other .xml files are skipped. The -scoring
-option will cause it to tabulate scoring packages and ignore all
-other package types.
+            By default the tool processes only test administration packages as
+            determined by the @purpose attribute on the root <testspecification>
+            element in the file. All other .xml files are skipped. The -scoring
+            option will cause it to tabulate scoring packages and ignore all
+            other package types.
 
-Command-line parameters:
- -i <input filename>
-Specifies an input filename which should be the name of a test
-administration or test reporting package. The Filename may include
-wildcards in which case all matching files will be processed. If the
-filename is a .zip then all .xml files in the .zip will be processed
-regardless of their path within the .zip file. The -i parameter may be
-repeated to process multiple input sources.
+            Command-line parameters:
+                -i <input filename>
+            Specifies an input filename which should be the name of a test
+            administration or test reporting package. The Filename may include
+            wildcards in which case all matching files will be processed. If the
+            filename is a .zip then all .xml files in the .zip will be processed
+            regardless of their path within the .zip file. The -i parameter may be
+            repeated to process multiple input sources.
 
- -o <output filename>
-Output filename prefix. The results are stored in the following files:
-  filename.items.csv    Tabulation of item data
-  filename.stims.csv    Tabulation of stimulus data
-  filename.errors.csv   Tabulation of errors (if any)
+                -o <output filename>
+            Output filename prefix. The results are stored in the following files:
+                filename.items.csv    Tabulation of item data
+                filename.stims.csv    Tabulation of stimulus data
+                filename.errors.csv   Tabulation of errors (if any)
 
--scoring
-Causes the tabulator to tabulate scoring packages and ignore all other
-package types. If this option is not specified, the tabulator tabulates
-all administration packages and ignores all other package types.
-";
+            -scoring
+            Causes the tabulator to tabulate scoring packages and ignore all other
+            package types. If this option is not specified, the tabulator tabulates
+            all administration packages and ignores all other package types.
+            ";
 
         private static void Main(string[] args)
         {
@@ -99,7 +100,7 @@ all administration packages and ignores all other package types.
 
                         default:
                             throw new ArgumentException(
-                                string.Format("Unknown command line option '{0}'. Use '-h' for syntax help.", args[i]));
+                                $"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");
                     }
                 }
 
@@ -116,7 +117,7 @@ all administration packages and ignores all other package types.
                             "Invalid command line. One output filename and at least one input filename must be specified.");
                     }
 
-                    using (var processor = new TestPackageProcessor(oFilename))
+                    using (var processor = new TestPackageTabulator(oFilename))
                     {
                         processor.ExpectedPackageType = packageType;
 
@@ -144,7 +145,7 @@ all administration packages and ignores all other package types.
             }
         }
 
-        private static void ProcessInputFilename(string filenamePattern, ITestResultProcessor processor)
+        private static void ProcessInputFilename(string filenamePattern, ITabulator tabulator)
         {
             var count = 0;
             var directory = Path.GetDirectoryName(filenamePattern);
@@ -158,37 +159,36 @@ all administration packages and ignores all other package types.
                 switch (Path.GetExtension(filename).ToLower())
                 {
                     case ".xml":
-                        ProcessInputXmlFile(filename, processor);
+                        ProcessInputXmlFile(filename, tabulator);
                         break;
 
                     case ".zip":
-                        ProcessInputZipFile(filename, processor);
+                        ProcessInputZipFile(filename, tabulator);
                         break;
 
                     default:
                         throw new ArgumentException(
-                            string.Format("Input file '{0}' is of unsupported time. Only .xml and .zip are supported.",
-                                filename));
+                            $"Input file '{filename}' is of unsupported type. Only .xml and .zip are supported.");
                 }
                 ++count;
             }
             if (count == 0)
             {
-                throw new ArgumentException(string.Format("Input file '{0}' not found!", filenamePattern));
+                throw new ArgumentException($"Input file '{filenamePattern}' not found!");
             }
         }
 
-        private static void ProcessInputXmlFile(string filename, ITestResultProcessor processor)
+        private static void ProcessInputXmlFile(string filename, ITabulator tabulator)
         {
             Console.WriteLine("Processing: " + filename);
             using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                processor.ProcessResult(stream);
+                tabulator.ProcessResult(stream);
             }
             Console.WriteLine();
         }
 
-        private static void ProcessInputZipFile(string filename, ITestResultProcessor processor)
+        private static void ProcessInputZipFile(string filename, ITabulator tabulator)
         {
             Console.WriteLine("Processing: " + filename);
             using (var zip = ZipFile.Open(filename, ZipArchiveMode.Read))
@@ -202,28 +202,12 @@ all administration packages and ignores all other package types.
                         Console.WriteLine("   Processing: " + entry.FullName);
                         using (var stream = entry.Open())
                         {
-                            processor.ProcessResult(stream);
+                            tabulator.ProcessResult(stream);
                         }
                     }
                 }
             }
             Console.WriteLine();
         }
-    }
-
-    [Flags]
-    internal enum DIDFlags
-    {
-        None = 0,
-        Id = 1, // Student ID
-        Name = 2, // Student Name
-        Birthdate = 4,
-        Demographics = 8, // Sex, Race, Ethnicity
-        School = 16 // School and districtID or ExternalSSID is unaffected
-    }
-
-    internal interface ITestResultProcessor : IDisposable
-    {
-        void ProcessResult(Stream input);
     }
 }

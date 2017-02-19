@@ -10,9 +10,9 @@ using TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList;
 using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestPackage.Processors.Common;
 
-namespace TabulateSmarterTestPackage
+namespace TabulateSmarterTestPackage.Tabulators
 {
-    internal class TestPackageProcessor : ITestResultProcessor
+    internal class TestPackageTabulator : ITabulator
     {
         private const int MaxBpRefs = 7;
         private const string c_MathStdPrefix = "SBAC-MA-v6:";
@@ -99,7 +99,7 @@ namespace TabulateSmarterTestPackage
 
         private static readonly Dictionary<string, int> sPoolPropertyMapping;
 
-        static TestPackageProcessor()
+        static TestPackageTabulator()
         {
             sPoolPropertyMapping = new Dictionary<string, int>
             {
@@ -128,7 +128,7 @@ namespace TabulateSmarterTestPackage
             };
         }
 
-        public TestPackageProcessor(string oFilename)
+        public TestPackageTabulator(string oFilename)
         {
             ReportingUtility.SetFileName(oFilename);
 #if DEBUG
@@ -492,7 +492,7 @@ namespace TabulateSmarterTestPackage
             return double.TryParse(val, out v) ? v.ToString("G", CultureInfo.InvariantCulture) : val;
         }
 
-        ~TestPackageProcessor()
+        ~TestPackageTabulator()
         {
             Dispose(false);
         }
