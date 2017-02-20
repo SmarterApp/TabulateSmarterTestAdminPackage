@@ -52,7 +52,8 @@ namespace TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList
                         "test",
                         "segment",
                         "strand",
-                        "contentlevel"
+                        "contentlevel",
+                        "affinitygroup"
                     }
                 },
                 {

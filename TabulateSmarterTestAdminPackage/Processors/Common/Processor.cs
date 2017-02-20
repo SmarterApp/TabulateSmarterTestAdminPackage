@@ -27,7 +27,7 @@ namespace TabulateSmarterTestPackage.Processors.Common
 
         public void Dispose() {}
 
-        public bool Process()
+        public virtual bool Process()
         {
             ValidatedAttributes = Attributes.Validate(Navigator);
             ValidatedAttributes
@@ -61,6 +61,18 @@ namespace TabulateSmarterTestPackage.Processors.Common
             {
                 processor.Attributes.Remove(attributeName);
             }
+        }
+
+        protected bool ApplySecondaryValidation(AttributeValidationDictionary attributeValidationDictionary)
+        {
+            var result = attributeValidationDictionary.Validate(Navigator);
+            result.Where(x => !x.Value.IsValid)
+                .ToList()
+                .ForEach(x =>
+                    ReportingUtility.ReportError(ReportingUtility.TestName, Navigator.OuterXml,
+                        x.Value.Validator.ErrorSeverity, x.Key,
+                        $"{Navigator.Name} attribute {x.Key} violates {x.Value.Validator.GetMessage()}"));
+            return result.Values.Count(x => !x.IsValid) == 0;
         }
     }
 }

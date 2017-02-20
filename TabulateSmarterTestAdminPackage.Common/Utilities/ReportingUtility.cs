@@ -20,6 +20,7 @@ namespace TabulateSmarterTestAdminPackage.Common.Utilities
         public static string StimuliFileName { get; set; }
         public static ErrorHandling ErrorHandling { get; set; }
         public static string TestName { get; set; }
+        public static string ContentDirectoryPath { get; set; }
 
         public static CsvWriter GetItemWriter()
         {

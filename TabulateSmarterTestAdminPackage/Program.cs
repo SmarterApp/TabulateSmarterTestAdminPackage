@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestAdminPackage.Common.Utilities;
 using TabulateSmarterTestPackage.Tabulators;
 
 namespace TabulateSmarterTestPackage
@@ -42,6 +43,11 @@ namespace TabulateSmarterTestPackage
             Causes the tabulator to tabulate scoring packages and ignore all other
             package types. If this option is not specified, the tabulator tabulates
             all administration packages and ignores all other package types.
+
+            -c <file path>
+            If a content file path is specified, the tabulator will check against 
+            the indicated directory and report errors if indicated resources do not
+            exist
             ";
 
         private static void Main(string[] args)
@@ -98,6 +104,20 @@ namespace TabulateSmarterTestPackage
                             packageType = PackageType.Scoring;
                             break;
 
+                        case "-c":
+                            ++i;
+                            if (i >= args.Length)
+                            {
+                                throw new ArgumentException(
+                                    "Invalid command line. '-c' option not followed by filename.");
+                            }
+                            if (!Directory.Exists(args[i]))
+                            {
+                                throw new ArgumentException(
+                                    "Invalid command line. '-c' argument does not refer to valid directory.");
+                            }
+                            ReportingUtility.ContentDirectoryPath = args[i];
+                            break;
                         default:
                             throw new ArgumentException(
                                 $"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");
@@ -117,13 +137,13 @@ namespace TabulateSmarterTestPackage
                             "Invalid command line. One output filename and at least one input filename must be specified.");
                     }
 
-                    using (var processor = new TestPackageTabulator(oFilename))
+                    using (var tabulator = new TestPackageTabulator(oFilename))
                     {
-                        processor.ExpectedPackageType = packageType;
+                        tabulator.ExpectedPackageType = packageType;
 
                         foreach (var filename in inputFilenames)
                         {
-                            ProcessInputFilename(filename, processor);
+                            ProcessInputFilename(filename, tabulator);
                         }
                     }
                 }

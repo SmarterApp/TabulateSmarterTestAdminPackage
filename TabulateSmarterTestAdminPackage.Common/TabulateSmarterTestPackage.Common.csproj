@@ -51,7 +51,8 @@
     <Compile Include="Validators\Convenience\DecimalValidator.cs" />
     <Compile Include="Validators\Convenience\IntValidator.cs" />
     <Compile Include="Validators\Convenience\StringValidator.cs" />
-    <Compile Include="Validators\FilePathValidator.cs" />
+    <Compile Include="Validators\CrossTabulation\ItemExistsValidator.cs" />
+    <Compile Include="Validators\CrossTabulation\StimuliExistsValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Validators\MaxLengthValidator.cs" />
     <Compile Include="Validators\MinDecimalValueValidator.cs" />
