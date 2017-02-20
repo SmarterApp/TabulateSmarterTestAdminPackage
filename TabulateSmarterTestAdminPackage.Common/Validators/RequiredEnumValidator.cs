@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList;
+using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestPackage.Common.RestrictedValues.RestrictedList;
 
-namespace TabulateSmarterTestAdminPackage.Common.Validators
+namespace TabulateSmarterTestPackage.Common.Validators
 {
     public class RequiredEnumValidator : Validator
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{6F9A6238-72C4-4389-B23E-B687C4542281}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TabulateSmarterTestAdminPackage.Common</RootNamespace>
-    <AssemblyName>TabulateSmarterTestAdminPackage.Common</AssemblyName>
+    <RootNamespace>TabulateSmarterTestPackage.Common</RootNamespace>
+    <AssemblyName>TabulateSmarterTestPackage.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

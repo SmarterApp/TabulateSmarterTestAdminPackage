@@ -1,9 +1,9 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestAdminPackage.Common.RestrictedValues.RestrictedList;
-using TabulateSmarterTestAdminPackage.Common.Utilities;
-using TabulateSmarterTestAdminPackage.Common.Validators;
-using TabulateSmarterTestAdminPackage.Common.Validators.Convenience;
+using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestPackage.Common.RestrictedValues.RestrictedList;
+using TabulateSmarterTestPackage.Common.Utilities;
+using TabulateSmarterTestPackage.Common.Validators;
+using TabulateSmarterTestPackage.Common.Validators.Convenience;
 
 namespace TabulateSmarterTestPackage.Processors.Common.ItemPool.TestItem
 {

@@ -1,4 +1,4 @@
-﻿namespace TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums
+﻿namespace TabulateSmarterTestPackage.Common.RestrictedValues.Enums
 {
     public enum PackageType
     {

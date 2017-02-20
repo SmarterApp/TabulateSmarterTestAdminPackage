@@ -1,6 +1,6 @@
-﻿using TabulateSmarterTestAdminPackage.Common.Validators;
+﻿using TabulateSmarterTestPackage.Common.Validators;
 
-namespace TabulateSmarterTestAdminPackage.Common.Utilities
+namespace TabulateSmarterTestPackage.Common.Utilities
 {
     public class ValidatedAttribute
     {

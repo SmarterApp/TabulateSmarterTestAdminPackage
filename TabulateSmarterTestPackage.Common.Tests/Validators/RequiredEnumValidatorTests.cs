@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestAdminPackage.Common.Validators;
+using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestPackage.Common.Validators;
 
 namespace TabulateSmarterTestPackage.Common.Tests.Validators
 {

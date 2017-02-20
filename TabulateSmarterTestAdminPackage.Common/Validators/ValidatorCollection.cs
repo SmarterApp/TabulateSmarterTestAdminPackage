@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
 
-namespace TabulateSmarterTestAdminPackage.Common.Validators
+namespace TabulateSmarterTestPackage.Common.Validators
 {
     public class ValidatorCollection : List<Validator>, IValidator
     {

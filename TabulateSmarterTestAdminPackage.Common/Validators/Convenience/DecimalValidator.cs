@@ -1,6 +1,6 @@
-﻿using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
+﻿using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
 
-namespace TabulateSmarterTestAdminPackage.Common.Validators.Convenience
+namespace TabulateSmarterTestPackage.Common.Validators.Convenience
 {
     public static class DecimalValidator
     {

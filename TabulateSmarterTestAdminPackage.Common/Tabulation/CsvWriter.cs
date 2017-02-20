@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace TabulateSmarterTestAdminPackage.Common.Tabulation
+namespace TabulateSmarterTestPackage.Common.Tabulation
 {
     public class CsvWriter : IDisposable
     {

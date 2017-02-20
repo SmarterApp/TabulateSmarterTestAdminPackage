@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using TabulateSmarterTestAdminPackage.Common.RestrictedValues.Enums;
+using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
 
-namespace TabulateSmarterTestAdminPackage.Common.Validators.CrossTabulation
+namespace TabulateSmarterTestPackage.Common.Validators.CrossTabulation
 {
     public class ItemExistsValidator : Validator
     {

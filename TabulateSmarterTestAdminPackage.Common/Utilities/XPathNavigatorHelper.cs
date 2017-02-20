@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.XPath;
 
-namespace TabulateSmarterTestAdminPackage.Common.Utilities
+namespace TabulateSmarterTestPackage.Common.Utilities
 {
     public static class XPathNavitagorHelper
     {
