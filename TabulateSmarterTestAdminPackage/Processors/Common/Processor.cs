@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.XPath;
 using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestPackage.Common.Utilities;
+using TabulateSmarterTestPackage.Common.Validators;
 
 namespace TabulateSmarterTestPackage.Processors.Common
 {
@@ -63,16 +64,24 @@ namespace TabulateSmarterTestPackage.Processors.Common
             }
         }
 
-        protected bool ApplySecondaryValidation(AttributeValidationDictionary attributeValidationDictionary)
+        protected void ApplySecondaryValidation(string key, string value, string affectedProperty, Validator validation)
         {
-            var result = attributeValidationDictionary.Validate(Navigator);
-            result.Where(x => !x.Value.IsValid)
-                .ToList()
-                .ForEach(x =>
-                    ReportingUtility.ReportError(ReportingUtility.TestName, Navigator.OuterXml,
-                        x.Value.Validator.ErrorSeverity, x.Key,
-                        $"{Navigator.Name} attribute {x.Key} violates {x.Value.Validator.GetMessage()}"));
-            return result.Values.Count(x => !x.IsValid) == 0;
+            if (Attributes.ContainsKey(key) &&
+                Navigator.Eval(XPathExpression.Compile($"@{key}")).Equals(value, StringComparison.OrdinalIgnoreCase))
+            {
+                if (Attributes[affectedProperty] is ValidatorCollection)
+                {
+                    ((ValidatorCollection) Attributes[affectedProperty]).Add(validation);
+                }
+                else
+                {
+                    Attributes[affectedProperty] = new ValidatorCollection
+                    {
+                        (Validator) Attributes[affectedProperty],
+                        validation
+                    };
+                }
+            }
         }
     }
 }
