@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
 using TabulateSmarterTestPackage.Common.Utilities;
 using TabulateSmarterTestPackage.Tabulators;
@@ -38,11 +39,6 @@ namespace TabulateSmarterTestPackage
                 filename.items.csv    Tabulation of item data
                 filename.stims.csv    Tabulation of stimulus data
                 filename.errors.csv   Tabulation of errors (if any)
-
-            -scoring
-            Causes the tabulator to tabulate scoring packages and ignore all other
-            package types. If this option is not specified, the tabulator tabulates
-            all administration packages and ignores all other package types.
 
             -c <file path>
             If a content file path is specified, the tabulator will check against 
@@ -100,10 +96,6 @@ namespace TabulateSmarterTestPackage
                         }
                             break;
 
-                        case "-scoring":
-                            packageType = PackageType.Scoring;
-                            break;
-
                         case "-c":
                             ++i;
                             if (i >= args.Length)
@@ -141,10 +133,12 @@ namespace TabulateSmarterTestPackage
                     {
                         tabulator.ExpectedPackageType = packageType;
 
-                        foreach (var filename in inputFilenames)
-                        {
-                            ProcessInputFilename(filename, tabulator);
-                        }
+                        inputFilenames.AddRange(
+                            inputFilenames.Where(Directory.Exists)
+                                .SelectMany(x => new DirectoryInfo(x).GetFiles())
+                                .Select(x => x.Name));
+
+                        inputFilenames.ToList().ForEach(x => ProcessInputFilename(x, tabulator));
                     }
                 }
             }
