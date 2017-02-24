@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{24EFD539-9E45-43BB-86CE-90D5EDFE68F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProcessSmarterTestPackage</RootNamespace>
+    <AssemblyName>ProcessSmarterTestPackage</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Processors\Administration\AdministrationProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\AdminSegmentProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\GroupItemProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\ItemGroupProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\ItemSelectionParameterProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\ItemSelectorProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\SegmentBlueprintElementProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\SegmentBlueprintProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\SegmentFormProcessor.cs" />
+    <Compile Include="Processors\Administration\AdminSegment\SegmentPoolProcessor.cs" />
+    <Compile Include="Processors\Administration\PoolPropertyProcessor.cs" />
+    <Compile Include="Processors\Common\IdentifierProcessor.cs" />
+    <Compile Include="Processors\Common\ItemPool\ItemPoolProcessor.cs" />
+    <Compile Include="Processors\Common\ItemPool\Passage\PassageProcessor.cs" />
+    <Compile Include="Processors\Common\ItemPool\TestItem\BpRefProcessor.cs" />
+    <Compile Include="Processors\Common\ItemPool\TestItem\ItemScoredDimensionProcessor.cs" />
+    <Compile Include="Processors\Common\ItemPool\TestItem\ItemScoreParameterProcessor.cs" />
+    <Compile Include="Processors\Common\ItemPool\TestItem\PassageRefProcessor.cs" />
+    <Compile Include="Processors\Common\ItemPool\TestItem\TestItemProcessor.cs" />
+    <Compile Include="Processors\Common\Processor.cs" />
+    <Compile Include="Processors\Common\PropertyProcessor.cs" />
+    <Compile Include="Processors\Common\TestBlueprint\BlueprintElementProcessor.cs" />
+    <Compile Include="Processors\Common\TestBlueprint\TestBlueprintProcessor.cs" />
+    <Compile Include="Processors\Common\TestForm\TestFormPartitionProcessor.cs" />
+    <Compile Include="Processors\Common\TestForm\TestFormProcessor.cs" />
+    <Compile Include="Processors\Common\TestSpecificationProcessor.cs" />
+    <Compile Include="Processors\Scoring\PerformanceLevels\PerformanceLevelProcessor.cs" />
+    <Compile Include="Processors\Scoring\PerformanceLevels\PerformanceLevelsProcessor.cs" />
+    <Compile Include="Processors\Scoring\ScoringProcessor.cs" />
+    <Compile Include="Processors\Scoring\ScoringRules\ComputationRuleParameterProcessor.cs" />
+    <Compile Include="Processors\Scoring\ScoringRules\ComputationRuleParameterValueProcessor.cs" />
+    <Compile Include="Processors\Scoring\ScoringRules\ComputationRuleProcessor.cs" />
+    <Compile Include="Processors\Scoring\ScoringRules\ScoringRulesProcessor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TabulateSmarterTestPackage.Common\TabulateSmarterTestPackage.Common.csproj">
+      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
+      <Name>TabulateSmarterTestPackage.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidateSmarterTestPackage\ValidateSmarterTestPackage.csproj">
+      <Project>{13d02c2b-f91b-4ce2-8b7c-af6a37e0d5a1}</Project>
+      <Name>ValidateSmarterTestPackage</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
