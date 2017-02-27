@@ -1,8 +1,8 @@
 ﻿using System.Xml.XPath;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
+using SmarterTestPackage.Common.Extensions;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.Processors.Common.ItemPool
 {

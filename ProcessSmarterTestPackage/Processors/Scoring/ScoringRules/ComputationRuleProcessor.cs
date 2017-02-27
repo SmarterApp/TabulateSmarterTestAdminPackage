@@ -1,8 +1,8 @@
 using System.Xml.XPath;
 using ProcessSmarterTestPackage.Processors.Common;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
+using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.Processors.Scoring.ScoringRules

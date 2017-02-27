@@ -1,9 +1,8 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
+using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators.Convenience;
-using ValidateSmarterTestPackage.Validators.CrossTabulation;
 
 namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage
 {
@@ -11,20 +10,11 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage
     {
         public PassageProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            Attributes = string.IsNullOrEmpty(ReportingUtility.ContentDirectoryPath)
-                ? new AttributeValidationDictionary
+            Attributes =
+                new AttributeValidationDictionary
                 {
                     {
                         "filename", StringValidator.IsValidNonEmptyWithLength(200)
-                    }
-                }
-                : new AttributeValidationDictionary
-                {
-                    {
-                        "filename",
-                        StringValidator.IsValidNonEmptyWithLength(200)
-                            .AddAndReturn(new StimuliExistsValidator(ErrorSeverity.Degraded,
-                                ReportingUtility.ContentDirectoryPath))
                     }
                 };
 

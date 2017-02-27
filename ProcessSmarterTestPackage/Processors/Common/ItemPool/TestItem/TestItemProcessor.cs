@@ -1,11 +1,11 @@
 ﻿using System.Xml.XPath;
 using ProcessSmarterTestPackage.Processors.Administration;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
+using SmarterTestPackage.Common.Data;
+using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators;
 using ValidateSmarterTestPackage.Validators.Convenience;
-using ValidateSmarterTestPackage.Validators.CrossTabulation;
 
 namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
 {
@@ -13,36 +13,18 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
     {
         public TestItemProcessor(XPathNavigator navigator, PackageType packageType) : base(navigator, packageType)
         {
-            if (string.IsNullOrEmpty(ReportingUtility.ContentDirectoryPath))
+            Attributes = new AttributeValidationDictionary
             {
-                Attributes = new AttributeValidationDictionary
                 {
-                    {
-                        "filename", StringValidator.IsValidNonEmptyWithLength(200)
-                    },
-                    {
-                        "itemtype", StringValidator.IsValidNonEmptyWithLength(50)
-                            .AddAndReturn(new RequiredEnumValidator(ErrorSeverity.Degraded,
-                                RestrictedListItems.ItemType))
-                    }
-                };
-            }
-            else
-            {
-                Attributes = new AttributeValidationDictionary
+                    "filename", StringValidator.IsValidNonEmptyWithLength(200)
+                },
                 {
-                    {
-                        "filename", StringValidator.IsValidNonEmptyWithLength(200)
-                            .AddAndReturn(new ItemExistsValidator(ErrorSeverity.Degraded,
-                                ReportingUtility.ContentDirectoryPath))
-                    },
-                    {
-                        "itemtype", StringValidator.IsValidNonEmptyWithLength(50)
-                            .AddAndReturn(new RequiredEnumValidator(ErrorSeverity.Degraded,
-                                RestrictedListItems.ItemType))
-                    }
-                };
-            }
+                    "itemtype", StringValidator.IsValidNonEmptyWithLength(50)
+                        .AddAndReturn(new RequiredEnumValidator(ErrorSeverity.Degraded,
+                            RestrictedListItems.ItemType))
+                }
+            };
+
             Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
             ReplaceAttributeValidation("identifier", new AttributeValidationDictionary
             {

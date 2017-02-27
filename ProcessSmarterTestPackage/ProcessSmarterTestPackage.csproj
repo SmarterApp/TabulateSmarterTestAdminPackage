@@ -36,6 +36,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProcessorDictionary.cs" />
     <Compile Include="Processors\Administration\AdministrationProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\AdminSegmentProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\GroupItemProcessor.cs" />
@@ -72,9 +73,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TabulateSmarterTestPackage.Common\TabulateSmarterTestPackage.Common.csproj">
-      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
-      <Name>TabulateSmarterTestPackage.Common</Name>
+    <ProjectReference Include="..\SmarterTestPackage.Common\SmarterTestPackage.Common.csproj">
+      <Project>{3e5b3c7d-9f21-4ef6-a18d-b3f6d762a7ff}</Project>
+      <Name>SmarterTestPackage.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ValidateSmarterTestPackage\ValidateSmarterTestPackage.csproj">
       <Project>{13d02c2b-f91b-4ce2-8b7c-af6a37e0d5a1}</Project>

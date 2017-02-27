@@ -57,9 +57,13 @@
       <Project>{24EFD539-9E45-43BB-86CE-90D5EDFE68F2}</Project>
       <Name>ProcessSmarterTestPackage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TabulateSmarterTestPackage.Common\TabulateSmarterTestPackage.Common.csproj">
-      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
-      <Name>TabulateSmarterTestPackage.Common</Name>
+    <ProjectReference Include="..\TabulateSmarterTestPackage\TabulateSmarterTestPackage.csproj">
+      <Project>{8b1c74f6-8534-45e9-ae12-2ed0eaa5545e}</Project>
+      <Name>TabulateSmarterTestPackage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidateSmarterTestPackage\ValidateSmarterTestPackage.csproj">
+      <Project>{13D02C2B-F91B-4CE2-8B7C-AF6A37E0D5A1}</Project>
+      <Name>ValidateSmarterTestPackage</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

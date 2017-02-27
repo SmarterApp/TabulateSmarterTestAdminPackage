@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
 using TabulateSmarterTestPackage.Tabulators;
+using TabulateSmarterTestPackage.Utilities;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage
 {

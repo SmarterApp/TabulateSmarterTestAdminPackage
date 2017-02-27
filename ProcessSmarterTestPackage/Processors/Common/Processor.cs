@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
+using SmarterTestPackage.Common.Data;
+using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators;
 
 namespace ProcessSmarterTestPackage.Processors.Common
@@ -32,17 +33,28 @@ namespace ProcessSmarterTestPackage.Processors.Common
         public virtual bool Process()
         {
             ValidatedAttributes = Attributes.Validate(Navigator);
+            var badProcessors = Processors.Count(x => !x.Process());
+            return ValidatedAttributes.Values.Count(x => !x.IsValid) == 0
+                   && badProcessors == 0;
+        }
+
+        public IList<ValidationError> GenerateErrorMessages()
+        {
+            var result = new List<ValidationError>();
             ValidatedAttributes
                 .Where(x => !x.Value.IsValid)
                 .ToList()
                 .ForEach(x =>
-                    ReportingUtility.ReportError(ReportingUtility.TestName, Navigator.OuterXml,
-                        x.Value.Validator.ErrorSeverity, x.Key,
-                        $"{Navigator.Name} attribute {x.Key} violates {x.Value.Validator.GetMessage()}"));
-
-            var badProcessors = Processors.Count(x => !x.Process());
-            return ValidatedAttributes.Values.Count(x => !x.IsValid) == 0
-                   && badProcessors == 0;
+                    result.Add(new ValidationError
+                        {
+                            ErrorSeverity = x.Value.Validator.ErrorSeverity,
+                            GeneratedMessage = x.Value.Validator.GetMessage(),
+                            Key = x.Key,
+                            Location = Navigator.Name,
+                            Path = Navigator.OuterXml
+                        }
+                    ));
+            return result;
         }
 
         protected void ReplaceAttributeValidation(string processorName,

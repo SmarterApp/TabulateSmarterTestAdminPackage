@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.RestrictedValues.RestrictedList;
+using SmarterTestPackage.Common.Data;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
+using ValidateSmarterTestPackage.RestrictedValues.RestrictedList;
 
 namespace ValidateSmarterTestPackage.Validators
 {

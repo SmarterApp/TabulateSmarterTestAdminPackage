@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
+using SmarterTestPackage.Common.Data;
 
 namespace ValidateSmarterTestPackage.Validators.CrossTabulation
 {

@@ -2,8 +2,8 @@
 using System.Xml.XPath;
 using NUnit.Framework;
 using ProcessSmarterTestPackage.Processors.Common;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
+using TabulateSmarterTestPackage.Utilities;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestAdminPackage.Tests.Processors
 {

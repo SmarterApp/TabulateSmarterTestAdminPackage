@@ -1,4 +1,4 @@
-﻿namespace TabulateSmarterTestPackage.Common.RestrictedValues.Enums
+﻿namespace SmarterTestPackage.Common.Data
 {
     public enum ErrorSeverity
     {

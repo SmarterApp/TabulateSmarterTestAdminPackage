@@ -56,9 +56,9 @@
     <Compile Include="Validators\RequiredRegularExpressionValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TabulateSmarterTestPackage.Common\TabulateSmarterTestPackage.Common.csproj">
-      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
-      <Name>TabulateSmarterTestPackage.Common</Name>
+    <ProjectReference Include="..\SmarterTestPackage.Common\SmarterTestPackage.Common.csproj">
+      <Project>{3E5B3C7D-9F21-4EF6-A18D-B3F6D762A7FF}</Project>
+      <Name>SmarterTestPackage.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ValidateSmarterTestPackage\ValidateSmarterTestPackage.csproj">
       <Project>{13D02C2B-F91B-4CE2-8B7C-AF6A37E0D5A1}</Project>

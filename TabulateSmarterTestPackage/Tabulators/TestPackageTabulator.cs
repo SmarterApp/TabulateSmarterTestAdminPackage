@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.XPath;
 using ProcessSmarterTestPackage.Processors.Common;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.RestrictedValues.RestrictedList;
-using TabulateSmarterTestPackage.Common.Utilities;
+using SmarterTestPackage.Common.Data;
+using SmarterTestPackage.Common.Extensions;
+using TabulateSmarterTestPackage.Utilities;
+using TabulateSmarterTestPackage.Utilities.Data;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
+using ValidateSmarterTestPackage.RestrictedValues.RestrictedList;
 
 namespace TabulateSmarterTestPackage.Tabulators
 {
-    internal class TestPackageTabulator : ITabulator
+    internal class TestPackageTabulator : Tabulator
     {
         private const int MaxBpRefs = 7;
         private const string c_MathStdPrefix = "SBAC-MA-v6:";
@@ -147,7 +149,7 @@ namespace TabulateSmarterTestPackage.Tabulators
 
         public PackageType ExpectedPackageType { get; set; }
 
-        public void ProcessResult(Stream input)
+        public override void ProcessResult(Stream input)
         {
             var doc = new XPathDocument(input);
             var nav = doc.CreateNavigator();
@@ -155,15 +157,6 @@ namespace TabulateSmarterTestPackage.Tabulators
             // /testspecification
             var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode("/testspecification"),
                 ExpectedPackageType);
-
-            if (
-                testSpecificationProcessor.Attributes.ValidateAttribute(testSpecificationProcessor.Navigator, "package")
-                    .Any(x => !x.Value.IsValid))
-            {
-                Console.WriteLine("Incorrect package type assigned");
-                return;
-                // If the test package is not what we expect, we should short circuit and return without processing any further
-            }
 
             // Get the test info
             var testName = nav.Eval(sXp_TestName);
@@ -472,7 +465,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         } // ProcessPackage
 
 
-        public void Dispose()
+        public new void Dispose()
         {
             Dispose(true);
         }
@@ -504,15 +497,6 @@ namespace TabulateSmarterTestPackage.Tabulators
             {
                 GC.SuppressFinalize(this);
             }
-        }
-
-        private class GroupItemInfo
-        {
-            public string AdminRequired;
-            public string FormPosition;
-            public string IsActive;
-            public string IsFieldTest;
-            public string ResponseRequired;
         }
     }
 }

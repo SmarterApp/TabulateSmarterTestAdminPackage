@@ -1,6 +1,6 @@
-﻿using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
+﻿using SmarterTestPackage.Common.Data;
 
-namespace TabulateSmarterTestPackage.Common.Tabulation
+namespace TabulateSmarterTestPackage.Utilities
 {
     public class ErrorHandling
     {

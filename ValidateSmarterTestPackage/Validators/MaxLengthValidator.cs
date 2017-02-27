@@ -1,4 +1,4 @@
-﻿using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
+﻿using SmarterTestPackage.Common.Data;
 
 namespace ValidateSmarterTestPackage.Validators
 {

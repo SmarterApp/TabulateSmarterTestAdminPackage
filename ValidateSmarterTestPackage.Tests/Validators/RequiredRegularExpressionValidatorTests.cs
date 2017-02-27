@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
+using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Validators;
 
 namespace TabulateSmarterTestPackage.Common.Tests.Validators

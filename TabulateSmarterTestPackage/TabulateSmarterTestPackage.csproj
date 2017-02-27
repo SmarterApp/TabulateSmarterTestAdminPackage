@@ -59,10 +59,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
+    <Compile Include="Utilities\CsvWriter.cs" />
+    <Compile Include="Utilities\Data\GroupItemInfo.cs" />
+    <Compile Include="Utilities\ErrorHandling.cs" />
+    <Compile Include="Tabulator.cs" />
     <Compile Include="Tabulators\ITabulator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tabulators\TestPackageTabulator.cs" />
+    <Compile Include="Utilities\ReportingUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -84,15 +89,16 @@
       <Project>{24efd539-9e45-43bb-86ce-90d5edfe68f2}</Project>
       <Name>ProcessSmarterTestPackage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TabulateSmarterTestPackage.Common\TabulateSmarterTestPackage.Common.csproj">
-      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
-      <Name>TabulateSmarterTestPackage.Common</Name>
+    <ProjectReference Include="..\SmarterTestPackage.Common\SmarterTestPackage.Common.csproj">
+      <Project>{3e5b3c7d-9f21-4ef6-a18d-b3f6d762a7ff}</Project>
+      <Name>SmarterTestPackage.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ValidateSmarterTestPackage\ValidateSmarterTestPackage.csproj">
       <Project>{13d02c2b-f91b-4ce2-8b7c-af6a37e0d5a1}</Project>
       <Name>ValidateSmarterTestPackage</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Tabulation;
+using SmarterTestPackage.Common.Data;
 
-namespace TabulateSmarterTestPackage.Common.Utilities
+namespace TabulateSmarterTestPackage.Utilities
 {
     public static class ReportingUtility
     {

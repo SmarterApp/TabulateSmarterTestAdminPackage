@@ -43,6 +43,11 @@
   <ItemGroup>
     <Compile Include="AttributeValidationDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RestrictedValues\Enums\ItemFieldNames.cs" />
+    <Compile Include="RestrictedValues\Enums\PackageType.cs" />
+    <Compile Include="RestrictedValues\Enums\RestrictedListItems.cs" />
+    <Compile Include="RestrictedValues\Enums\StimFieldNames.cs" />
+    <Compile Include="RestrictedValues\RestrictedList\RestrictedList.cs" />
     <Compile Include="ValidatedAttribute.cs" />
     <Compile Include="Validators\Convenience\BooleanValidator.cs" />
     <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
@@ -67,9 +72,9 @@
     <Compile Include="Validators\ValidatorCollection.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TabulateSmarterTestPackage.Common\TabulateSmarterTestPackage.Common.csproj">
-      <Project>{6f9a6238-72c4-4389-b23e-b687c4542281}</Project>
-      <Name>TabulateSmarterTestPackage.Common</Name>
+    <ProjectReference Include="..\SmarterTestPackage.Common\SmarterTestPackage.Common.csproj">
+      <Project>{3e5b3c7d-9f21-4ef6-a18d-b3f6d762a7ff}</Project>
+      <Name>SmarterTestPackage.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

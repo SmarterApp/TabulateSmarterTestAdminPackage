@@ -1,7 +1,6 @@
 ﻿using System.Xml.XPath;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
 using ValidateSmarterTestPackage;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
@@ -29,8 +28,8 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
                 return true;
             }
 
-            ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, Navigator.BaseURI,
-                validators.GetMessage());
+            //ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, Navigator.BaseURI,
+            //    validators.GetMessage());
             return false;
         }
     }

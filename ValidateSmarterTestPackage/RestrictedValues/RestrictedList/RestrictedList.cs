@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
+using SmarterTestPackage.Common.Data;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
-namespace TabulateSmarterTestPackage.Common.RestrictedValues.RestrictedList
+namespace ValidateSmarterTestPackage.RestrictedValues.RestrictedList
 {
     public static class RestrictedList
     {

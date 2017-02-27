@@ -5,8 +5,8 @@ using ProcessSmarterTestPackage.Processors.Common.TestBlueprint;
 using ProcessSmarterTestPackage.Processors.Common.TestForm;
 using ProcessSmarterTestPackage.Processors.Scoring.PerformanceLevels;
 using ProcessSmarterTestPackage.Processors.Scoring.ScoringRules;
-using TabulateSmarterTestPackage.Common.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Common.Utilities;
+using SmarterTestPackage.Common.Extensions;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.Processors.Scoring
 {
