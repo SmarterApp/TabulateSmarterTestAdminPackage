@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
@@ -26,7 +27,14 @@ namespace ValidateSmarterTestPackage.Validators
             RestrictedListItems restrictedListItem;
             return !Enum.TryParse(Parameter.ToString(), out restrictedListItem)
                 ? $"[IncorrectArgumentProvidedToValidator:{Parameter}]"
-                : $"[RequiredValueIn:{RestrictedList.RestrictedLists[restrictedListItem]}";
+                : $"[RequiredValueIn:{StringifyList(RestrictedList.RestrictedLists[restrictedListItem].ToList())}";
+        }
+
+        private string StringifyList(List<string> list)
+        {
+            var result = string.Empty;
+            list.ForEach(x => result = $"{result}<{x}>");
+            return $"({result})";
         }
     }
 }

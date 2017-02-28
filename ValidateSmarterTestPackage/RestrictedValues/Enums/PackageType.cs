@@ -2,9 +2,7 @@
 {
     public enum PackageType
     {
-        Registration,
         Administration,
-        Scoring,
-        Reporting
+        Scoring
     }
 }

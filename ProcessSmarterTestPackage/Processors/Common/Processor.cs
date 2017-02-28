@@ -54,6 +54,9 @@ namespace ProcessSmarterTestPackage.Processors.Common
                             Path = Navigator.OuterXml
                         }
                     ));
+            var childErrors = Processors.SelectMany(x => x.GenerateErrorMessages()).ToList();
+            childErrors.ForEach(x => x.Location = $"{Navigator.Name}/{x.Location}");
+            result.AddRange(childErrors);
             return result;
         }
 
@@ -95,6 +98,31 @@ namespace ProcessSmarterTestPackage.Processors.Common
                     };
                 }
             }
+        }
+
+        public IEnumerable<Processor> ChildNodesWithName(string name)
+        {
+            return Processors.Where(x => x.Navigator.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public Processor ChildNodeWithName(string name)
+        {
+            return Processors.First(x => x.Navigator.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public Processor ChildNodeWithNameAndPropertyValue(string name, string propertyName, string propertyValue)
+        {
+            return
+                ChildNodesWithName(name)
+                    .First(
+                        x =>
+                            x.ValueForAttribute(propertyName).Equals(propertyValue,
+                                StringComparison.OrdinalIgnoreCase));
+        }
+
+        public string ValueForAttribute(string attribute)
+        {
+            return ValidatedAttributes[attribute].Value;
         }
     }
 }

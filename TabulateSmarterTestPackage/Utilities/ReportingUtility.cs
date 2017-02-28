@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using SmarterTestPackage.Common.Data;
+﻿using SmarterTestPackage.Common.Data;
 
 namespace TabulateSmarterTestPackage.Utilities
 {
@@ -65,10 +64,6 @@ namespace TabulateSmarterTestPackage.Utilities
         {
             if (ItemWriter != null)
             {
-                if (!disposing)
-                {
-                    Debug.Fail("Failed to dispose TestPackageProcessor");
-                }
                 ItemWriter.Dispose();
                 ItemWriter = null;
             }

@@ -59,14 +59,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
+    <Compile Include="Tabulators\ItemTabulator.cs" />
+    <Compile Include="Tabulators\StimuliTabulator.cs" />
     <Compile Include="Utilities\CsvWriter.cs" />
     <Compile Include="Utilities\Data\GroupItemInfo.cs" />
+    <Compile Include="Utilities\Data\PerformanceLevel.cs" />
+    <Compile Include="Utilities\Data\TestInformation.cs" />
     <Compile Include="Utilities\ErrorHandling.cs" />
     <Compile Include="Tabulator.cs" />
     <Compile Include="Tabulators\ITabulator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tabulators\TestPackageTabulator.cs" />
+    <Compile Include="Utilities\FormatHelper.cs" />
     <Compile Include="Utilities\ReportingUtility.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -83,6 +83,7 @@ namespace TabulateSmarterTestPackage.Utilities
                 {
                     Debug.Fail("Failed to dispose CsvWriter");
                 }
+
                 mWriter.Dispose();
                 mWriter = null;
             }

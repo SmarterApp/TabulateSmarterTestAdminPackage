@@ -2,10 +2,15 @@
 {
     public enum ItemFieldNames
     {
-        TestName,
-        TestSubject,
-        TestGrade,
-        TestType, // PT or Summative
+        AssessmentId,
+        AssessmentName,
+        AssessmentSubject,
+        AssessmentGrade,
+        AssessmentType, // PT or Summative
+        AssessmentSubtype,
+        AssessmentLabel,
+        AssessmentVersion,
+        AcademicYear,
         ItemId, // Strip the "200-" bankId prefix
         Filename,
         Version,
