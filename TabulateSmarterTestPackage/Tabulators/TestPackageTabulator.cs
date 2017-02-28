@@ -13,7 +13,7 @@ using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage.Tabulators
 {
-    internal class TestPackageTabulator : Tabulator
+    internal class TestPackageTabulator : IDisposable
     {
         public TestPackageTabulator(string oFilename)
         {
@@ -32,7 +32,13 @@ namespace TabulateSmarterTestPackage.Tabulators
 
         public PackageType ExpectedPackageType { get; set; }
 
-        public override void ProcessResult(Stream input)
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        public TestSpecificationProcessor ProcessResult(Stream input)
         {
             var doc = new XPathDocument(input);
             var nav = doc.CreateNavigator();
@@ -47,50 +53,54 @@ namespace TabulateSmarterTestPackage.Tabulators
                 ExpectedPackageType);
             testSpecificationProcessor.Process();
 
-            var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>();
-            var errorList = new List<List<string>>();
-            errorList.AddRange(errors.Select(x => new List<string>
-            {
-                x.TestName,
-                x.ErrorSeverity.ToString(),
-                x.Path,
-                x.ItemId,
-                x.Message
-            }));
-            errorList.ForEach(x => ReportingUtility.GetErrorWriter().Write(x.ToArray()));
-
-            // Extract the test info
-            var testInformation = TestInformation.RetrieveTestInformation(testSpecificationProcessor);
-
-            ReportingUtility.TestName = testInformation[ItemFieldNames.AssessmentName];
-
-            //var itemNames = Enum.GetNames(typeof(ItemFieldNames));
-            //foreach (var performanceLevel in performanceLevels)
-            //{
-            //    itemNames.ToList().Add("PerformanceLevel");
-            //    itemNames.ToList().Add("ScaledLow");
-            //    itemNames.ToList().Add("ScaledHigh");
-            //}
-            //ReportingUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
-            //ReportingUtility.GetItemWriter().Write(itemNames);
-
-            var itemTabulator = new ItemTabulator();
-            var items = itemTabulator.ProcessResult(nav, testSpecificationProcessor, testInformation);
-            items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
-
-            var assessmentRoot = ExpectedPackageType == PackageType.Administration
-                ? testSpecificationProcessor.ChildNodeWithName("administration")
-                : testSpecificationProcessor.ChildNodeWithName("scoring");
-            var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage");
-            var stimuliTabulator = new StimuliTabulator();
-            var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(), testInformation);
-            stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+            return testSpecificationProcessor;
         }
 
-
-        public new void Dispose()
+        public void TabulateResults(IList<TestSpecificationProcessor> testSpecificationProcessors,
+            IList<ProcessingError> crossTabulationErrors)
         {
-            Dispose(true);
+            foreach (var testSpecificationProcessor in testSpecificationProcessors)
+            {
+                var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>();
+                var errorList = new List<List<string>>();
+                errorList.AddRange(errors.Select(x => new List<string>
+                {
+                    x.TestName,
+                    x.ErrorSeverity.ToString(),
+                    x.Path,
+                    x.ItemId,
+                    x.Message
+                }));
+                errorList.ForEach(x => ReportingUtility.GetErrorWriter().Write(x.ToArray()));
+
+                // Extract the test info
+                var testInformation = TestInformation.RetrieveTestInformation(testSpecificationProcessor);
+
+                ReportingUtility.TestName = testInformation[ItemFieldNames.AssessmentName];
+
+                //var itemNames = Enum.GetNames(typeof(ItemFieldNames));
+                //foreach (var performanceLevel in performanceLevels)
+                //{
+                //    itemNames.ToList().Add("PerformanceLevel");
+                //    itemNames.ToList().Add("ScaledLow");
+                //    itemNames.ToList().Add("ScaledHigh");
+                //}
+                //ReportingUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
+                //ReportingUtility.GetItemWriter().Write(itemNames);
+
+                var itemTabulator = new ItemTabulator();
+                var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
+                    testInformation);
+                items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
+
+                var assessmentRoot = ExpectedPackageType == PackageType.Administration
+                    ? testSpecificationProcessor.ChildNodeWithName("administration")
+                    : testSpecificationProcessor.ChildNodeWithName("scoring");
+                var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage");
+                var stimuliTabulator = new StimuliTabulator();
+                var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(), testInformation);
+                stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+            }
         }
 
         ~TestPackageTabulator()

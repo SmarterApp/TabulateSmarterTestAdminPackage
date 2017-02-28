@@ -61,6 +61,7 @@
     <Compile Include="ConsoleHelper.cs" />
     <Compile Include="Tabulators\ItemTabulator.cs" />
     <Compile Include="Tabulators\StimuliTabulator.cs" />
+    <Compile Include="Utilities\CsvProcessor.cs" />
     <Compile Include="Utilities\CsvWriter.cs" />
     <Compile Include="Utilities\Data\GroupItemInfo.cs" />
     <Compile Include="Utilities\Data\PerformanceLevel.cs" />

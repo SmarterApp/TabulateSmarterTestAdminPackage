@@ -36,7 +36,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProcessorDictionary.cs" />
+    <Compile Include="CrossTabulator.cs" />
     <Compile Include="Processors\Administration\AdministrationProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\AdminSegmentProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\GroupItemProcessor.cs" />

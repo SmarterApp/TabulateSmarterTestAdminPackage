@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Linq;
 using TabulateSmarterTestPackage.Tabulators;
 using TabulateSmarterTestPackage.Utilities;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage
 {
@@ -51,7 +50,6 @@ namespace TabulateSmarterTestPackage
             {
                 var inputFilenames = new List<string>();
                 string oFilename = null;
-                var packageType = PackageType.Administration;
 
                 var help = false;
 
@@ -131,8 +129,6 @@ namespace TabulateSmarterTestPackage
 
                     using (var tabulator = new TestPackageTabulator(oFilename))
                     {
-                        tabulator.ExpectedPackageType = packageType;
-
                         inputFilenames.AddRange(
                             inputFilenames.Where(Directory.Exists)
                                 .SelectMany(x => new DirectoryInfo(x).GetFiles())
@@ -159,7 +155,7 @@ namespace TabulateSmarterTestPackage
             }
         }
 
-        private static void ProcessInputFilename(string filenamePattern, ITabulator tabulator)
+        private static void ProcessInputFilename(string filenamePattern, TestPackageTabulator tabulator)
         {
             var count = 0;
             var directory = Path.GetDirectoryName(filenamePattern);
@@ -192,7 +188,7 @@ namespace TabulateSmarterTestPackage
             }
         }
 
-        private static void ProcessInputXmlFile(string filename, ITabulator tabulator)
+        private static void ProcessInputXmlFile(string filename, TestPackageTabulator tabulator)
         {
             Console.WriteLine("Processing: " + filename);
             using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -202,7 +198,7 @@ namespace TabulateSmarterTestPackage
             Console.WriteLine();
         }
 
-        private static void ProcessInputZipFile(string filename, ITabulator tabulator)
+        private static void ProcessInputZipFile(string filename, TestPackageTabulator tabulator)
         {
             Console.WriteLine("Processing: " + filename);
             using (var zip = ZipFile.Open(filename, ZipArchiveMode.Read))
