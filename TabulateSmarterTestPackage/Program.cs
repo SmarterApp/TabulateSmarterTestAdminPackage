@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using ProcessSmarterTestPackage.Processors.Common;
+using SmarterTestPackage.Common.Data;
 using TabulateSmarterTestPackage.Tabulators;
 using TabulateSmarterTestPackage.Utilities;
 
@@ -39,8 +41,13 @@ namespace TabulateSmarterTestPackage
                 filename.stims.csv    Tabulation of stimulus data
                 filename.errors.csv   Tabulation of errors (if any)
 
-            -c <file path>
-            If a content tabulator output file is specified, input test packages will
+            -ci <file path>
+            If a content tabulator item output file is specified, input test packages will
+            be cross-tabulated against that csv output file and any discrepencies will
+            be reported.
+
+            -cs <file path>
+            If a content tabulator stimuli output file is specified, input test packages will
             be cross-tabulated against that csv output file and any discrepencies will
             be reported.";
 
@@ -93,25 +100,46 @@ namespace TabulateSmarterTestPackage
                         }
                             break;
 
-                        case "-c":
+                        case "-ci":
                             ++i;
                             if (i >= args.Length)
                             {
                                 throw new ArgumentException(
-                                    "Invalid command line. '-c' option not followed by filename.");
+                                    "Invalid command line. '-ci' option not followed by filename.");
                             }
                             if (!File.Exists(args[i]) &&
                                 !new FileInfo(args[i]).Extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
                             {
                                 throw new ArgumentException(
-                                    "Invalid command line. '-c' argument does not refer to valid csv output file.");
+                                    "Invalid command line. '-ci' argument does not refer to valid csv output file.");
                             }
-                            ReportingUtility.ContentDirectoryPath = args[i];
+                            ReportingUtility.ContentItemDirectoryPath = args[i];
+                            break;
+                        case "-cs":
+                            ++i;
+                            if (i >= args.Length)
+                            {
+                                throw new ArgumentException(
+                                    "Invalid command line. '-cs' option not followed by filename.");
+                            }
+                            if (!File.Exists(args[i]) &&
+                                !new FileInfo(args[i]).Extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
+                            {
+                                throw new ArgumentException(
+                                    "Invalid command line. '-cs' argument does not refer to valid csv output file.");
+                            }
+                            ReportingUtility.ContentStimuliDirectoryPath = args[i];
                             break;
                         default:
                             throw new ArgumentException(
                                 $"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");
                     }
+                }
+
+                if (!string.IsNullOrEmpty(ReportingUtility.ContentItemDirectoryPath) &&
+                    !string.IsNullOrEmpty(ReportingUtility.ContentStimuliDirectoryPath))
+                {
+                    ReportingUtility.InitializeCrossProcessor();
                 }
 
                 if (help || args.Length == 0)
@@ -193,7 +221,15 @@ namespace TabulateSmarterTestPackage
             Console.WriteLine("Processing: " + filename);
             using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                tabulator.ProcessResult(stream);
+                var processor = tabulator.ProcessResult(stream);
+                var errors = new List<ProcessingError>();
+                if (ReportingUtility.CrossProcessor != null)
+                {
+                    ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
+                    errors.AddRange(ReportingUtility.CrossProcessor.ExecuteValidation());
+                }
+                tabulator.AddTabulationHeaders();
+                tabulator.TabulateResults(new List<TestSpecificationProcessor> {processor}, errors);
             }
             Console.WriteLine();
         }
@@ -201,8 +237,10 @@ namespace TabulateSmarterTestPackage
         private static void ProcessInputZipFile(string filename, TestPackageTabulator tabulator)
         {
             Console.WriteLine("Processing: " + filename);
+            tabulator.AddTabulationHeaders();
             using (var zip = ZipFile.Open(filename, ZipArchiveMode.Read))
             {
+                var errors = new List<ProcessingError>();
                 foreach (var entry in zip.Entries)
                 {
                     // Must not be folder (empty name) and must have .xml extension
@@ -212,9 +250,23 @@ namespace TabulateSmarterTestPackage
                         Console.WriteLine("   Processing: " + entry.FullName);
                         using (var stream = entry.Open())
                         {
-                            tabulator.ProcessResult(stream);
+                            var processor = tabulator.ProcessResult(stream);
+                            if (ReportingUtility.CrossProcessor != null)
+                            {
+                                ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
+                                errors.AddRange(ReportingUtility.CrossProcessor.ExecuteValidation());
+                            }
+                            else
+                            {
+                                tabulator.TabulateResults(new List<TestSpecificationProcessor> {processor}, errors);
+                            }
                         }
                     }
+                }
+                if (ReportingUtility.CrossProcessor != null)
+                {
+                    tabulator.TabulateResults(
+                        ReportingUtility.CrossProcessor.TestPackages.Values.SelectMany(x => x).ToList(), errors);
                 }
             }
             Console.WriteLine();

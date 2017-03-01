@@ -124,5 +124,47 @@ namespace ProcessSmarterTestPackage.Processors.Common
         {
             return ValidatedAttributes[attribute].Value;
         }
+
+        public IEnumerable<CrossPackageValidationError> EqualTo(Processor processor,
+            IEnumerable<string> restrictedToKeys = null)
+        {
+            if (restrictedToKeys == null)
+            {
+                restrictedToKeys = processor.ValidatedAttributes.Keys;
+            }
+            var result =
+                new List<CrossPackageValidationError>();
+            if (processor == null || ValidatedAttributes == null)
+            {
+                return result;
+            }
+            foreach (var key in processor.ValidatedAttributes.Keys.Where(x => restrictedToKeys.Contains(x)))
+            {
+                var errorMessage = new CrossPackageValidationError
+                {
+                    ErrorSeverity = ErrorSeverity.Severe,
+                    GeneratedMessage = string.Empty,
+                    ItemId = string.Empty,
+                    Key = key,
+                    Location = Navigator.InnerXml,
+                    Path = Navigator.Name,
+                    PrimarySource = string.Empty,
+                    SecondarySource = string.Empty,
+                    TestName = string.Empty
+                };
+                if (!ValidatedAttributes.ContainsKey(key))
+                {
+                    errorMessage.GeneratedMessage = $"[RequiredProperty={key}]";
+                    result.Add(errorMessage);
+                }
+                else if (!ValidatedAttributes[key].Value.Equals(processor.ValidatedAttributes[key].Value))
+                {
+                    errorMessage.GeneratedMessage =
+                        $"{errorMessage.GeneratedMessage}[RequiredProperty {key} Value {ValidatedAttributes[key].Value}!={processor.ValidatedAttributes[key].Value}]";
+                    result.Add(errorMessage);
+                }
+            }
+            return result;
+        }
     }
 }

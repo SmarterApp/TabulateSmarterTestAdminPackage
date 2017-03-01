@@ -3,9 +3,9 @@ using System.IO;
 
 namespace TabulateSmarterTestPackage.Utilities
 {
-    public class CsvProcessor
+    public static class CsvProcessor
     {
-        public List<Dictionary<string, string>> Process(Stream stream)
+        public static List<Dictionary<string, string>> Process(Stream stream)
         {
             var result = new List<Dictionary<string, string>>();
             using (var reader = new StreamReader(stream))

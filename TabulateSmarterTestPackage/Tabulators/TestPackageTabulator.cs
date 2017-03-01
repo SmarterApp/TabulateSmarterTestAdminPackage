@@ -78,16 +78,6 @@ namespace TabulateSmarterTestPackage.Tabulators
 
                 ReportingUtility.TestName = testInformation[ItemFieldNames.AssessmentName];
 
-                //var itemNames = Enum.GetNames(typeof(ItemFieldNames));
-                //foreach (var performanceLevel in performanceLevels)
-                //{
-                //    itemNames.ToList().Add("PerformanceLevel");
-                //    itemNames.ToList().Add("ScaledLow");
-                //    itemNames.ToList().Add("ScaledHigh");
-                //}
-                //ReportingUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
-                //ReportingUtility.GetItemWriter().Write(itemNames);
-
                 var itemTabulator = new ItemTabulator();
                 var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
                     testInformation);
@@ -101,6 +91,20 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(), testInformation);
                 stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
             }
+        }
+
+        public void AddTabulationHeaders(int performancelevels = 0)
+        {
+            ReportingUtility.GetErrorWriter()
+                .Write(new[] {"AssessmentName", "ErrorSeverity", "Path", "UniqueId", "Message"});
+            ReportingUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
+            var itemHeaders = new List<string>();
+            itemHeaders.AddRange(Enum.GetNames(typeof(ItemFieldNames)).ToList());
+            for (var i = 0; i < performancelevels; i++)
+            {
+                itemHeaders.AddRange(new List<string> {"PerformanceLevel", "ScaledLow", "ScaledHigh"});
+            }
+            ReportingUtility.GetItemWriter().Write(itemHeaders.ToArray());
         }
 
         ~TestPackageTabulator()

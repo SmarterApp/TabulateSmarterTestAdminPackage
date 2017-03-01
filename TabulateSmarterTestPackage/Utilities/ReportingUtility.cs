@@ -1,4 +1,7 @@
-﻿using SmarterTestPackage.Common.Data;
+﻿using System.Collections.Generic;
+using System.IO;
+using ProcessSmarterTestPackage;
+using SmarterTestPackage.Common.Data;
 
 namespace TabulateSmarterTestPackage.Utilities
 {
@@ -18,7 +21,9 @@ namespace TabulateSmarterTestPackage.Utilities
         public static string StimuliFileName { get; set; }
         public static ErrorHandling ErrorHandling { get; set; }
         public static string TestName { get; set; }
-        public static string ContentDirectoryPath { get; set; }
+        public static string ContentItemDirectoryPath { get; set; }
+        public static string ContentStimuliDirectoryPath { get; set; }
+        public static CrossProcessor CrossProcessor { get; set; }
 
         public static CsvWriter GetItemWriter()
         {
@@ -40,6 +45,30 @@ namespace TabulateSmarterTestPackage.Utilities
             ErrorFileName = fileName + ".errors.csv";
             ItemFileName = fileName + ".items.csv";
             StimuliFileName = fileName + ".stims.csv";
+        }
+
+        public static void InitializeCrossProcessor()
+        {
+            if (!string.IsNullOrEmpty(ContentItemDirectoryPath) && !string.IsNullOrEmpty(ContentStimuliDirectoryPath))
+            {
+                var items = new List<Dictionary<string, string>>();
+                using (
+                    var itemStream = new FileStream(ContentItemDirectoryPath, FileMode.Open, FileAccess.Read,
+                        FileShare.Read))
+                {
+                    items = CsvProcessor.Process(itemStream);
+                }
+
+                var stimuli = new List<Dictionary<string, string>>();
+                using (
+                    var stimuliStream = new FileStream(ContentItemDirectoryPath, FileMode.Open, FileAccess.Read,
+                        FileShare.Read))
+                {
+                    stimuli = CsvProcessor.Process(stimuliStream);
+                }
+
+                CrossProcessor = new CrossProcessor(items, stimuli);
+            }
         }
 
         public static void ReportError(string testName, string path, ErrorSeverity severity, string itemId,
