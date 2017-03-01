@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentPackage\ContentPackage.cs" />
+    <Compile Include="Data\CrossPackageValidationError.cs" />
     <Compile Include="Data\ErrorSeverity.cs" />
     <Compile Include="Data\ProcessingError.cs" />
     <Compile Include="Data\ValidationError.cs" />
