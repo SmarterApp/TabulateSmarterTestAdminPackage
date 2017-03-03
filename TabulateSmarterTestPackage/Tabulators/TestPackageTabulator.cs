@@ -65,7 +65,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var errorList = new List<List<string>>();
                 errorList.AddRange(errors.Select(x => new List<string>
                 {
-                    x.TestName,
+                    testSpecificationProcessor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
                     x.ErrorSeverity.ToString(),
                     x.Path,
                     x.ItemId,

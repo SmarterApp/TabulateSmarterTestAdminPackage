@@ -125,7 +125,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
             return ValidatedAttributes[attribute].Value;
         }
 
-        public IEnumerable<CrossPackageValidationError> EqualTo(Processor processor,
+        public IEnumerable<CrossPackageValidationError> CheckEqualTo(Processor processor,
             IEnumerable<string> restrictedToKeys = null)
         {
             if (restrictedToKeys == null)

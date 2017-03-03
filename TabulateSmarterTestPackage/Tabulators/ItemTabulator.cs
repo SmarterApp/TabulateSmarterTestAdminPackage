@@ -367,17 +367,31 @@ namespace TabulateSmarterTestPackage.Tabulators
                         }
                     }
                 }
+
+                Dictionary<string, string> contentItem = null;
+                if (ReportingUtility.CrossProcessor != null &&
+                    ReportingUtility.CrossProcessor.ItemContentPackage != null)
+                {
+                    contentItem =
+                        ReportingUtility.CrossProcessor.ItemContentPackage.FirstOrDefault(
+                            x =>
+                                x["ItemId"].Equals(itemFields[(int) ItemFieldNames.ItemId],
+                                    StringComparison.OrdinalIgnoreCase));
+                }
+
                 if (itemFields[(int) ItemFieldNames.Standard] == null)
                 {
-                    itemFields[(int) ItemFieldNames.Standard] = string.Empty;
+                    itemFields[(int) ItemFieldNames.Standard] = contentItem != null
+                        ? contentItem["Standard"]
+                        : string.Empty;
                 }
                 if (itemFields[(int) ItemFieldNames.Claim] == null)
                 {
-                    itemFields[(int) ItemFieldNames.Claim] = string.Empty;
+                    itemFields[(int) ItemFieldNames.Claim] = contentItem != null ? contentItem["Claim"] : string.Empty;
                 }
                 if (itemFields[(int) ItemFieldNames.Target] == null)
                 {
-                    itemFields[(int) ItemFieldNames.Target] = string.Empty;
+                    itemFields[(int) ItemFieldNames.Target] = contentItem != null ? contentItem["Target"] : string.Empty;
                 }
 
                 GroupItemInfo gii;

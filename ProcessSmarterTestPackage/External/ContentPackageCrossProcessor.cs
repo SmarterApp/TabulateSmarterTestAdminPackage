@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
@@ -19,13 +20,17 @@ namespace ProcessSmarterTestPackage.External
                     : "scoring").ChildNodeWithName("itempool");
             var items = itemPool.ChildNodesWithName("testitem");
             var passages = itemPool.ChildNodesWithName("passage");
-            CrossValidateContentStimuli(primary.ValueForAttribute("uniqueid"), passages.Cast<PassageProcessor>(),
+            var stimuliErrors = CrossValidateContentStimuli(primary.ValueForAttribute("uniqueid"),
+                passages.Cast<PassageProcessor>(),
                 stimuliContent);
-            return CrossValidateContentItems(primary.ValueForAttribute("uniqueid"), items.Cast<TestItemProcessor>(),
+            var itemErrors = CrossValidateContentItems(primary.ValueForAttribute("uniqueid"),
+                items.Cast<TestItemProcessor>(),
                 itemContent);
+            stimuliErrors.ToList().AddRange(itemErrors);
+            return stimuliErrors;
         }
 
-        private IList<CrossPackageValidationError> CrossValidateContentItems(string key,
+        private IEnumerable<CrossPackageValidationError> CrossValidateContentItems(string key,
             IEnumerable<TestItemProcessor> processors, List<Dictionary<string, string>> itemContent)
         {
             var errors = new List<CrossPackageValidationError>();
@@ -36,18 +41,42 @@ namespace ProcessSmarterTestPackage.External
                     itemContent.FirstOrDefault(x => x["ItemId"].Equals(itemId));
                 if (item == null)
                 {
-                    errors.Add(new CrossPackageValidationError
-                    {
-                        ErrorSeverity = ErrorSeverity.Severe,
-                        GeneratedMessage = "[Item Does not exist in content package]",
-                        ItemId = itemId,
-                        Key = "ItemId",
-                        Location = "Item Cross-Tabulation (Item Content Package)",
-                        Path = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/testitem",
-                        PrimarySource = $"{key} - {processor.PackageType}",
-                        SecondarySource = "Item Content Package",
-                        TestName = key
-                    });
+                    errors.Add(GenerateItemError("[Item Does not exist in content package]", itemId, processor, key));
+                    continue;
+                }
+                var poolPropertyProcessors = processor.ChildNodesWithName("poolproperty").ToList();
+                var itemType = poolPropertyProcessors.FirstOrDefault(
+                    x => x.ValueForAttribute("property").Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase));
+                if (itemType != null &&
+                    !item["ItemType"].Equals(itemType.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add(
+                        GenerateItemError(
+                            $"[ContentPackageItemType:{item["ItemType"]}!=TestPackageItemType{itemType.ValueForAttribute("value")}]",
+                            itemId, processor, key));
+                }
+                var dok = poolPropertyProcessors.FirstOrDefault(
+                    x =>
+                        x.ValueForAttribute("property")
+                            .Trim()
+                            .Equals("Depth of Knowledge", StringComparison.OrdinalIgnoreCase));
+                if (dok != null &&
+                    !item["DOK"].Equals(dok.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add(
+                        GenerateItemError(
+                            $"[ContentPackageItemDOK:{item["DOK"]}!=TestPackageItemType{itemType.ValueForAttribute("value")}]",
+                            itemId, processor, key));
+                }
+                var grade = poolPropertyProcessors.FirstOrDefault(
+                    x => x.ValueForAttribute("property").Equals("Grade", StringComparison.OrdinalIgnoreCase));
+                if (grade != null &&
+                    !item["Grade"].Equals(grade.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add(
+                        GenerateItemError(
+                            $"[ContentPackageItemType:{item["Grade"]}!=TestPackageItemType{itemType.ValueForAttribute("value")}]",
+                            itemId, processor, key));
                 }
             }
             return errors;

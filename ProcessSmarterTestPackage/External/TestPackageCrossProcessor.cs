@@ -18,77 +18,81 @@ namespace ProcessSmarterTestPackage.External
                 primary.ChildNodeWithName("administration").ChildNodeWithName("itempool");
             var scoringItemPool =
                 primary.ChildNodeWithName("scoring").ChildNodeWithName("itempool");
-            result.AddRange(administrationItemPool.EqualTo(scoringItemPool));
-            result.AddRange(CrossValidatePackageItems(
-                administrationItemPool.ChildNodesWithName("testitem").Cast<TestItemProcessor>(),
-                scoringItemPool.ChildNodesWithName("testitem").Cast<TestItemProcessor>()));
+            result.AddRange(administrationItemPool.CheckEqualTo(scoringItemPool));
+            result.AddRange(
+                CrossValidatePackageItems(
+                    administrationItemPool.ChildNodesWithName("testitem").Cast<TestItemProcessor>(),
+                    scoringItemPool.ChildNodesWithName("testitem").Cast<TestItemProcessor>()));
+            result.AddRange(
+                CrossValidatePackagePassages(
+                    administrationItemPool.ChildNodesWithName("passage").Cast<PassageProcessor>(),
+                    scoringItemPool.ChildNodesWithName("passage").Cast<PassageProcessor>()));
             return result;
         }
 
-        private List<CrossPackageValidationError> CrossValidatePackageItems(
+        private IEnumerable<CrossPackageValidationError> CrossValidatePackageItems(
             IEnumerable<TestItemProcessor> adminItemProcessors, IEnumerable<TestItemProcessor> scoringItemProcessors)
         {
             var result = new List<CrossPackageValidationError>();
             foreach (var adminItemProcessor in adminItemProcessors)
             {
                 var id = adminItemProcessor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
-                var scoringProcessor =
+                var scoringItemProcessor =
                     scoringItemProcessors.FirstOrDefault(
                         x =>
                             x.ChildNodeWithName("identifier")
                                 .ValueForAttribute("uniqueid")
                                 .Equals(id, StringComparison.OrdinalIgnoreCase));
-                if (scoringProcessor == null)
+                if (scoringItemProcessor == null)
                 {
-                    result.Add(new CrossPackageValidationError
-                    {
-                        ErrorSeverity = ErrorSeverity.Severe,
-                        GeneratedMessage = "[Item does not exist in scoring package]",
-                        ItemId = id,
-                        Key = "uniqueid",
-                        Location = "Item Cross-Tabulation (Scoring Package)",
-                        Path = "testspecification/scoring/itempool/testitem/identifier",
-                        PrimarySource = string.Empty,
-                        SecondarySource = string.Empty,
-                        TestName = string.Empty
-                    });
+                    result.Add(GenerateError("[Item does not exist in scoring package]", id, adminItemProcessor,
+                        "uniqueid", "testspecification/scoring/itempool/testitem/identifier"));
                     continue;
                 }
-                result.AddRange(
-                    adminItemProcessor.ChildNodeWithName("identifier")
-                        .EqualTo(scoringProcessor.ChildNodeWithName("identifier"), new[] {"version"}));
-                foreach (var poolProperty in adminItemProcessor.ChildNodesWithName("poolproperty"))
-                {
-                    var scoringPoolProperty =
-                        scoringProcessor.ChildNodesWithName("poolproperty")
-                            .FirstOrDefault(
-                                x => x.ValueForAttribute("property").Equals(poolProperty.ValueForAttribute("property")));
-                    if (scoringPoolProperty == null)
-                    {
-                        result.Add(new CrossPackageValidationError
-                        {
-                            ErrorSeverity = ErrorSeverity.Severe,
-                            GeneratedMessage =
-                                $"[Pool property {poolProperty.ValueForAttribute("property")} does not exist in item {id}]",
-                            ItemId = id,
-                            Key = poolProperty.ValueForAttribute("property"),
-                            Location = "Item Cross-Tabulation (Scoring Package)",
-                            Path = "testspecification/scoring/itempool/testitem/poolproperty",
-                            PrimarySource = string.Empty,
-                            SecondarySource = string.Empty,
-                            TestName = string.Empty
-                        });
-                    }
-                }
+                result.AddRange(adminItemProcessor.CheckEqualTo(scoringItemProcessor));
             }
             return result;
         }
 
-        private List<CrossPackageValidationError> CrossValidatePackagePassages(
-            IEnumerable<PassageProcessor> adminPassageProcessors, IEnumerable<PassageProcessor> scoringPassageProcessors)
+        private IEnumerable<CrossPackageValidationError> CrossValidatePackagePassages(
+            IEnumerable<PassageProcessor> adminItemProcessors, IEnumerable<PassageProcessor> scoringItemProcessors)
         {
             var result = new List<CrossPackageValidationError>();
             return result;
+        }
+
+        public IEnumerable<CrossPackageValidationError> GetCrossPackageValidationErrors(string identifier,
+            Processor primary,
+            Processor secondary)
+        {
+            return GetProcessorsForIdentifier(primary, identifier).SelectMany(x => x.CheckEqualTo(secondary));
+        }
+
+        public IEnumerable<string> GetChildIdentifiers(Processor processor)
+        {
+            return processor.Processors.Select(x => x.Navigator.Name).Distinct();
+        }
+
+        public IEnumerable<Processor> GetProcessorsForIdentifier(Processor processor, string identifier)
+        {
+            return processor.ChildNodesWithName(identifier);
+        }
+
+        private static CrossPackageValidationError GenerateError(string message, string id, Processor processor,
+            string key, string path)
+        {
+            return new CrossPackageValidationError
+            {
+                ErrorSeverity = ErrorSeverity.Severe,
+                GeneratedMessage = message,
+                ItemId = id,
+                Key = processor.Navigator.Name,
+                Location = processor.Navigator.InnerXml,
+                Path = path,
+                PrimarySource = $"{key} - {processor.PackageType}",
+                SecondarySource = "Scoring Package",
+                TestName = key
+            };
         }
     }
 }

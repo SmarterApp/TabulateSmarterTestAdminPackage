@@ -16,8 +16,6 @@ namespace ProcessSmarterTestPackage.Processors.Administration
             {
                 {
                     "property", StringValidator.IsValidNonEmptyWithLength(50)
-                        .AddAndReturn(new RequiredEnumValidator(ErrorSeverity.Degraded,
-                            RestrictedListItems.PoolPropertyName))
                 },
                 {
                     "value", StringValidator.IsValidNonEmptyWithLength(128)
