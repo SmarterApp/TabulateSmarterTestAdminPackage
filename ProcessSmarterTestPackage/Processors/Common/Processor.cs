@@ -107,14 +107,14 @@ namespace ProcessSmarterTestPackage.Processors.Common
 
         public Processor ChildNodeWithName(string name)
         {
-            return Processors.First(x => x.Navigator.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return Processors.FirstOrDefault(x => x.Navigator.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         public Processor ChildNodeWithNameAndPropertyValue(string name, string propertyName, string propertyValue)
         {
             return
                 ChildNodesWithName(name)
-                    .First(
+                    .FirstOrDefault(
                         x =>
                             x.ValueForAttribute(propertyName).Equals(propertyValue,
                                 StringComparison.OrdinalIgnoreCase));
@@ -122,7 +122,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
 
         public string ValueForAttribute(string attribute)
         {
-            return ValidatedAttributes[attribute].Value;
+            return ValidatedAttributes.ContainsKey(attribute) ? ValidatedAttributes[attribute].Value : string.Empty;
         }
 
         public IEnumerable<CrossPackageValidationError> CheckEqualTo(Processor processor,

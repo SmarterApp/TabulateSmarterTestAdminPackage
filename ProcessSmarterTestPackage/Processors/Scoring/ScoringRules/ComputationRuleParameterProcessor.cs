@@ -34,6 +34,9 @@ namespace ProcessSmarterTestPackage.Processors.Scoring.ScoringRules
             {
                 {
                     "name", StringValidator.IsValidNonEmptyWithLength(128)
+                },
+                {
+                    "version", DecimalValidator.IsValidPositiveNonEmptyWithLength(10)
                 }
             });
 

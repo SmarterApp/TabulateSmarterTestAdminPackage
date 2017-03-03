@@ -24,6 +24,12 @@ namespace ProcessSmarterTestPackage.Processors.Scoring.ScoringRules
 
             Navigator.GenerateList("identifier")
                 .ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+            ReplaceAttributeValidation("identifier", new AttributeValidationDictionary
+            {
+                {
+                    "version", DecimalValidator.IsValidPositiveNonEmptyWithLength(10)
+                }
+            });
             Navigator.GenerateList("computationruleparameter")
                 .ForEach(x => Processors.Add(new ComputationRuleParameterProcessor(x, packageType)));
         }

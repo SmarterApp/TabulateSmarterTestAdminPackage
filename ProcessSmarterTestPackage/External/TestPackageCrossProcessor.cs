@@ -17,7 +17,7 @@ namespace ProcessSmarterTestPackage.External
             var administrationItemPool =
                 primary.ChildNodeWithName("administration").ChildNodeWithName("itempool");
             var scoringItemPool =
-                primary.ChildNodeWithName("scoring").ChildNodeWithName("itempool");
+                secondary.ChildNodeWithName("scoring").ChildNodeWithName("itempool");
             result.AddRange(administrationItemPool.CheckEqualTo(scoringItemPool));
             result.AddRange(
                 CrossValidatePackageItems(

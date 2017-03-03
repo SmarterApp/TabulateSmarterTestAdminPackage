@@ -20,10 +20,10 @@ namespace ProcessSmarterTestPackage.Processors.Scoring.PerformanceLevels
                     "plevel", IntValidator.IsValidNonEmptyWithLengthAndMinValue(10, 1)
                 },
                 {
-                    "scaledlo", DecimalValidator.IsValidPositiveNonEmptyWithLength(30)
+                    "scaledlo", StringValidator.IsValidNonEmptyWithLength(30)
                 },
                 {
-                    "scaledhi", DecimalValidator.IsValidPositiveNonEmptyWithLength(30)
+                    "scaledhi", StringValidator.IsValidNonEmptyWithLength(30)
                 }
             };
         }

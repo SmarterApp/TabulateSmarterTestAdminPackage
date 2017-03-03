@@ -38,7 +38,7 @@ namespace ProcessSmarterTestPackage.External
             {
                 var itemId = processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
                 var item =
-                    itemContent.FirstOrDefault(x => x["ItemId"].Equals(itemId));
+                    itemContent.FirstOrDefault(x => x.ContainsKey("ItemId") && x["ItemId"].Equals(itemId));
                 if (item == null)
                 {
                     errors.Add(GenerateItemError("[Item Does not exist in content package]", itemId, processor, key));
@@ -90,7 +90,7 @@ namespace ProcessSmarterTestPackage.External
             {
                 var stimuliId = processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
                 var stimuli =
-                    stimuliContent.FirstOrDefault(x => x["StimulusId"].Equals(stimuliId));
+                    stimuliContent.FirstOrDefault(x => x.ContainsKey("StimulusId") && x["StimulusId"].Equals(stimuliId));
                 if (stimuli == null)
                 {
                     errors.Add(GenerateStimuliError("[Stimuli does not exist in content package]", stimuliId, processor,

@@ -51,6 +51,18 @@
         bpref4,
         bpref5,
         bpref6,
-        bpref7
+        bpref7,
+        CutPoint1,
+        ScaledLow1,
+        ScaledHigh1,
+        CutPoint2,
+        ScaledLow2,
+        ScaledHigh2,
+        CutPoint3,
+        ScaledLow3,
+        ScaledHigh3,
+        CutPoint4,
+        ScaledLow4,
+        ScaledHigh4,
     }
 }

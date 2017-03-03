@@ -61,7 +61,7 @@ namespace TabulateSmarterTestPackage.Utilities
 
                 var stimuli = new List<Dictionary<string, string>>();
                 using (
-                    var stimuliStream = new FileStream(ContentItemDirectoryPath, FileMode.Open, FileAccess.Read,
+                    var stimuliStream = new FileStream(ContentStimuliDirectoryPath, FileMode.Open, FileAccess.Read,
                         FileShare.Read))
                 {
                     stimuli = CsvProcessor.Process(stimuliStream);

@@ -61,7 +61,8 @@ namespace TabulateSmarterTestPackage.Tabulators
         {
             foreach (var testSpecificationProcessor in testSpecificationProcessors)
             {
-                var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>();
+                var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>().ToList();
+                errors.AddRange(crossTabulationErrors);
                 var errorList = new List<List<string>>();
                 errorList.AddRange(errors.Select(x => new List<string>
                 {
@@ -71,6 +72,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     x.ItemId,
                     x.Message
                 }));
+
                 errorList.ForEach(x => ReportingUtility.GetErrorWriter().Write(x.ToArray()));
 
                 // Extract the test info
@@ -83,13 +85,19 @@ namespace TabulateSmarterTestPackage.Tabulators
                     testInformation);
                 items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
 
-                var assessmentRoot = ExpectedPackageType == PackageType.Administration
-                    ? testSpecificationProcessor.ChildNodeWithName("administration")
-                    : testSpecificationProcessor.ChildNodeWithName("scoring");
-                var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage");
-                var stimuliTabulator = new StimuliTabulator();
-                var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(), testInformation);
-                stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+                var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration");
+                if (assessmentRoot == null)
+                {
+                    assessmentRoot = testSpecificationProcessor.ChildNodeWithName("scoring");
+                }
+                var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage").ToList();
+                if (passages.Any())
+                {
+                    var stimuliTabulator = new StimuliTabulator();
+                    var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(),
+                        testInformation);
+                    stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+                }
             }
         }
 

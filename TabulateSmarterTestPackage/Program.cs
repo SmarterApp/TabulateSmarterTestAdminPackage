@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using TabulateSmarterTestPackage.Tabulators;
@@ -176,11 +177,11 @@ namespace TabulateSmarterTestPackage
 #endif
             }
 
-            if (ConsoleHelper.IsSoleConsoleOwner)
-            {
+            //if (ConsoleHelper.IsSoleConsoleOwner)
+            //{
                 Console.Write("Press any key to exit.");
                 Console.ReadKey(true);
-            }
+            //}
         }
 
         private static void ProcessInputFilename(string filenamePattern, TestPackageTabulator tabulator)
@@ -265,6 +266,9 @@ namespace TabulateSmarterTestPackage
                 }
                 if (ReportingUtility.CrossProcessor != null)
                 {
+                    var singles =
+                        ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count == 1).SelectMany(x => x).ToList();
+                    //singles.AddRange(ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count > 1).SelectMany(x => x.));
                     tabulator.TabulateResults(
                         ReportingUtility.CrossProcessor.TestPackages.Values.SelectMany(x => x).ToList(), errors);
                 }
