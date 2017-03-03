@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using ProcessSmarterTestPackage;
+using ProcessSmarterTestPackage.External;
 using SmarterTestPackage.Common.Data;
 
 namespace TabulateSmarterTestPackage.Utilities

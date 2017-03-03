@@ -157,7 +157,9 @@ namespace ProcessSmarterTestPackage.Processors.Common
                     errorMessage.GeneratedMessage = $"[RequiredProperty={key}]";
                     result.Add(errorMessage);
                 }
-                else if (!ValidatedAttributes[key].Value.Equals(processor.ValidatedAttributes[key].Value))
+                else if (
+                    !ValidatedAttributes[key].Value.Equals(processor.ValidatedAttributes[key].Value,
+                        StringComparison.OrdinalIgnoreCase))
                 {
                     errorMessage.GeneratedMessage =
                         $"{errorMessage.GeneratedMessage}[RequiredProperty {key} Value {ValidatedAttributes[key].Value}!={processor.ValidatedAttributes[key].Value}]";
