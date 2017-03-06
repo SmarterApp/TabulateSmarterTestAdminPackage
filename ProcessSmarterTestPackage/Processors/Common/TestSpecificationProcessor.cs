@@ -49,5 +49,10 @@ namespace ProcessSmarterTestPackage.Processors.Common
                     break;
             }
         }
+
+        public string GetUniqueId()
+        {
+            return ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
+        }
     }
 }

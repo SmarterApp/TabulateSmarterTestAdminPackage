@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ProcessSmarterTestPackage.External;
 using SmarterTestPackage.Common.Data;
 
@@ -74,7 +75,7 @@ namespace TabulateSmarterTestPackage.Utilities
         public static void ReportError(string testName, string path, ErrorSeverity severity, string itemId,
             string message, params object[] args)
         {
-            ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, path, severity, itemId, message, args);
+            ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, path, severity, itemId.Split('-').Last(), message, args);
         }
 
         public static void ReportSpecificationError(string path, string attribute, string violationMessage)

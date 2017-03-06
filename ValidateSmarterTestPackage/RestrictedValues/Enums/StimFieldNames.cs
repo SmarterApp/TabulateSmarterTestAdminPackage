@@ -2,12 +2,12 @@
 {
     public enum StimFieldNames
     {
-        TestName,
-        TestSubject,
-        TestGrade,
-        TestType, // PT or Summative
-        StimId, // Strip the "200-" bankId prefix
-        Filename,
+        AssessmentName,
+        AssessmentSubject,
+        AssessmentGrade,
+        AssessmentType, // PT or Summative
+        StimuliId, // Strip the "200-" bankId prefix
+        FileName,
         Version
     }
 }

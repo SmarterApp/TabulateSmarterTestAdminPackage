@@ -19,12 +19,12 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var identifier = passageProcessor.ChildNodeWithName("identifier");
                 var stimFields = new string[Enum.GetNames(typeof(StimFieldNames)).Length];
 
-                stimFields[(int) StimFieldNames.TestName] = testInformation[ItemFieldNames.AssessmentName];
-                stimFields[(int) StimFieldNames.TestSubject] = testInformation[ItemFieldNames.AssessmentSubject];
-                stimFields[(int) StimFieldNames.TestGrade] = testInformation[ItemFieldNames.AssessmentGrade];
-                stimFields[(int) StimFieldNames.TestType] = testInformation[ItemFieldNames.AssessmentType];
-                stimFields[(int) StimFieldNames.StimId] = FormatHelper.Strip200(identifier.ValueForAttribute("uniqueid"));
-                stimFields[(int) StimFieldNames.Filename] = passageProcessor.ValueForAttribute("filename");
+                stimFields[(int) StimFieldNames.AssessmentName] = testInformation[ItemFieldNames.AssessmentName];
+                stimFields[(int) StimFieldNames.AssessmentSubject] = testInformation[ItemFieldNames.AssessmentSubject];
+                stimFields[(int) StimFieldNames.AssessmentGrade] = testInformation[ItemFieldNames.AssessmentGrade];
+                stimFields[(int) StimFieldNames.AssessmentType] = testInformation[ItemFieldNames.AssessmentType];
+                stimFields[(int) StimFieldNames.StimuliId] = FormatHelper.Strip200(identifier.ValueForAttribute("uniqueid"));
+                stimFields[(int) StimFieldNames.FileName] = passageProcessor.ValueForAttribute("filename");
                 stimFields[(int) StimFieldNames.Version] = identifier.ValueForAttribute("version");
 
                 resultList.Add(stimFields.ToList());

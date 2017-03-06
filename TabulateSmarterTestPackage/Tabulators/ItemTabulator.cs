@@ -174,7 +174,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                             FormPosition = formPosition
                         };
                         indexGroupItemInfo.Add(itemId, gii);
-                        //Console.WriteLine(itemId);
                     }
                 }
             }
@@ -217,7 +216,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                 itemFields[(int) ItemFieldNames.AcademicYear] = testInformation[ItemFieldNames.AcademicYear];
 
                 var itemId = FormatHelper.Strip200(node.Eval(sXp_ItemId));
-                itemFields[(int) ItemFieldNames.ItemId] = itemId;
+                itemFields[(int) ItemFieldNames.ItemId] = itemId.Split('-').Last();
+                itemFields[(int) ItemFieldNames.BankKey] = itemId.Split('-').First();
                 itemFields[(int) ItemFieldNames.Filename] = node.Eval(sXp_Filename);
                 itemFields[(int) ItemFieldNames.Version] = node.Eval(sXp_Version);
                 itemFields[(int) ItemFieldNames.ItemType] = node.Eval(sXp_ItemType);
@@ -266,8 +266,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                             {
                                 if (!string.IsNullOrEmpty(itemFields[fieldIndex]))
                                 {
-                                    ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
-                                        ppNode.NamespaceURI,
+                                    ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                                        ppNode.Name,
                                         ErrorSeverity.Degraded, itemId,
                                         "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
                                 }
@@ -276,8 +276,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                         }
                         else
                         {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
-                                ppNode.NamespaceURI, ErrorSeverity.Degraded,
+                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                                ppNode.Name, ErrorSeverity.Degraded,
                                 itemId, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
                         }
                     }
@@ -299,7 +299,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     !RestrictedList.RestrictedLists[RestrictedListItems.MeasurementModel]
                         .Contains(itemFields[(int) ItemFieldNames.MeasurementModel]))
                 {
-                    ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName], node.NamespaceURI,
+                    ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId], node.Name,
                         ErrorSeverity.Benign, itemId,
                         "'{0}' Unrecognized Measurement Model", itemFields[(int) ItemFieldNames.MeasurementModel]);
                 }
@@ -311,8 +311,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     var name = pnNodes.Current.Value;
                     if (!RestrictedList.RestrictedLists[RestrictedListItems.MeasurementParameter].Contains(name))
                     {
-                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
-                            pnNodes.Current.NamespaceURI, ErrorSeverity.Benign,
+                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                            pnNodes.Current.Name, ErrorSeverity.Benign,
                             itemId, "'{0}' Unrecognized Measurement Parameter", name);
                     }
                 }
@@ -325,8 +325,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     var bpref = bpNodes.Current.Value;
                     if (bpIndex >= MaxBpRefs)
                     {
-                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
-                            bpNodes.Current.NamespaceURI, ErrorSeverity.Benign,
+                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                            bpNodes.Current.Name, ErrorSeverity.Benign,
                             itemId, "More than {0} bpref nodes", MaxBpRefs);
                     }
                     else
@@ -368,30 +368,48 @@ namespace TabulateSmarterTestPackage.Tabulators
                     }
                 }
 
-                Dictionary<string, string> contentItem = null;
                 if (ReportingUtility.CrossProcessor != null &&
                     ReportingUtility.CrossProcessor.ItemContentPackage != null)
                 {
-                    contentItem =
-                        ReportingUtility.CrossProcessor.ItemContentPackage.FirstOrDefault(
-                            x => x.ContainsKey("ItemId") &&
-                                 x["ItemId"].Equals(itemFields[(int) ItemFieldNames.ItemId],
-                                     StringComparison.OrdinalIgnoreCase));
-                }
+                    var contentItem = ReportingUtility.CrossProcessor.ItemContentPackage.FirstOrDefault(
+                        x => x.ContainsKey("ItemId") &&
+                             x["ItemId"].Equals(itemFields[(int) ItemFieldNames.ItemId],
+                                 StringComparison.OrdinalIgnoreCase));
 
-                if (itemFields[(int) ItemFieldNames.Standard] == null)
-                {
-                    itemFields[(int) ItemFieldNames.Standard] = contentItem != null
-                        ? contentItem["Standard"]
-                        : string.Empty;
-                }
-                if (itemFields[(int) ItemFieldNames.Claim] == null)
-                {
-                    itemFields[(int) ItemFieldNames.Claim] = contentItem != null ? contentItem["Claim"] : string.Empty;
-                }
-                if (itemFields[(int) ItemFieldNames.Target] == null)
-                {
-                    itemFields[(int) ItemFieldNames.Target] = contentItem != null ? contentItem["Target"] : string.Empty;
+
+                    if (itemFields[(int) ItemFieldNames.Standard] == null)
+                    {
+                        if (contentItem != null && !string.IsNullOrEmpty(contentItem["Standard"].Replace("\"",string.Empty).Trim()))
+                        {
+                            itemFields[(int) ItemFieldNames.Standard] = contentItem["Standard"];
+                        }
+                        else
+                        {
+                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(GenerateItemError("[Item standard does not exist in both test package and content package]", itemId, testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
+                        }
+                    }
+                    if (itemFields[(int) ItemFieldNames.Claim] == null)
+                    {
+                        if (contentItem != null && !string.IsNullOrEmpty(contentItem["Claim"].Replace("\"", string.Empty).Trim()))
+                        {
+                            itemFields[(int) ItemFieldNames.Claim] = contentItem["Claim"];
+                        }
+                        else 
+                        {
+                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(GenerateItemError("[Item claim does not exist in both test package and content package]", itemId, testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
+                        }
+                    }
+                    if (itemFields[(int) ItemFieldNames.Target] == null)
+                    {
+                        if (contentItem != null && !string.IsNullOrEmpty(contentItem["Target"].Replace("\"", string.Empty).Trim()))
+                        {
+                            itemFields[(int) ItemFieldNames.Target] = contentItem["Target"];
+                        }
+                        else 
+                        {
+                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(GenerateItemError("[Item target does not exist in both test package and content package]", itemId, testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
+                        }
+                    }
                 }
 
                 GroupItemInfo gii;
@@ -433,6 +451,23 @@ namespace TabulateSmarterTestPackage.Tabulators
             }
 
             return resultList;
+        }
+
+        private static CrossPackageValidationError GenerateItemError(string message, string id, Processor processor,
+            string key)
+        {
+            return new CrossPackageValidationError
+            {
+                ErrorSeverity = ErrorSeverity.Severe,
+                GeneratedMessage = message,
+                ItemId = id,
+                Key = "ItemId",
+                Location = "Item Cross-Tabulation (Item Content Package)",
+                Path = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/testitem",
+                PrimarySource = $"{key} - {processor.PackageType}",
+                SecondarySource = "Item Content Package",
+                TestName = key
+            };
         }
     }
 }

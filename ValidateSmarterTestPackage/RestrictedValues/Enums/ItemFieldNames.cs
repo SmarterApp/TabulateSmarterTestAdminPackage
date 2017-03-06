@@ -11,6 +11,7 @@
         AssessmentLabel,
         AssessmentVersion,
         AcademicYear,
+        BankKey,
         ItemId, // Strip the "200-" bankId prefix
         Filename,
         Version,

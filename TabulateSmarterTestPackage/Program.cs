@@ -57,6 +57,7 @@ namespace TabulateSmarterTestPackage
 
         private static void Main(string[] args)
         {
+            Logger.Info("Test Package Tabulator Initialized");
             try
             {
                 var inputFilenames = new List<string>();
@@ -272,10 +273,13 @@ namespace TabulateSmarterTestPackage
             }
             else
             {
-                ReportingUtility.CrossProcessor.Errors.AddRange(ReportingUtility.CrossProcessor.ExecuteValidation());
-                tabulator.TabulateResults(
-                    ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count == 1)
-                        .SelectMany(x => x).ToList(), new List<ProcessingError>());
+                ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count == 1)
+                    .SelectMany(x => x)
+                    .ToList()
+                    .ForEach(
+                        x =>
+                            tabulator.TabulateResults(new List<TestSpecificationProcessor> {x},
+                                ReportingUtility.CrossProcessor.Errors[x.GetUniqueId()].Cast<ProcessingError>().ToList()));
                 var crossTabulatedPackages =
                     ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count > 1);
                 foreach (var packageSets in crossTabulatedPackages)
@@ -284,20 +288,17 @@ namespace TabulateSmarterTestPackage
                     if (adminPackage != null)
                     {
                         tabulator.TabulateResults(new List<TestSpecificationProcessor> {adminPackage},
-                            new List<ProcessingError>());
+                            ReportingUtility.CrossProcessor.Errors[adminPackage.GetUniqueId()].Cast<ProcessingError>()
+                                .ToList());
                         continue;
                     }
                     var scoringPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Scoring);
                     if (scoringPackage != null)
                     {
                         tabulator.TabulateResults(new List<TestSpecificationProcessor> {scoringPackage},
-                            new List<ProcessingError>());
+                            ReportingUtility.CrossProcessor.Errors[scoringPackage.GetUniqueId()].Cast<ProcessingError>()
+                                .ToList());
                     }
-                }
-                if (ReportingUtility.CrossProcessor.Errors.Any())
-                {
-                    tabulator.TabulateResults(new List<TestSpecificationProcessor>(),
-                        ReportingUtility.CrossProcessor.Errors.Cast<ProcessingError>().ToList());
                 }
             }
         }
@@ -327,7 +328,8 @@ namespace TabulateSmarterTestPackage
             if (ReportingUtility.CrossProcessor != null)
             {
                 ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
-                ReportingUtility.CrossProcessor.Errors.AddRange(ReportingUtility.CrossProcessor.ExecuteValidation());
+                ReportingUtility.CrossProcessor.AddCrossProcessingErrors(processor,
+                    ReportingUtility.CrossProcessor.ExecuteValidation());
             }
             return processor;
         }
@@ -336,7 +338,6 @@ namespace TabulateSmarterTestPackage
             TestPackageTabulator tabulator)
         {
             Logger.Info($"Processing input zip file: {filename}");
-            tabulator.AddTabulationHeaders();
             var processors = new List<TestSpecificationProcessor>();
             using (var zip = ZipFile.Open(filename, ZipArchiveMode.Read))
             {
@@ -359,9 +360,10 @@ namespace TabulateSmarterTestPackage
             return processors;
         }
 
-        private static List<TestSpecificationProcessor> ProcessDirectory(string directoryName,
+        private static IEnumerable<TestSpecificationProcessor> ProcessDirectory(string directoryName,
             TestPackageTabulator tabulator)
         {
+            Logger.Info($"Processing input directory: {directoryName}");
             return new DirectoryInfo(directoryName)
                 .EnumerateFiles()
                 .Select(x => Path.Combine(directoryName, x.Name))

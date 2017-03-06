@@ -24,9 +24,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                 File.Delete(ReportingUtility.ErrorFileName);
             }
 #else
-            if (File.Exists(itemFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", itemFilename));
-            if (File.Exists(stimFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", stimFilename));
-            if (File.Exists(m_errFilename)) throw new ApplicationException(string.Format("Output file, '{0}' already exists.", m_errFilename));
+            if (File.Exists(ReportingUtility.ItemFileName)) throw new ApplicationException($"Output file, '{ReportingUtility.ItemFileName}' already exists.");
+            if (File.Exists(ReportingUtility.StimuliFileName)) throw new ApplicationException($"Output file, '{ReportingUtility.StimuliFileName}' already exists.");
+            if (File.Exists(ReportingUtility.ErrorFileName)) throw new ApplicationException($"Output file, '{ReportingUtility.ErrorFileName}' already exists.");
 #endif
         }
 
@@ -70,20 +70,6 @@ namespace TabulateSmarterTestPackage.Tabulators
         {
             foreach (var testSpecificationProcessor in testSpecificationProcessors)
             {
-                var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>().ToList();
-                errors.AddRange(crossTabulationErrors);
-                var errorList = new List<List<string>>();
-                errorList.AddRange(errors.Select(x => new List<string>
-                {
-                    testSpecificationProcessor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
-                    x.ErrorSeverity.ToString(),
-                    x.Path,
-                    x.ItemId,
-                    x.Message
-                }));
-
-                errorList.ForEach(x => ReportingUtility.GetErrorWriter().Write(x.ToArray()));
-
                 // Extract the test info
                 var testInformation = TestInformation.RetrieveTestInformation(testSpecificationProcessor);
 
@@ -107,6 +93,20 @@ namespace TabulateSmarterTestPackage.Tabulators
                         testInformation);
                     stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
                 }
+
+                var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>().ToList();
+                errors.AddRange(crossTabulationErrors);
+                var errorList = new List<List<string>>();
+                errorList.AddRange(errors.Select(x => new List<string>
+                {
+                    testSpecificationProcessor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                    x.ErrorSeverity.ToString(),
+                    x.Path,
+                    x.ItemId,
+                    x.Message
+                }));
+
+                errorList.ForEach(x => ReportingUtility.GetErrorWriter().Write(x.ToArray()));
             }
         }
 
