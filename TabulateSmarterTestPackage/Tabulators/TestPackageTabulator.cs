@@ -99,7 +99,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var errorList = new List<List<string>>();
                 errorList.AddRange(errors.Select(x => new List<string>
                 {
-                    testSpecificationProcessor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                    testSpecificationProcessor.GetUniqueId(),
+                    x.PackageType.ToString(),
                     x.ErrorSeverity.ToString(),
                     x.Path,
                     x.ItemId,
@@ -113,7 +114,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         public void AddTabulationHeaders(int performancelevels = 0)
         {
             ReportingUtility.GetErrorWriter()
-                .Write(new[] {"AssessmentName", "ErrorSeverity", "Path", "UniqueId", "Message"});
+                .Write(new[] {"AssessmentName", "PackageType", "ErrorSeverity", "Path", "UniqueId", "Message"});
             ReportingUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
             var itemHeaders = new List<string>();
             itemHeaders.AddRange(Enum.GetNames(typeof(ItemFieldNames)).ToList());

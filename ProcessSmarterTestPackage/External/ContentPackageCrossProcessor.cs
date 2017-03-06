@@ -5,7 +5,6 @@ using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem;
 using SmarterTestPackage.Common.Data;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.External
 {

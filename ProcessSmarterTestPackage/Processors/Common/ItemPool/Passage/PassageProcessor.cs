@@ -1,7 +1,7 @@
 ﻿using System.Xml.XPath;
+using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage

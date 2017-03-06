@@ -1,7 +1,7 @@
 ﻿using System.Xml.XPath;
 using ProcessSmarterTestPackage.Processors.Common;
+using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.Processors.Scoring.PerformanceLevels
 {

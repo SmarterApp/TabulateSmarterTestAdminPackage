@@ -72,23 +72,12 @@ namespace TabulateSmarterTestPackage.Utilities
             }
         }
 
-        public static void ReportError(string testName, string path, ErrorSeverity severity, string itemId,
+        public static void ReportError(string testName, PackageType packageType, string path, ErrorSeverity severity,
+            string itemId,
             string message, params object[] args)
         {
             ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, path, severity,
                 itemId.Split('-').Last(), message, args);
-        }
-
-        public static void ReportSpecificationError(string path, string attribute, string violationMessage)
-        {
-            ReportError(TestName, path, ErrorSeverity.Degraded, string.Empty,
-                $"{path} attribute {attribute} violates {violationMessage}");
-        }
-
-        public static void ReportLoadError(string path, string attribute, string violationMessage)
-        {
-            ReportError(TestName, path, ErrorSeverity.Severe, string.Empty,
-                $"{path} attribute {attribute} violates {violationMessage}");
         }
 
         public static void Dispose(bool disposing)

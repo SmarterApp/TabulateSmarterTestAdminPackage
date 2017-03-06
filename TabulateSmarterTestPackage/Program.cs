@@ -8,7 +8,6 @@ using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using TabulateSmarterTestPackage.Tabulators;
 using TabulateSmarterTestPackage.Utilities;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage
 {

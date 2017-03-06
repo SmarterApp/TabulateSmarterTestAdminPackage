@@ -4,7 +4,6 @@ using System.Xml.XPath;
 using ProcessSmarterTestPackage.PostProcessors;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.Processors.Common.TestBlueprint
 {

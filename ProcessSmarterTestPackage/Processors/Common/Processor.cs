@@ -5,7 +5,6 @@ using System.Xml.XPath;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators;
 
 namespace ProcessSmarterTestPackage.Processors.Common
@@ -51,13 +50,14 @@ namespace ProcessSmarterTestPackage.Processors.Common
                             GeneratedMessage = x.Value.Validator.GetMessage(),
                             Key = x.Key,
                             Location = Navigator.Name,
-                            Path = Navigator.OuterXml
+                            Path = Navigator.OuterXml,
+                            PackageType = PackageType
                         }
                     ));
             var childErrors = Processors.SelectMany(x => x.GenerateErrorMessages()).ToList();
             childErrors.ForEach(x => x.Location = $"{Navigator.Name}/{x.Location}");
             result.AddRange(childErrors);
-            AdditionalValidations();
+            result.AddRange(AdditionalValidations());
             return result;
         }
 

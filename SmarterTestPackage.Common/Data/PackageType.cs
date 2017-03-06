@@ -1,4 +1,4 @@
-﻿namespace ValidateSmarterTestPackage.RestrictedValues.Enums
+﻿namespace SmarterTestPackage.Common.Data
 {
     public enum PackageType
     {

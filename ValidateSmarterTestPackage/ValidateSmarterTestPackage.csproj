@@ -39,7 +39,6 @@
     <Compile Include="AttributeValidationDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestrictedValues\Enums\ItemFieldNames.cs" />
-    <Compile Include="RestrictedValues\Enums\PackageType.cs" />
     <Compile Include="RestrictedValues\Enums\RestrictedListItems.cs" />
     <Compile Include="RestrictedValues\Enums\StimFieldNames.cs" />
     <Compile Include="RestrictedValues\RestrictedList\RestrictedList.cs" />

@@ -8,7 +8,7 @@
   <property name="type" value="summative" label="summative" />
   <administration>
     <testblueprint>
-      <bpelement elementtype="test" minopitems="12" maxopitems="12" minftitems="0" maxftitems="0" opitemcount="22"
+      <bpelement elementtype="test" minopitems="1" maxopitems="12" minftitems="0" maxftitems="0" opitemcount="22"
                  ftitemcount="0">
         <identifier uniqueid="(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016" name="SBAC-IRP-ELA-3-COMBINED"
                     version="8175" />
@@ -92,7 +92,7 @@
                  ftitemcount="0">
         <identifier uniqueid="SBAC_PT-1-LT|6-3|3.RL.5" name="1-LT|6-3|3.RL.5" version="8175" />
       </bpelement>
-      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-LT" minopitems="0" maxopitems="16" opitemcount="1"
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-LTaa" minopitems="0" maxopitems="16" opitemcount="1"
                  ftitemcount="0">
         <identifier uniqueid="SBAC_PT-1-LT|7-3" name="1-LT|7-3" version="8175" />
       </bpelement>
@@ -192,7 +192,7 @@
         <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
         <bpref>SBAC_PT-3-L</bpref>
         <bpref>SBAC_PT-3-L|4-3</bpref>
-        <bpref>SBAC_PT-3-L|4-3|3.SL.2</bpref>
+        <bpref>SBAC_PT-3-L|4-3|3.SL.2aaa</bpref>
         <passageref>187-3732</passageref>
         <poolproperty property="--ITEMTYPE--" value="EBSR" label="EBSR" />
         <poolproperty property="Language" value="ENU" label="English" />

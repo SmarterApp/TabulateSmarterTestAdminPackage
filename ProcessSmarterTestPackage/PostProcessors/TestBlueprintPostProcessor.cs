@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.PostProcessors
 {
@@ -25,7 +24,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ErrorSeverity = ErrorSeverity.Severe,
                     GeneratedMessage = "[TestBlueprint element does not contain \"test\" elementtype]",
                     Key = "bpelement",
-                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement"
+                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
+                    PackageType = PackageType
                 });
             }
             else if (test.Count() > 1)
@@ -35,7 +35,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ErrorSeverity = ErrorSeverity.Severe,
                     GeneratedMessage = "[TestBlueprint \"test\" elementtype count > 1]",
                     Key = "bpelement",
-                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement"
+                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
+                    PackageType = PackageType
                 });
             }
             else
@@ -80,7 +81,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         GeneratedMessage =
                             $"[TestBlueprint contentlevel element's parentid {element.ValueForAttribute("parentid")} does not exist]",
                         Key = "bpelement",
-                        Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement"
+                        Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
+                        PackageType = PackageType
                     });
                 }
             }
@@ -100,7 +102,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ErrorSeverity = ErrorSeverity.Degraded,
                     GeneratedMessage = $"[TestBlueprint test {propertyName} != sum of segment properties]",
                     Key = "bpelement",
-                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement"
+                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
+                    PackageType = PackageType
                 });
             }
             return result;

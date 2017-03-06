@@ -10,5 +10,6 @@
         public string Location { get; set; }
         public string Key { get; set; }
         public string GeneratedMessage { get; set; }
+        public PackageType PackageType { get; set; }
     }
 }

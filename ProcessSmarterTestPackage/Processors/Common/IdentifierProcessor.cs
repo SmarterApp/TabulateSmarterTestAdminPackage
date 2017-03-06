@@ -1,6 +1,6 @@
 ﻿using System.Xml.XPath;
+using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.Processors.Common

@@ -2,7 +2,7 @@
 using System.Xml.XPath;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProcessSmarterTestPackage.Processors.Common;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
+using SmarterTestPackage.Common.Data;
 
 namespace ProcessSmarterTestAdminPackage.Tests.Processors
 {

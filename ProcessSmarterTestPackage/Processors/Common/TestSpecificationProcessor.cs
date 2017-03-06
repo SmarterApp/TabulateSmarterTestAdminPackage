@@ -7,7 +7,6 @@ using ProcessSmarterTestPackage.Processors.Scoring;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.Validators;
 using ValidateSmarterTestPackage.Validators.Convenience;
 

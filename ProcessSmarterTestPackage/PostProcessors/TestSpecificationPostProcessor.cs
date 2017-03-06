@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.PostProcessors
 {
@@ -31,7 +30,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     GeneratedMessage = $"[TestBlueprint test uniqueid {blueprintId} != TestSpecification uniqueid {id}]",
                     Key = "identifier",
                     Location =
-                        $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier"
+                        $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
+                    PackageType = PackageType
                 });
             }
             // Getting the identifiers of all items in the testblueprint, then all testitems
@@ -58,17 +58,19 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     var found =
                         elementIds.Any(
                             element =>
-                                element.Equals(bpRef.ValueForAttribute("bpref"), StringComparison.OrdinalIgnoreCase));
+                                element.Equals(bpRef.Navigator.InnerXml, StringComparison.OrdinalIgnoreCase));
                     if (!found)
                     {
                         result.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Degraded,
                             GeneratedMessage =
-                                $"[BpRef {bpRef.ValueForAttribute("bpref")} is not present in TestBlueprint]",
+                                $"[BpRef {bpRef.Navigator.InnerXml} is not present in TestBlueprint]",
                             Key = "bpref",
-                            Location = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref",
-                            ItemId = testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
+                            ItemId =
+                                testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last(),
+                            Path = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref",
+                            PackageType = PackageType
                         });
                     }
                 }

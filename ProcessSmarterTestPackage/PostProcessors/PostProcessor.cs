@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.PostProcessors
 {
