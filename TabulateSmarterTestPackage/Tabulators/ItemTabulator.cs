@@ -477,11 +477,11 @@ namespace TabulateSmarterTestPackage.Tabulators
                 GeneratedMessage = message,
                 ItemId = id,
                 Key = "ItemId",
-                Location = "Item Cross-Tabulation (Item Content Package)",
-                Path = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/testitem",
+                Location = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/testitem",
+                Value = processor.Navigator.OuterXml,
                 PrimarySource = $"{key} - {processor.PackageType}",
                 SecondarySource = "Item Content Package",
-                TestName = key
+                AssessmentId = key
             };
         }
     }

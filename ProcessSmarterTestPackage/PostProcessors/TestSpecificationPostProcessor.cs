@@ -69,8 +69,9 @@ namespace ProcessSmarterTestPackage.PostProcessors
                             Key = "bpref",
                             ItemId =
                                 testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last(),
-                            Path = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref",
-                            PackageType = PackageType
+                            Value = Processor.Navigator.OuterXml,
+                            PackageType = PackageType,
+                            Location = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref"
                         });
                     }
                 }

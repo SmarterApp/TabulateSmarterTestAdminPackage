@@ -23,7 +23,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last(),
                     Key = "bpref",
                     PackageType = PackageType,
-                    Path = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref"
+                    Value = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref"
                 });
             }
 

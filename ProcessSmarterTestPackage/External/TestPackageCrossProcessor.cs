@@ -79,7 +79,7 @@ namespace ProcessSmarterTestPackage.External
         }
 
         private static CrossPackageValidationError GenerateError(string message, string id, Processor processor,
-            string key, string path)
+            string key, string location)
         {
             return new CrossPackageValidationError
             {
@@ -87,11 +87,11 @@ namespace ProcessSmarterTestPackage.External
                 GeneratedMessage = message,
                 ItemId = id,
                 Key = processor.Navigator.Name,
-                Location = processor.Navigator.InnerXml,
-                Path = path,
+                Location = location,
+                Value = processor.Navigator.OuterXml,
                 PrimarySource = $"{key} - {processor.PackageType}",
                 SecondarySource = "Scoring Package",
-                TestName = key
+                AssessmentId = key
             };
         }
     }

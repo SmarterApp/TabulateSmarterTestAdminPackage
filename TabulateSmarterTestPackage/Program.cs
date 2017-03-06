@@ -56,6 +56,7 @@ namespace TabulateSmarterTestPackage
 
         private static void Main(string[] args)
         {
+            Logger.Info(string.Concat(Enumerable.Repeat("-",60)));
             Logger.Info("Test Package Tabulator Initialized");
             try
             {
@@ -288,7 +289,7 @@ namespace TabulateSmarterTestPackage
                     {
                         tabulator.TabulateResults(new List<TestSpecificationProcessor> {adminPackage},
                             ReportingUtility.CrossProcessor.Errors[adminPackage.GetUniqueId()].Cast<ProcessingError>()
-                                .ToList());
+                            .Where(x => x.PackageType == PackageType.Administration).ToList());
                         continue;
                     }
                     var scoringPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Scoring);
@@ -296,7 +297,7 @@ namespace TabulateSmarterTestPackage
                     {
                         tabulator.TabulateResults(new List<TestSpecificationProcessor> {scoringPackage},
                             ReportingUtility.CrossProcessor.Errors[scoringPackage.GetUniqueId()].Cast<ProcessingError>()
-                                .ToList());
+                                .Where(x => x.PackageType == PackageType.Scoring).ToList());
                     }
                 }
             }
@@ -366,9 +367,7 @@ namespace TabulateSmarterTestPackage
             return new DirectoryInfo(directoryName)
                 .EnumerateFiles()
                 .Select(x => Path.Combine(directoryName, x.Name))
-                .ToList()
-                .SelectMany(x => ProcessInputFilename(x, tabulator))
-                .ToList();
+                .SelectMany(x => ProcessInputFilename(x, tabulator));
         }
     }
 }

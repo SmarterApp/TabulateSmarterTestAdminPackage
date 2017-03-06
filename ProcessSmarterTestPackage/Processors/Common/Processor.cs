@@ -50,8 +50,8 @@ namespace ProcessSmarterTestPackage.Processors.Common
                             GeneratedMessage = x.Value.Validator.GetMessage(),
                             Key = x.Key,
                             Location = Navigator.Name,
-                            Path = Navigator.OuterXml,
-                            PackageType = PackageType
+                            Value = Navigator.OuterXml,
+                            PackageType = PackageType,
                         }
                     ));
             var childErrors = Processors.SelectMany(x => x.GenerateErrorMessages()).ToList();
@@ -153,10 +153,10 @@ namespace ProcessSmarterTestPackage.Processors.Common
                     ItemId = string.Empty,
                     Key = key,
                     Location = Navigator.InnerXml,
-                    Path = Navigator.Name,
+                    Value = Navigator.Name,
                     PrimarySource = string.Empty,
                     SecondarySource = string.Empty,
-                    TestName = string.Empty
+                    AssessmentId = string.Empty
                 };
                 if (!ValidatedAttributes.ContainsKey(key))
                 {

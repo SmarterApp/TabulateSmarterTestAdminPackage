@@ -20,7 +20,7 @@ namespace ValidateSmarterTestPackage.Validators
 
         public override string GetMessage()
         {
-            return $"[Value!={Parameter}";
+            return $"[Value!={Parameter}]";
         }
     }
 }

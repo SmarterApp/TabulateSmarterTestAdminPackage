@@ -128,11 +128,11 @@ namespace ProcessSmarterTestPackage.External
                 GeneratedMessage = message,
                 ItemId = id,
                 Key = "StimuliId",
-                Location = "Stimuli Cross-Tabulation (Stimuli Content Package)",
-                Path = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/passage",
+                Location = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/passage",
+                Value = processor.Navigator.OuterXml,
                 PrimarySource = $"{key} - {processor.PackageType}",
                 SecondarySource = "Passage Content Package",
-                TestName = key
+                AssessmentId = key
             };
         }
 
@@ -145,11 +145,11 @@ namespace ProcessSmarterTestPackage.External
                 GeneratedMessage = message,
                 ItemId = id,
                 Key = "ItemId",
-                Location = "Item Cross-Tabulation (Item Content Package)",
-                Path = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/testitem",
+                Location = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/testitem",
+                Value = processor.Navigator.OuterXml,
                 PrimarySource = $"{key} - {processor.PackageType}",
                 SecondarySource = "Item Content Package",
-                TestName = key
+                AssessmentId = key
             };
         }
     }
