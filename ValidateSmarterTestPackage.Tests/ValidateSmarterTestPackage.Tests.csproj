@@ -54,6 +54,7 @@
     <Compile Include="Validators\RequiredEnumValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\RequiredRegularExpressionValidatorTests.cs" />
+    <Compile Include="Validators\StringMatchValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmarterTestPackage.Common\SmarterTestPackage.Common.csproj">

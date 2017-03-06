@@ -18,6 +18,8 @@ namespace ProcessSmarterTestPackage.External
         public List<Dictionary<string, string>> ItemContentPackage { get; set; }
         public List<Dictionary<string, string>> StimuliContentPackage { get; set; }
 
+        public List<CrossPackageValidationError> Errors { get; set; } = new List<CrossPackageValidationError>();
+
         public ContentPackageCrossProcessor ContentPackageCrossProcessor { get; set; } =
             new ContentPackageCrossProcessor();
 
@@ -54,12 +56,17 @@ namespace ProcessSmarterTestPackage.External
                 var adminPackage = TestPackages[key].FirstOrDefault(x => x.PackageType == PackageType.Administration);
                 var scoringPackage = TestPackages[key].FirstOrDefault(x => x.PackageType == PackageType.Scoring);
 
+                if (adminPackage == null && scoringPackage == null)
+                {
+                    continue;
+                }
+
                 if (adminPackage == null)
                 {
                     result.AddRange(ContentPackageCrossProcessor.CrossValidateContent(scoringPackage, ItemContentPackage,
                         StimuliContentPackage));
                 }
-                if (scoringPackage == null)
+                else if (scoringPackage == null)
                 {
                     result.AddRange(ContentPackageCrossProcessor.CrossValidateContent(adminPackage, ItemContentPackage,
                         StimuliContentPackage));

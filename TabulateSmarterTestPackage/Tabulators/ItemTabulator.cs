@@ -375,8 +375,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     contentItem =
                         ReportingUtility.CrossProcessor.ItemContentPackage.FirstOrDefault(
                             x => x.ContainsKey("ItemId") &&
-                                x["ItemId"].Equals(itemFields[(int) ItemFieldNames.ItemId],
-                                    StringComparison.OrdinalIgnoreCase));
+                                 x["ItemId"].Equals(itemFields[(int) ItemFieldNames.ItemId],
+                                     StringComparison.OrdinalIgnoreCase));
                 }
 
                 if (itemFields[(int) ItemFieldNames.Standard] == null)

@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using NLog;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using TabulateSmarterTestPackage.Tabulators;
 using TabulateSmarterTestPackage.Utilities;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage
 {
     internal class Program
     {
-        private static readonly string sSyntax =
+        private const string HelpMessage =
             @"This tool tabulates the item metadata included in Smarter Balanced
             Test Administration packages. It can also be used with Test Scoring
             packages since they use the same format for the item sections.
@@ -52,6 +53,8 @@ namespace TabulateSmarterTestPackage
             be cross-tabulated against that csv output file and any discrepencies will
             be reported.";
 
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private static void Main(string[] args)
         {
             try
@@ -67,6 +70,7 @@ namespace TabulateSmarterTestPackage
                     {
                         case "-h":
                             help = true;
+                            Logger.Info("Application run in help mode");
                             break;
 
                         case "-i":
@@ -74,9 +78,11 @@ namespace TabulateSmarterTestPackage
                             ++i;
                             if (i >= args.Length)
                             {
+                                Logger.Error("-i option must be followed by a valid string filename");
                                 throw new ArgumentException(
                                     "Invalid command line. '-i' option not followed by filename.");
                             }
+                            Logger.Info($"Input found: {args[i]}");
                             inputFilenames.Add(args[i]);
                         }
                             break;
@@ -86,17 +92,20 @@ namespace TabulateSmarterTestPackage
                             ++i;
                             if (i >= args.Length)
                             {
+                                Logger.Error("-o option must be followed by a valid string filename");
                                 throw new ArgumentException(
                                     "Invalid command line. '-o' option not followed by filename.");
                             }
                             if (oFilename != null)
                             {
+                                Logger.Error($"Output filename already set to: {oFilename}, cannot set to {args[i]}");
                                 throw new ArgumentException("Only one item output filename may be specified.");
                             }
                             oFilename = Path.GetFullPath(args[i]);
                             if (oFilename.EndsWith(".csv"))
                             {
                                 oFilename = oFilename.Substring(0, oFilename.Length - 4);
+                                Logger.Info($"Output filename set to: {args[i]}");
                             }
                         }
                             break;
@@ -105,12 +114,16 @@ namespace TabulateSmarterTestPackage
                             ++i;
                             if (i >= args.Length)
                             {
+                                Logger.Error(
+                                    "-ci option must be followed by a valid path to the \"ItemReport.csv\" output of the ContentPackageTabulator https://github.com/smarterapp/TabulateSmarterTestContentPackage");
                                 throw new ArgumentException(
                                     "Invalid command line. '-ci' option not followed by filename.");
                             }
                             if (!File.Exists(args[i]) &&
                                 !new FileInfo(args[i]).Extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
                             {
+                                Logger.Error(
+                                    "-ci option must be followed by a valid path to the \"ItemReport.csv\" output of the ContentPackageTabulator https://github.com/smarterapp/TabulateSmarterTestContentPackage");
                                 throw new ArgumentException(
                                     "Invalid command line. '-ci' argument does not refer to valid csv output file.");
                             }
@@ -120,18 +133,23 @@ namespace TabulateSmarterTestPackage
                             ++i;
                             if (i >= args.Length)
                             {
+                                Logger.Error(
+                                    "-cs option must be followed by a valid path to the \"StimulusReport.csv\" output of the ContentPackageTabulator https://github.com/smarterapp/TabulateSmarterTestContentPackage");
                                 throw new ArgumentException(
                                     "Invalid command line. '-cs' option not followed by filename.");
                             }
                             if (!File.Exists(args[i]) &&
                                 !new FileInfo(args[i]).Extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
                             {
+                                Logger.Error(
+                                    "-ci option must be followed by a valid path to the \"ItemReport.csv\" output of the ContentPackageTabulator https://github.com/smarterapp/TabulateSmarterTestContentPackage");
                                 throw new ArgumentException(
                                     "Invalid command line. '-cs' argument does not refer to valid csv output file.");
                             }
                             ReportingUtility.ContentStimuliDirectoryPath = args[i];
                             break;
                         default:
+                            Logger.Error($"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");
                             throw new ArgumentException(
                                 $"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");
                     }
@@ -140,140 +158,216 @@ namespace TabulateSmarterTestPackage
                 if (!string.IsNullOrEmpty(ReportingUtility.ContentItemDirectoryPath) &&
                     !string.IsNullOrEmpty(ReportingUtility.ContentStimuliDirectoryPath))
                 {
+                    Logger.Info(
+                        "Found valid paths to ContentPackageTabulator outputs. Initializing cross-processing validations...");
                     ReportingUtility.InitializeCrossProcessor();
+                }
+                else
+                {
+                    Logger.Warn(
+                        "Unable to find valid paths to ContentPackageTabulator outputs. No cross-processing validations will be run.");
                 }
 
                 if (help || args.Length == 0)
                 {
-                    Console.WriteLine(sSyntax);
+                    Console.WriteLine(HelpMessage);
                 }
 
                 else
                 {
                     if (inputFilenames.Count == 0 || oFilename == null)
                     {
+                        Logger.Error(
+                            "Invalid command line. One output filename and at least one input filename must be specified.");
                         throw new ArgumentException(
                             "Invalid command line. One output filename and at least one input filename must be specified.");
                     }
 
                     using (var tabulator = new TestPackageTabulator(oFilename))
                     {
-                        inputFilenames.AddRange(
-                            inputFilenames.Where(Directory.Exists)
-                                .SelectMany(x => new DirectoryInfo(x).GetFiles())
-                                .Select(x => x.Name));
-
-                        inputFilenames.ToList().ForEach(x => ProcessInputFilename(x, tabulator));
+                        var results = inputFilenames.SelectMany(x => ProcessInputFilename(x, tabulator)).ToList();
+                        TabulateResults(results, tabulator);
                     }
                 }
             }
             catch (Exception err)
             {
+                Logger.Fatal(err.InnerException);
                 Console.WriteLine();
 #if DEBUG
                 Console.WriteLine(err.ToString());
 #else
                 Console.WriteLine(err.Message);
 #endif
+                Console.ReadKey();
             }
 
-            //if (ConsoleHelper.IsSoleConsoleOwner)
-            //{
-                Console.Write("Press any key to exit.");
-                Console.ReadKey(true);
-            //}
+            Console.Write("Press any key to exit.");
+            Console.ReadKey(true);
         }
 
-        private static void ProcessInputFilename(string filenamePattern, TestPackageTabulator tabulator)
+        private static IEnumerable<TestSpecificationProcessor> ProcessInputFilename(string filenamePattern,
+            TestPackageTabulator tabulator)
         {
+            Logger.Info($"Processing input file: {filenamePattern}");
             var count = 0;
+
+            if (Directory.Exists(filenamePattern))
+            {
+                return ProcessDirectory(filenamePattern, tabulator);
+            }
+
+            var processors = new List<TestSpecificationProcessor>();
+
             var directory = Path.GetDirectoryName(filenamePattern);
             if (string.IsNullOrEmpty(directory))
             {
                 directory = Environment.CurrentDirectory;
             }
             var pattern = Path.GetFileName(filenamePattern);
+
             foreach (var filename in Directory.GetFiles(directory, pattern))
             {
+                if (!Path.HasExtension(pattern))
+                {
+                    Logger.Warn($"Input file: {filenamePattern} does not have an extension. Skipping...");
+                    continue;
+                }
                 switch (Path.GetExtension(filename).ToLower())
                 {
                     case ".xml":
-                        ProcessInputXmlFile(filename, tabulator);
+                        var processor = ProcessInputXmlFile(filename, tabulator);
+                        if (processor != null)
+                        {
+                            processors.Add(processor);
+                        }
                         break;
 
                     case ".zip":
-                        ProcessInputZipFile(filename, tabulator);
+                        processors.AddRange(ProcessInputZipFile(filename, tabulator));
                         break;
 
                     default:
+                        Logger.Warn(
+                            $"Input '{filename}' is of unsupported type. Only directories, .xml, and .zip are supported.");
                         throw new ArgumentException(
-                            $"Input file '{filename}' is of unsupported type. Only .xml and .zip are supported.");
+                            $"Input file '{filename}' is of unsupported type. Only directories, .xml, and .zip are supported.");
                 }
                 ++count;
             }
             if (count == 0)
             {
+                Logger.Error($"Input file '{filenamePattern}' not found!");
                 throw new ArgumentException($"Input file '{filenamePattern}' not found!");
             }
+            return processors;
         }
 
-        private static void ProcessInputXmlFile(string filename, TestPackageTabulator tabulator)
+        private static void TabulateResults(List<TestSpecificationProcessor> processors, TestPackageTabulator tabulator)
         {
-            Console.WriteLine("Processing: " + filename);
-            using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                var processor = tabulator.ProcessResult(stream);
-                var errors = new List<ProcessingError>();
-                if (ReportingUtility.CrossProcessor != null)
-                {
-                    ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
-                    errors.AddRange(ReportingUtility.CrossProcessor.ExecuteValidation());
-                }
-                tabulator.AddTabulationHeaders();
-                tabulator.TabulateResults(new List<TestSpecificationProcessor> {processor}, errors);
-            }
-            Console.WriteLine();
-        }
-
-        private static void ProcessInputZipFile(string filename, TestPackageTabulator tabulator)
-        {
-            Console.WriteLine("Processing: " + filename);
             tabulator.AddTabulationHeaders();
-            using (var zip = ZipFile.Open(filename, ZipArchiveMode.Read))
+            if (ReportingUtility.CrossProcessor == null)
             {
-                var errors = new List<ProcessingError>();
-                foreach (var entry in zip.Entries)
+                tabulator.TabulateResults(processors, new List<ProcessingError>());
+            }
+            else
+            {
+                ReportingUtility.CrossProcessor.Errors.AddRange(ReportingUtility.CrossProcessor.ExecuteValidation());
+                tabulator.TabulateResults(
+                    ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count == 1)
+                        .SelectMany(x => x).ToList(), new List<ProcessingError>());
+                var crossTabulatedPackages =
+                    ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count > 1);
+                foreach (var packageSets in crossTabulatedPackages)
                 {
-                    // Must not be folder (empty name) and must have .xml extension
-                    if (!string.IsNullOrEmpty(entry.Name) &&
-                        Path.GetExtension(entry.Name).Equals(".xml", StringComparison.OrdinalIgnoreCase))
+                    var adminPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Administration);
+                    if (adminPackage != null)
                     {
-                        Console.WriteLine("   Processing: " + entry.FullName);
-                        using (var stream = entry.Open())
-                        {
-                            var processor = tabulator.ProcessResult(stream);
-                            if (ReportingUtility.CrossProcessor != null)
-                            {
-                                ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
-                                errors.AddRange(ReportingUtility.CrossProcessor.ExecuteValidation());
-                            }
-                            else
-                            {
-                                tabulator.TabulateResults(new List<TestSpecificationProcessor> {processor}, errors);
-                            }
-                        }
+                        tabulator.TabulateResults(new List<TestSpecificationProcessor> {adminPackage},
+                            new List<ProcessingError>());
+                        continue;
+                    }
+                    var scoringPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Scoring);
+                    if (scoringPackage != null)
+                    {
+                        tabulator.TabulateResults(new List<TestSpecificationProcessor> {scoringPackage},
+                            new List<ProcessingError>());
                     }
                 }
-                if (ReportingUtility.CrossProcessor != null)
+                if (ReportingUtility.CrossProcessor.Errors.Any())
                 {
-                    var singles =
-                        ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count == 1).SelectMany(x => x).ToList();
-                    //singles.AddRange(ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count > 1).SelectMany(x => x.));
-                    tabulator.TabulateResults(
-                        ReportingUtility.CrossProcessor.TestPackages.Values.SelectMany(x => x).ToList(), errors);
+                    tabulator.TabulateResults(new List<TestSpecificationProcessor>(),
+                        ReportingUtility.CrossProcessor.Errors.Cast<ProcessingError>().ToList());
+                }
+            }
+        }
+
+        private static TestSpecificationProcessor ProcessInputXmlFile(string filename, TestPackageTabulator tabulator)
+        {
+            Logger.Info($"Processing: {filename}");
+            using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                return ProcessStream(stream, tabulator);
+            }
+        }
+
+        private static TestSpecificationProcessor ProcessStream(Stream stream, TestPackageTabulator tabulator)
+        {
+            TestSpecificationProcessor processor;
+            try
+            {
+                processor = tabulator.ProcessResult(stream);
+            }
+            catch (ArgumentException ex)
+            {
+                Logger.Error(ex.Message);
+                return null;
+            }
+
+            if (ReportingUtility.CrossProcessor != null)
+            {
+                ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
+                ReportingUtility.CrossProcessor.Errors.AddRange(ReportingUtility.CrossProcessor.ExecuteValidation());
+            }
+            return processor;
+        }
+
+        private static IEnumerable<TestSpecificationProcessor> ProcessInputZipFile(string filename,
+            TestPackageTabulator tabulator)
+        {
+            Logger.Info($"Processing input zip file: {filename}");
+            tabulator.AddTabulationHeaders();
+            var processors = new List<TestSpecificationProcessor>();
+            using (var zip = ZipFile.Open(filename, ZipArchiveMode.Read))
+            {
+                foreach (var entry in zip.Entries)
+                {
+                    if (string.IsNullOrEmpty(entry.Name) ||
+                        !Path.GetExtension(entry.Name).Equals(".xml", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Logger.Info($"File: {entry.Name} in zip file: {filename} is not a valid .xml file. Skipping...");
+                        continue;
+                    }
+                    Logger.Info($"   Processing: {entry.FullName}");
+                    using (var stream = entry.Open())
+                    {
+                        processors.Add(ProcessStream(stream, tabulator));
+                    }
                 }
             }
             Console.WriteLine();
+            return processors;
+        }
+
+        private static List<TestSpecificationProcessor> ProcessDirectory(string directoryName,
+            TestPackageTabulator tabulator)
+        {
+            return new DirectoryInfo(directoryName)
+                .EnumerateFiles()
+                .Select(x => Path.Combine(directoryName, x.Name))
+                .ToList()
+                .SelectMany(x => ProcessInputFilename(x, tabulator))
+                .ToList();
         }
     }
 }

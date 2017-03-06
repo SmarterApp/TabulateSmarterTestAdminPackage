@@ -44,11 +44,20 @@ namespace TabulateSmarterTestPackage.Tabulators
             var nav = doc.CreateNavigator();
 
             // /testspecification
-            ExpectedPackageType = nav.SelectSingleNode("/testspecification")
-                .Eval(XPathExpression.Compile("@purpose"))
-                .Equals("administration", StringComparison.InvariantCultureIgnoreCase)
-                ? PackageType.Administration
-                : PackageType.Scoring;
+            var packageType = nav.SelectSingleNode("/testspecification")
+                .Eval(XPathExpression.Compile("@purpose"));
+            if (packageType.Equals("administration", StringComparison.OrdinalIgnoreCase))
+            {
+                ExpectedPackageType = PackageType.Administration;
+            }
+            else if (packageType.Equals("scoring", StringComparison.OrdinalIgnoreCase))
+            {
+                ExpectedPackageType = PackageType.Scoring;
+            }
+            else
+            {
+                throw new ArgumentException("UnrecognizedPackageType");
+            }
             var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode("/testspecification"),
                 ExpectedPackageType);
             testSpecificationProcessor.Process();
@@ -56,8 +65,8 @@ namespace TabulateSmarterTestPackage.Tabulators
             return testSpecificationProcessor;
         }
 
-        public void TabulateResults(IList<TestSpecificationProcessor> testSpecificationProcessors,
-            IList<ProcessingError> crossTabulationErrors)
+        public void TabulateResults(List<TestSpecificationProcessor> testSpecificationProcessors,
+            List<ProcessingError> crossTabulationErrors)
         {
             foreach (var testSpecificationProcessor in testSpecificationProcessors)
             {
