@@ -23,14 +23,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
                 Validator = validators
             });
 
-            if (ValidatedAttributes["bpref"].IsValid)
-            {
-                return true;
-            }
-
-            //ReportingUtility.ReportSpecificationError(Navigator.NamespaceURI, Navigator.BaseURI,
-            //    validators.GetMessage());
-            return false;
+            return ValidatedAttributes["bpref"].IsValid;
         }
     }
 }
