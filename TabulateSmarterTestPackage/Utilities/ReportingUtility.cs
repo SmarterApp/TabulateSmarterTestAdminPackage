@@ -76,7 +76,7 @@ namespace TabulateSmarterTestPackage.Utilities
             string itemId,
             string message, params object[] args)
         {
-            ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, path, severity,
+            ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, packageType, path, severity,
                 itemId.Split('-').Last(), message, args);
         }
 

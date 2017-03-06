@@ -102,7 +102,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     testSpecificationProcessor.GetUniqueId(),
                     x.PackageType.ToString(),
                     x.ErrorSeverity.ToString(),
-                    x.Path,
+                    x.Location,
                     x.ItemId,
                     x.Message
                 }));
@@ -114,7 +114,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         public void AddTabulationHeaders(int performancelevels = 0)
         {
             ReportingUtility.GetErrorWriter()
-                .Write(new[] {"AssessmentName", "PackageType", "ErrorSeverity", "Path", "UniqueId", "Message"});
+                .Write(new[] {"AssessmentName", "PackageType", "ErrorSeverity", "Location", "UniqueId", "Message"});
             ReportingUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
             var itemHeaders = new List<string>();
             itemHeaders.AddRange(Enum.GetNames(typeof(ItemFieldNames)).ToList());

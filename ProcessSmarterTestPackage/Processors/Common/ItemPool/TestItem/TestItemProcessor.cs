@@ -1,4 +1,7 @@
-﻿using System.Xml.XPath;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.XPath;
+using ProcessSmarterTestPackage.PostProcessors;
 using ProcessSmarterTestPackage.Processors.Administration;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
@@ -46,6 +49,11 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
 
             Navigator.GenerateList("itemscoreddimension")
                 .ForEach(x => Processors.Add(new ItemScoredDimensionProcessor(x, packageType)));
+        }
+
+        public override List<ValidationError> AdditionalValidations()
+        {
+            return new TestItemPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
     }
 }

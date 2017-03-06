@@ -96,9 +96,12 @@ namespace ProcessSmarterTestPackage.External
                     stimuliContent.FirstOrDefault(x => x.ContainsKey("StimulusId") && x["StimulusId"].Equals(stimuliId));
                 if (stimuli == null)
                 {
-                    errors.Add(GenerateStimuliError($"[Stimuli:{stimuliId} doesn't exist in content package]", stimuliId,
+                    var error = GenerateStimuliError($"[Stimuli:{stimuliId} doesn't exist in content package]",
+                        stimuliId,
                         processor,
-                        key));
+                        key);
+                    error.ErrorSeverity = ErrorSeverity.Severe;
+                    errors.Add(error);
                 }
                 else
                 {
@@ -121,7 +124,7 @@ namespace ProcessSmarterTestPackage.External
         {
             return new CrossPackageValidationError
             {
-                ErrorSeverity = ErrorSeverity.Severe,
+                ErrorSeverity = ErrorSeverity.Benign,
                 GeneratedMessage = message,
                 ItemId = id,
                 Key = "StimuliId",

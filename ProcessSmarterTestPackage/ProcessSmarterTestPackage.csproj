@@ -42,6 +42,7 @@
     <Compile Include="PostProcessors\IPostProcessor.cs" />
     <Compile Include="PostProcessors\PostProcessor.cs" />
     <Compile Include="PostProcessors\TestBlueprintPostProcessor.cs" />
+    <Compile Include="PostProcessors\TestItemPostProcessor.cs" />
     <Compile Include="PostProcessors\TestSpecificationPostProcessor.cs" />
     <Compile Include="Processors\Administration\AdministrationProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\AdminSegmentProcessor.cs" />

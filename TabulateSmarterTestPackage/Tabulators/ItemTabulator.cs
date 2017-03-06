@@ -332,16 +332,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                 while (bpNodes.MoveNext())
                 {
                     var bpref = bpNodes.Current.Value;
-                    if (bpIndex >= MaxBpRefs)
+                    if (bpIndex < MaxBpRefs)
                     {
-                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                            testSpecificationProcessor.PackageType,
-                            bpNodes.Current.Name, ErrorSeverity.Benign,
-                            itemId, "More than {0} bpref nodes", MaxBpRefs);
-                    }
-                    else
-                    {
-                        itemFields[(int) ItemFieldNames.bpref1 + bpIndex++] = bpref;
+                        itemFields[(int)ItemFieldNames.bpref1 + bpIndex++] = bpref;
                     }
 
                     // Attempt to parse the bpref as an SBAC standard
