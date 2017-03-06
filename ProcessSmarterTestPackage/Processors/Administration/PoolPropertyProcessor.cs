@@ -1,7 +1,9 @@
 ﻿using System.Xml.XPath;
 using ProcessSmarterTestPackage.Processors.Common;
+using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
+using ValidateSmarterTestPackage.Validators;
 using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.Processors.Administration
@@ -25,6 +27,10 @@ namespace ProcessSmarterTestPackage.Processors.Administration
                     "itemcount", IntValidator.IsValidPositiveNonEmptyWithLength(10)
                 }
             };
+            ApplySecondaryValidation("property", "--ITEMTYPE--", "value", new RequiredEnumValidator(
+                ErrorSeverity.Severe,
+                RestrictedListItems.ItemType
+            ));
         }
     }
 }

@@ -57,6 +57,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
             var childErrors = Processors.SelectMany(x => x.GenerateErrorMessages()).ToList();
             childErrors.ForEach(x => x.Location = $"{Navigator.Name}/{x.Location}");
             result.AddRange(childErrors);
+            AdditionalValidations();
             return result;
         }
 
@@ -123,6 +124,11 @@ namespace ProcessSmarterTestPackage.Processors.Common
         public string ValueForAttribute(string attribute)
         {
             return ValidatedAttributes.ContainsKey(attribute) ? ValidatedAttributes[attribute].Value : string.Empty;
+        }
+
+        public virtual List<ValidationError> AdditionalValidations()
+        {
+            return new List<ValidationError>();
         }
 
         public IEnumerable<CrossPackageValidationError> CheckEqualTo(Processor processor,

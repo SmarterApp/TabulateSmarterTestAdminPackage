@@ -119,15 +119,12 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="IrpContentPackage_ItemReport" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\IrpContentPackage_ItemReport.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\Resources\IrpContentPackage_ItemReport.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="IrpContentPackage_StimulusReport" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\IrpContentPackage_StimulusReport.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="_SBAC_PT_SBAC_IRP_CAT_ELA_3_Summer_2015_2016" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\(SBAC_PT)SBAC-IRP-CAT-ELA-3-Summer-2015-2016.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\IrpContentPackage_StimulusReport.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="_SBAC_PT_SBAC_IRP_ELA_3_COMBINED_Summer_2015_2016" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

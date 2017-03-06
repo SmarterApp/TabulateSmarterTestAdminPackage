@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProcessSmarterTestAdminPackage.Tests {
+namespace ProcessSmarterTestAdminPackage.Tests.Properties {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace ProcessSmarterTestAdminPackage.Tests {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ProcessSmarterTestAdminPackage.Tests {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ProcessSmarterTestAdminPackage.Tests.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ProcessSmarterTestAdminPackage.Tests.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,24 +57,6 @@ namespace ProcessSmarterTestAdminPackage.Tests {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///
-        ///&lt;testspecification purpose=&quot;administration&quot; publisher=&quot;SBAC_PT&quot; publishdate=&quot;Aug 19 2015  3:44PM&quot; version=&quot;1.0&quot;&gt;
-        ///  &lt;identifier uniqueid=&quot;(SBAC_PT)SBAC-IRP-CAT-ELA-3-Summer-2015-2016&quot; name=&quot;SBAC-IRP-CAT-ELA-3&quot; label=&quot;Grade 3 ELA&quot;
-        ///              version=&quot;8185&quot; /&gt;
-        ///  &lt;property name=&quot;subject&quot; value=&quot;ELA&quot; label=&quot;ELA&quot; /&gt;
-        ///  &lt;property name=&quot;grade&quot; value=&quot;3&quot; label=&quot;grade 3&quot; /&gt;
-        ///  &lt;property name=&quot;type&quot; value=&quot;summative&quot; label=&quot;summative&quot; /&gt;
-        ///  &lt;administration&gt;
-        ///    &lt;testblu [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string _SBAC_PT_SBAC_IRP_CAT_ELA_3_Summer_2015_2016 {
-            get {
-                return ResourceManager.GetString("_SBAC_PT_SBAC_IRP_CAT_ELA_3_Summer_2015_2016", resourceCulture);
             }
         }
         

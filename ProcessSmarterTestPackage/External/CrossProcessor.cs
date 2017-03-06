@@ -18,7 +18,8 @@ namespace ProcessSmarterTestPackage.External
         public List<Dictionary<string, string>> ItemContentPackage { get; set; }
         public List<Dictionary<string, string>> StimuliContentPackage { get; set; }
 
-        public Dictionary<string, List<CrossPackageValidationError>> Errors { get; set; } = new Dictionary<string,List<CrossPackageValidationError>>();
+        public Dictionary<string, List<CrossPackageValidationError>> Errors { get; set; } =
+            new Dictionary<string, List<CrossPackageValidationError>>();
 
         public ContentPackageCrossProcessor ContentPackageCrossProcessor { get; set; } =
             new ContentPackageCrossProcessor();
@@ -44,7 +45,8 @@ namespace ProcessSmarterTestPackage.External
             }
         }
 
-        public void AddCrossProcessingErrors(TestSpecificationProcessor processor, IEnumerable<CrossPackageValidationError> errors)
+        public void AddCrossProcessingErrors(TestSpecificationProcessor processor,
+            IEnumerable<CrossPackageValidationError> errors)
         {
             var uniqueId = processor.GetUniqueId();
             if (!Errors.ContainsKey(uniqueId))

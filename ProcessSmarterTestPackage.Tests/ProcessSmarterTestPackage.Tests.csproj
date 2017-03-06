@@ -32,16 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Processors\IdentifierProcessorTests.cs" />
+    <Compile Include="Processors\TestSpecificationProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -50,12 +48,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="Resources\IrpContentPackage_ItemReport.csv" />
+    <None Include="Resources\IrpContentPackage_StimulusReport.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProcessSmarterTestPackage\ProcessSmarterTestPackage.csproj">
       <Project>{24EFD539-9E45-43BB-86CE-90D5EDFE68F2}</Project>
       <Name>ProcessSmarterTestPackage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmarterTestPackage.Common\SmarterTestPackage.Common.csproj">
+      <Project>{3e5b3c7d-9f21-4ef6-a18d-b3f6d762a7ff}</Project>
+      <Name>SmarterTestPackage.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\TabulateSmarterTestPackage\TabulateSmarterTestPackage.csproj">
       <Project>{8b1c74f6-8534-45e9-ae12-2ed0eaa5545e}</Project>
@@ -74,6 +77,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\%28SBAC_PT%29SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

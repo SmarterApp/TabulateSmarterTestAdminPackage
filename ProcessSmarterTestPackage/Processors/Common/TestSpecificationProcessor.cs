@@ -1,4 +1,7 @@
-﻿using System.Xml.XPath;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.XPath;
+using ProcessSmarterTestPackage.PostProcessors;
 using ProcessSmarterTestPackage.Processors.Administration;
 using ProcessSmarterTestPackage.Processors.Scoring;
 using SmarterTestPackage.Common.Data;
@@ -48,6 +51,11 @@ namespace ProcessSmarterTestPackage.Processors.Common
                 default:
                     break;
             }
+        }
+
+        public override List<ValidationError> AdditionalValidations()
+        {
+            return new TestSpecificationPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
 
         public string GetUniqueId()

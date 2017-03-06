@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
-using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage.Tabulators
@@ -23,7 +22,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                 stimFields[(int) StimFieldNames.AssessmentSubject] = testInformation[ItemFieldNames.AssessmentSubject];
                 stimFields[(int) StimFieldNames.AssessmentGrade] = testInformation[ItemFieldNames.AssessmentGrade];
                 stimFields[(int) StimFieldNames.AssessmentType] = testInformation[ItemFieldNames.AssessmentType];
-                stimFields[(int) StimFieldNames.StimuliId] = FormatHelper.Strip200(identifier.ValueForAttribute("uniqueid"));
+                stimFields[(int) StimFieldNames.StimuliId] =
+                    identifier.ValueForAttribute("uniqueid").Split('-').First();
                 stimFields[(int) StimFieldNames.FileName] = passageProcessor.ValueForAttribute("filename");
                 stimFields[(int) StimFieldNames.Version] = identifier.ValueForAttribute("version");
 

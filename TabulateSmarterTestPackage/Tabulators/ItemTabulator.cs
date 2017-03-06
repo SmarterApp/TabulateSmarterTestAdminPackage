@@ -379,35 +379,47 @@ namespace TabulateSmarterTestPackage.Tabulators
 
                     if (itemFields[(int) ItemFieldNames.Standard] == null)
                     {
-                        if (contentItem != null && !string.IsNullOrEmpty(contentItem["Standard"].Replace("\"",string.Empty).Trim()))
+                        if (contentItem != null &&
+                            !string.IsNullOrEmpty(contentItem["Standard"].Replace("\"", string.Empty).Trim()))
                         {
                             itemFields[(int) ItemFieldNames.Standard] = contentItem["Standard"];
                         }
                         else
                         {
-                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(GenerateItemError("[Item standard does not exist in both test package and content package]", itemId, testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
+                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(
+                                GenerateItemError(
+                                    "[Item standard does not exist in both test package and content package]", itemId,
+                                    testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
                         }
                     }
                     if (itemFields[(int) ItemFieldNames.Claim] == null)
                     {
-                        if (contentItem != null && !string.IsNullOrEmpty(contentItem["Claim"].Replace("\"", string.Empty).Trim()))
+                        if (contentItem != null &&
+                            !string.IsNullOrEmpty(contentItem["Claim"].Replace("\"", string.Empty).Trim()))
                         {
                             itemFields[(int) ItemFieldNames.Claim] = contentItem["Claim"];
                         }
-                        else 
+                        else
                         {
-                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(GenerateItemError("[Item claim does not exist in both test package and content package]", itemId, testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
+                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(
+                                GenerateItemError(
+                                    "[Item claim does not exist in both test package and content package]", itemId,
+                                    testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
                         }
                     }
                     if (itemFields[(int) ItemFieldNames.Target] == null)
                     {
-                        if (contentItem != null && !string.IsNullOrEmpty(contentItem["Target"].Replace("\"", string.Empty).Trim()))
+                        if (contentItem != null &&
+                            !string.IsNullOrEmpty(contentItem["Target"].Replace("\"", string.Empty).Trim()))
                         {
                             itemFields[(int) ItemFieldNames.Target] = contentItem["Target"];
                         }
-                        else 
+                        else
                         {
-                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(GenerateItemError("[Item target does not exist in both test package and content package]", itemId, testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
+                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(
+                                GenerateItemError(
+                                    "[Item target does not exist in both test package and content package]", itemId,
+                                    testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
                         }
                     }
                 }

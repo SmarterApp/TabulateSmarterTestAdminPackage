@@ -1,16 +1,18 @@
 ﻿using System.IO;
 using System.Xml.XPath;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProcessSmarterTestPackage.Processors.Common;
 using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestAdminPackage.Tests.Processors
 {
-    [TestFixture]
+    [TestClass]
     public class IdentifierProcessorTests
     {
-        [SetUp]
+        public IdentifierProcessorTests IdentifierProcessor;
+
+        [TestInitialize]
         public void Setup()
         {
             ReportingUtility.SetFileName("UnitTests");
@@ -21,9 +23,7 @@ namespace ProcessSmarterTestAdminPackage.Tests.Processors
             }
         }
 
-        public IdentifierProcessorTests IdentifierProcessor;
-
-        [Test]
+        [TestMethod]
         public void IsValidVersionTest()
         {
             // Arrange

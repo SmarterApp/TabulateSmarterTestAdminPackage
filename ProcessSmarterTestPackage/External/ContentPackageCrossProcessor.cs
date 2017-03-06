@@ -43,7 +43,8 @@ namespace ProcessSmarterTestPackage.External
                     itemContent.FirstOrDefault(x => x.ContainsKey("ItemId") && x["ItemId"].Equals(itemId));
                 if (item == null)
                 {
-                    errors.Add(GenerateItemError($"[Item {itemId} doesn't exist in content package]", itemId, processor, key));
+                    errors.Add(GenerateItemError($"[Item {itemId} doesn't exist in content package]", itemId, processor,
+                        key));
                     continue;
                 }
                 var poolPropertyProcessors = processor.ChildNodesWithName("poolproperty").ToList();
@@ -90,12 +91,14 @@ namespace ProcessSmarterTestPackage.External
             var errors = new List<CrossPackageValidationError>();
             foreach (var processor in processors)
             {
-                var stimuliId = processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last();
+                var stimuliId =
+                    processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last();
                 var stimuli =
                     stimuliContent.FirstOrDefault(x => x.ContainsKey("StimulusId") && x["StimulusId"].Equals(stimuliId));
                 if (stimuli == null)
                 {
-                    errors.Add(GenerateStimuliError($"[Stimuli:{stimuliId} doesn't exist in content package]", stimuliId, processor,
+                    errors.Add(GenerateStimuliError($"[Stimuli:{stimuliId} doesn't exist in content package]", stimuliId,
+                        processor,
                         key));
                 }
                 else
@@ -103,8 +106,11 @@ namespace ProcessSmarterTestPackage.External
                     var version = processor.ChildNodeWithName("identifier").ValueForAttribute("version");
                     if (!version.Equals(stimuli["Version"]))
                     {
-                        errors.Add(GenerateStimuliError($"[StimuliVersion:{version}!=ContentPackageStimuliVersion:{stimuli["Version"]}]", stimuliId,
-                            processor, key));
+                        errors.Add(
+                            GenerateStimuliError(
+                                $"[StimuliVersion:{version}!=ContentPackageStimuliVersion:{stimuli["Version"]}]",
+                                stimuliId,
+                                processor, key));
                     }
                 }
             }
