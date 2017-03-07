@@ -24,7 +24,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ErrorSeverity = ErrorSeverity.Severe,
                     GeneratedMessage = "[TestBlueprint element does not contain \"test\" elementtype]",
                     Key = "bpelement",
-                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
+                    Location = "/testblueprint/bpelement",
                     PackageType = PackageType
                 });
             }
@@ -35,8 +35,9 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ErrorSeverity = ErrorSeverity.Severe,
                     GeneratedMessage = "[TestBlueprint \"test\" elementtype count > 1]",
                     Key = "bpelement",
-                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
-                    PackageType = PackageType
+                    Location = "/testblueprint/bpelement",
+                    PackageType = PackageType,
+                    Value = test.First().ToList().First().Navigator.OuterXml
                 });
             }
             else
@@ -81,8 +82,9 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         GeneratedMessage =
                             $"[TestBlueprint contentlevel element's parentid {element.ValueForAttribute("parentid")} does not exist]",
                         Key = "bpelement",
-                        Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
-                        PackageType = PackageType
+                        Location = "/testblueprint/bpelement",
+                        PackageType = PackageType,
+                        Value = element.Navigator.OuterXml
                     });
                 }
             }
@@ -102,8 +104,9 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ErrorSeverity = ErrorSeverity.Degraded,
                     GeneratedMessage = $"[TestBlueprint test {propertyName} != sum of segment properties]",
                     Key = "bpelement",
-                    Location = $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
-                    PackageType = PackageType
+                    Location = "/testblueprint/bpelement",
+                    PackageType = PackageType,
+                    Value = test.Navigator.OuterXml
                 });
             }
             return result;

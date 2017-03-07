@@ -18,12 +18,12 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 validationErrors.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Benign,
-                    Location = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref",
+                    Location = "/testitem/bpref",
                     GeneratedMessage = $"[bpref node count ({Processor.ChildNodesWithName("bpref").Count()}) > max (7)]",
                     ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last(),
                     Key = "bpref",
                     PackageType = PackageType,
-                    Value = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref"
+                    Value = Processor.Navigator.OuterXml
                 });
             }
 
