@@ -31,8 +31,8 @@ namespace ProcessSmarterTestPackage.External
             return result;
         }
 
-        private IEnumerable<CrossPackageValidationError> CrossValidateContentItems(string key,
-            IEnumerable<TestItemProcessor> processors, List<Dictionary<string, string>> itemContent)
+        private static IEnumerable<CrossPackageValidationError> CrossValidateContentItems(string key,
+            IEnumerable<TestItemProcessor> processors, IReadOnlyCollection<Dictionary<string, string>> itemContent)
         {
             var errors = new List<CrossPackageValidationError>();
             foreach (var processor in processors)
@@ -43,7 +43,7 @@ namespace ProcessSmarterTestPackage.External
                 if (item == null)
                 {
                     errors.Add(GenerateItemError($"[Item {itemId} doesn't exist in content package]", itemId, processor,
-                        key));
+                        key, "ItemId"));
                     continue;
                 }
                 var poolPropertyProcessors = processor.ChildNodesWithName("poolproperty").ToList();
@@ -54,8 +54,8 @@ namespace ProcessSmarterTestPackage.External
                 {
                     errors.Add(
                         GenerateItemError(
-                            $"[ContentPackageItemType:{item["ItemType"]}!=TestPackageItemType{itemType.ValueForAttribute("value")}]",
-                            itemId, processor, key));
+                            $"[ContentPackageItemType:{item["ItemType"]}!=TestPackageItemType:{itemType.ValueForAttribute("value")}]",
+                            itemId, processor, key, "ItemType"));
                 }
                 var dok = poolPropertyProcessors.FirstOrDefault(
                     x =>
@@ -68,7 +68,7 @@ namespace ProcessSmarterTestPackage.External
                     errors.Add(
                         GenerateItemError(
                             $"[ContentPackageItemDOK:{item["DOK"]}!=TestPackageItemType{dok.ValueForAttribute("value")}]",
-                            itemId, processor, key));
+                            itemId, processor, key, "DOK"));
                 }
                 var grade = poolPropertyProcessors.FirstOrDefault(
                     x => x.ValueForAttribute("property").Equals("Grade", StringComparison.OrdinalIgnoreCase));
@@ -78,14 +78,14 @@ namespace ProcessSmarterTestPackage.External
                     errors.Add(
                         GenerateItemError(
                             $"[ContentPackageItemGrade:{item["Grade"]}!=TestPackageItemType{grade.ValueForAttribute("value")}]",
-                            itemId, processor, key));
+                            itemId, processor, key, "Grade"));
                 }
             }
             return errors;
         }
 
-        private IList<CrossPackageValidationError> CrossValidateContentStimuli(string key,
-            IEnumerable<PassageProcessor> processors, List<Dictionary<string, string>> stimuliContent)
+        private static IEnumerable<CrossPackageValidationError> CrossValidateContentStimuli(string key,
+            IEnumerable<PassageProcessor> processors, IReadOnlyCollection<Dictionary<string, string>> stimuliContent)
         {
             var errors = new List<CrossPackageValidationError>();
             foreach (var processor in processors)
@@ -99,7 +99,7 @@ namespace ProcessSmarterTestPackage.External
                     var error = GenerateStimuliError($"[Stimuli:{stimuliId} doesn't exist in content package]",
                         stimuliId,
                         processor,
-                        key);
+                        key, "StimulusId");
                     error.ErrorSeverity = ErrorSeverity.Severe;
                     errors.Add(error);
                 }
@@ -112,7 +112,7 @@ namespace ProcessSmarterTestPackage.External
                             GenerateStimuliError(
                                 $"[StimuliVersion:{version}!=ContentPackageStimuliVersion:{stimuli["Version"]}]",
                                 stimuliId,
-                                processor, key));
+                                processor, key, "Version"));
                     }
                 }
             }
@@ -120,36 +120,36 @@ namespace ProcessSmarterTestPackage.External
         }
 
         private static CrossPackageValidationError GenerateStimuliError(string message, string id, Processor processor,
-            string key)
+            string assessmentId, string key)
         {
             return new CrossPackageValidationError
             {
                 ErrorSeverity = ErrorSeverity.Benign,
                 GeneratedMessage = message,
                 ItemId = id,
-                Key = "StimuliId",
+                Key = key,
                 Location = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/passage",
                 Value = processor.Navigator.OuterXml,
-                PrimarySource = $"{key} - {processor.PackageType}",
+                PrimarySource = $"{assessmentId} - {processor.PackageType}",
                 SecondarySource = "Passage Content Package",
-                AssessmentId = key
+                AssessmentId = assessmentId
             };
         }
 
         private static CrossPackageValidationError GenerateItemError(string message, string id, Processor processor,
-            string key)
+            string assessmentId, string key)
         {
             return new CrossPackageValidationError
             {
                 ErrorSeverity = ErrorSeverity.Severe,
                 GeneratedMessage = message,
                 ItemId = id,
-                Key = "ItemId",
+                Key = key,
                 Location = $"testspecification/{processor.PackageType.ToString().ToLower()}/itempool/testitem",
                 Value = processor.Navigator.OuterXml,
-                PrimarySource = $"{key} - {processor.PackageType}",
+                PrimarySource = $"{assessmentId} - {processor.PackageType}",
                 SecondarySource = "Item Content Package",
-                AssessmentId = key
+                AssessmentId = assessmentId
             };
         }
     }
