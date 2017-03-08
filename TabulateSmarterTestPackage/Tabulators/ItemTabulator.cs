@@ -135,21 +135,21 @@ namespace TabulateSmarterTestPackage.Tabulators
                         {
                             ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId,
+                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
                                 "Conflicting isfieldtest info: '{0}' <> '{1}'", isFieldTest, gii.IsFieldTest);
                         }
                         if (!string.Equals(gii.IsActive, isActive, StringComparison.Ordinal))
                         {
                             ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId,
+                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
                                 "Conflicting isactive info: '{0}' <> '{1}'", isActive, gii.IsActive);
                         }
                         if (!string.Equals(gii.ResponseRequired, responseRequired, StringComparison.Ordinal))
                         {
                             ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId,
+                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
                                 "Conflicting responserequired info: '{0}' <> '{1}'", responseRequired,
                                 gii.ResponseRequired);
                         }
@@ -157,14 +157,14 @@ namespace TabulateSmarterTestPackage.Tabulators
                         {
                             ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId,
+                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
                                 "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
                         }
                         if (!string.Equals(gii.FormPosition, formPosition, StringComparison.Ordinal))
                         {
                             ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId,
+                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
                                 "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
                         }
                     }
@@ -274,7 +274,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                                     ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                         testSpecificationProcessor.PackageType,
                                         ppNode.Name,
-                                        ErrorSeverity.Degraded, itemId,
+                                        ErrorSeverity.Degraded, itemId, string.Empty,
                                         "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
                                 }
                                 itemFields[fieldIndex] = ppValue;
@@ -285,7 +285,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                 testSpecificationProcessor.PackageType,
                                 ppNode.Name, ErrorSeverity.Degraded,
-                                itemId, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
+                                itemId, string.Empty, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
                         }
                     }
                 }
@@ -308,7 +308,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {
                     ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                         testSpecificationProcessor.PackageType, node.Name,
-                        ErrorSeverity.Benign, itemId,
+                        ErrorSeverity.Benign, itemId, string.Empty,
                         "'{0}' Unrecognized Measurement Model", itemFields[(int) ItemFieldNames.MeasurementModel]);
                 }
 
@@ -322,7 +322,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                         ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                             testSpecificationProcessor.PackageType,
                             pnNodes.Current.Name, ErrorSeverity.Benign,
-                            itemId, "'{0}' Unrecognized Measurement Parameter", name);
+                            itemId, string.Empty, "'{0}' Unrecognized Measurement Parameter", name);
                     }
                 }
 

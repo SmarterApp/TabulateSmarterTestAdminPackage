@@ -46,7 +46,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     GeneratedMessage = "[TestBlueprint contains no test root element]",
                     Key = "identifier",
                     Location =
-                            $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
+                        $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
                     PackageType = PackageType
                 });
             }

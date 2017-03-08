@@ -73,11 +73,11 @@ namespace TabulateSmarterTestPackage.Utilities
         }
 
         public static void ReportError(string testName, PackageType packageType, string path, ErrorSeverity severity,
-            string itemId,
+            string itemId, string value,
             string message, params object[] args)
         {
             ErrorHandling.ReportError(GetErrorWriter(), ErrorFileName, testName, packageType, path, severity,
-                itemId.Split('-').Last(), message, args);
+                itemId.Split('-').Last(), value, message, args);
         }
 
         public static void Dispose(bool disposing)

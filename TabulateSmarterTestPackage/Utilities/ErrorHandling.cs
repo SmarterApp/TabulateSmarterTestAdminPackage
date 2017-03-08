@@ -7,7 +7,7 @@ namespace TabulateSmarterTestPackage.Utilities
         public static void ReportError(CsvWriter writer, string errorFileName, string testName, PackageType packageType,
             string path,
             ErrorSeverity severity,
-            string itemId, string message, params object[] args)
+            string itemId, string value, string message, params object[] args)
         {
             if (writer == null)
             {
@@ -15,7 +15,7 @@ namespace TabulateSmarterTestPackage.Utilities
             }
 
             var outMessage = string.Format(message, args);
-            writer.Write(new[] {testName, packageType.ToString(), severity.ToString(), path, itemId, outMessage});
+            writer.Write(new[] {testName, packageType.ToString(), severity.ToString(), path, itemId, value, outMessage});
         }
     }
 }

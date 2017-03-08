@@ -18,7 +18,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 validationErrors.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Benign,
-                    Location = "/testitem/bpref",
+                    Location = "testitem/bpref",
                     GeneratedMessage = $"[bpref node count ({Processor.ChildNodesWithName("bpref").Count()}) > max (7)]",
                     ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last(),
                     Key = "bpref",
