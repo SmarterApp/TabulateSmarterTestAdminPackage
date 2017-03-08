@@ -56,7 +56,7 @@ namespace TabulateSmarterTestPackage
 
         private static void Main(string[] args)
         {
-            Logger.Info(string.Concat(Enumerable.Repeat("-",60)));
+            Logger.Info(string.Concat(Enumerable.Repeat("-", 60)));
             Logger.Info("Test Package Tabulator Initialized");
             try
             {
@@ -193,7 +193,7 @@ namespace TabulateSmarterTestPackage
             }
             catch (Exception err)
             {
-                Logger.Fatal(err.InnerException);
+                Logger.Fatal(err);
                 Console.WriteLine();
 #if DEBUG
                 Console.WriteLine(err.ToString());
@@ -289,7 +289,7 @@ namespace TabulateSmarterTestPackage
                     {
                         tabulator.TabulateResults(new List<TestSpecificationProcessor> {adminPackage},
                             ReportingUtility.CrossProcessor.Errors[adminPackage.GetUniqueId()].Cast<ProcessingError>()
-                            .Where(x => x.PackageType == PackageType.Administration).ToList());
+                                .Where(x => x.PackageType == PackageType.Administration).ToList());
                         continue;
                     }
                     var scoringPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Scoring);

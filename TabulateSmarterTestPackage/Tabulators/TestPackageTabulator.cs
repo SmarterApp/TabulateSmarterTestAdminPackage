@@ -71,7 +71,8 @@ namespace TabulateSmarterTestPackage.Tabulators
             foreach (var testSpecificationProcessor in testSpecificationProcessors)
             {
                 // Extract the test info
-                var testInformation = TestInformation.RetrieveTestInformation(testSpecificationProcessor);
+                var testInfo = new TestInformation();
+                var testInformation = testInfo.RetrieveTestInformation(testSpecificationProcessor);
 
                 ReportingUtility.TestName = testInformation[ItemFieldNames.AssessmentName];
 
@@ -80,11 +81,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     testInformation);
                 items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
 
-                var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration");
-                if (assessmentRoot == null)
-                {
-                    assessmentRoot = testSpecificationProcessor.ChildNodeWithName("scoring");
-                }
+                var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration") ??
+                                     testSpecificationProcessor.ChildNodeWithName("scoring");
                 var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage").ToList();
                 if (passages.Any())
                 {
@@ -96,6 +94,7 @@ namespace TabulateSmarterTestPackage.Tabulators
 
                 var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>().ToList();
                 errors.AddRange(crossTabulationErrors);
+                errors.AddRange(testInfo.Errors);
                 var errorList = new List<List<string>>();
                 errorList.AddRange(errors.Select(x => new List<string>
                 {
@@ -115,7 +114,8 @@ namespace TabulateSmarterTestPackage.Tabulators
         public void AddTabulationHeaders(int performancelevels = 0)
         {
             ReportingUtility.GetErrorWriter()
-                .Write(new[] {"AssessmentId", "PackageType", "ErrorSeverity", "Location", "UniqueId", "Value", "Message"});
+                .Write(new[]
+                    {"AssessmentId", "PackageType", "ErrorSeverity", "Location", "UniqueId", "Value", "Message"});
             ReportingUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
             var itemHeaders = new List<string>();
             itemHeaders.AddRange(Enum.GetNames(typeof(ItemFieldNames)).ToList());

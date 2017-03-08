@@ -334,7 +334,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     var bpref = bpNodes.Current.Value;
                     if (bpIndex < MaxBpRefs)
                     {
-                        itemFields[(int)ItemFieldNames.bpref1 + bpIndex++] = bpref;
+                        itemFields[(int) ItemFieldNames.bpref1 + bpIndex++] = bpref;
                     }
 
                     // Attempt to parse the bpref as an SBAC standard

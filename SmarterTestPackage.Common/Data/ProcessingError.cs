@@ -20,11 +20,11 @@ namespace SmarterTestPackage.Common.Data
             {
                 return false;
             }
-                var other = (ProcessingError) obj;
-                return AssessmentId.Equals(other.AssessmentId, StringComparison.OrdinalIgnoreCase) &&
-                       Value.Equals(other.Value, StringComparison.OrdinalIgnoreCase) &&
-                       ErrorSeverity == other.ErrorSeverity && PackageType == other.PackageType &&
-                       Message.Equals(other.Message, StringComparison.OrdinalIgnoreCase);
+            var other = (ProcessingError) obj;
+            return AssessmentId.Equals(other.AssessmentId, StringComparison.OrdinalIgnoreCase) &&
+                   Value.Equals(other.Value, StringComparison.OrdinalIgnoreCase) &&
+                   ErrorSeverity == other.ErrorSeverity && PackageType == other.PackageType &&
+                   Message.Equals(other.Message, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode()

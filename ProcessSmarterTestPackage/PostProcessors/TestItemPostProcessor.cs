@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
@@ -9,6 +8,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
     public class TestItemPostProcessor : PostProcessor
     {
         public TestItemPostProcessor(PackageType packageType, Processor processor) : base(packageType, processor) {}
+
         public override IList<ValidationError> GenerateErrors()
         {
             var validationErrors = new List<ValidationError>();

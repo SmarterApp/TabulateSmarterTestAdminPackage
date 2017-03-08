@@ -51,7 +51,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
                             Key = x.Key,
                             Location = Navigator.Name,
                             Value = Navigator.OuterXml,
-                            PackageType = PackageType,
+                            PackageType = PackageType
                         }
                     ));
             var childErrors = Processors.SelectMany(x => x.GenerateErrorMessages()).ToList();

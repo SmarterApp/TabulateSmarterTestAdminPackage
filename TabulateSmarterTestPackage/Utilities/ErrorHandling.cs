@@ -4,7 +4,8 @@ namespace TabulateSmarterTestPackage.Utilities
 {
     public class ErrorHandling
     {
-        public static void ReportError(CsvWriter writer, string errorFileName, string testName, PackageType packageType, string path,
+        public static void ReportError(CsvWriter writer, string errorFileName, string testName, PackageType packageType,
+            string path,
             ErrorSeverity severity,
             string itemId, string message, params object[] args)
         {
