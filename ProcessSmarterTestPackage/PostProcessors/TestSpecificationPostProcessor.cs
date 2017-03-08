@@ -19,18 +19,34 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 Processor.ChildNodeWithName(PackageType.ToString().ToLower())
                     .ChildNodeWithName("testblueprint")
                     .ChildNodesWithName("bpelement")
-                    .First(x => x.ValueForAttribute("elementtype")
+                    .FirstOrDefault(x => x.ValueForAttribute("elementtype")
                         .Equals("test", StringComparison.OrdinalIgnoreCase));
-            var blueprintId = blueprintElement.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
-            if (!id.Equals(blueprintId, StringComparison.OrdinalIgnoreCase))
+            if (blueprintElement != null)
+            {
+                var blueprintId = blueprintElement.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
+                if (!id.Equals(blueprintId, StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Severe,
+                        GeneratedMessage =
+                            $"[TestBlueprint test uniqueid {blueprintId} != TestSpecification uniqueid {id}]",
+                        Key = "identifier",
+                        Location =
+                            $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
+                        PackageType = PackageType
+                    });
+                }
+            }
+            else
             {
                 result.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Severe,
-                    GeneratedMessage = $"[TestBlueprint test uniqueid {blueprintId} != TestSpecification uniqueid {id}]",
+                    GeneratedMessage = "[TestBlueprint contains no test root element]",
                     Key = "identifier",
                     Location =
-                        $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
+                            $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
                     PackageType = PackageType
                 });
             }
