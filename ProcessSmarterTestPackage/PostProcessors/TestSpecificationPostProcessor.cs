@@ -141,7 +141,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                             Key = "bpref",
                             ItemId =
                                 testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last(),
-                            Value = Processor.Navigator.OuterXml,
+                            Value = bpRef.Navigator.OuterXml,
                             PackageType = PackageType,
                             Location = $"testspecification/{PackageType.ToString().ToLower()}/itempool/testitem/bpref"
                         });
