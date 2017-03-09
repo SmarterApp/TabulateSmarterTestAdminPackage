@@ -15,15 +15,20 @@ namespace ProcessSmarterTestPackage.PostProcessors
         {
             var result = new List<ValidationError>();
             var id = ((TestSpecificationProcessor) Processor).GetUniqueId();
-            var blueprintElement =
+            var blueprintTestElement =
                 Processor.ChildNodeWithName(PackageType.ToString().ToLower())
                     .ChildNodeWithName("testblueprint")
                     .ChildNodesWithName("bpelement")
                     .FirstOrDefault(x => x.ValueForAttribute("elementtype")
                         .Equals("test", StringComparison.OrdinalIgnoreCase));
-            if (blueprintElement != null)
+            var blueprintSegmentElements = Processor.ChildNodeWithName(PackageType.ToString().ToLower())
+                    .ChildNodeWithName("testblueprint")
+                    .ChildNodesWithName("bpelement")
+                    .Where(x => x.ValueForAttribute("elementtype")
+                        .Equals("segment", StringComparison.OrdinalIgnoreCase)).ToList();
+            if (blueprintTestElement != null)
             {
-                var blueprintId = blueprintElement.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
+                var blueprintId = blueprintTestElement.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
                 if (!id.Equals(blueprintId, StringComparison.OrdinalIgnoreCase))
                 {
                     result.Add(new ValidationError
@@ -32,6 +37,45 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         GeneratedMessage =
                             $"[TestBlueprint test uniqueid {blueprintId} != TestSpecification uniqueid {id}]",
                         Key = "identifier",
+                        Location =
+                            $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
+                        PackageType = PackageType
+                    });
+                }
+                // There is no valid test
+                if (!blueprintSegmentElements.Any())
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Severe,
+                        GeneratedMessage =
+                            "[TestBlueprint contains no segment elements]",
+                        Key = "elementtype",
+                        Location =
+                            $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
+                        PackageType = PackageType
+                    });
+                } else if (blueprintSegmentElements.Count() == 1 && !blueprintSegmentElements.First().ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Equals(blueprintId,StringComparison.OrdinalIgnoreCase))
+                { // Test with one segment ID == test ID
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Severe,
+                        GeneratedMessage =
+                            $"[Segment ID must match Test ID in single-segmented assessments - SegmentId:{blueprintSegmentElements.First().ChildNodeWithName("identifier").ValueForAttribute("uniqueid")}!=TestId:{blueprintId}]",
+                        Key = "uniqueid",
+                        Location =
+                            $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
+                        PackageType = PackageType
+                    });
+                }
+                else if(blueprintSegmentElements.Any(x => x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Equals(blueprintId, StringComparison.OrdinalIgnoreCase)))
+                { // Test with multiple segments must not be same as test ID
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Severe,
+                        GeneratedMessage =
+                            $"[Segment ID must NOT match Test ID in multi-segmented assessments - SegmentId:{blueprintId}==TestId:{blueprintId}]",
+                        Key = "uniqueid",
                         Location =
                             $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
                         PackageType = PackageType
