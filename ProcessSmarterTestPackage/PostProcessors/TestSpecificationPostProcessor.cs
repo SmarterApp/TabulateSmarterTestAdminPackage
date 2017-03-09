@@ -22,10 +22,10 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     .FirstOrDefault(x => x.ValueForAttribute("elementtype")
                         .Equals("test", StringComparison.OrdinalIgnoreCase));
             var blueprintSegmentElements = Processor.ChildNodeWithName(PackageType.ToString().ToLower())
-                    .ChildNodeWithName("testblueprint")
-                    .ChildNodesWithName("bpelement")
-                    .Where(x => x.ValueForAttribute("elementtype")
-                        .Equals("segment", StringComparison.OrdinalIgnoreCase)).ToList();
+                .ChildNodeWithName("testblueprint")
+                .ChildNodesWithName("bpelement")
+                .Where(x => x.ValueForAttribute("elementtype")
+                    .Equals("segment", StringComparison.OrdinalIgnoreCase)).ToList();
             if (blueprintTestElement != null)
             {
                 var blueprintId = blueprintTestElement.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
@@ -55,8 +55,14 @@ namespace ProcessSmarterTestPackage.PostProcessors
                             $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement",
                         PackageType = PackageType
                     });
-                } else if (blueprintSegmentElements.Count() == 1 && !blueprintSegmentElements.First().ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Equals(blueprintId,StringComparison.OrdinalIgnoreCase))
-                { // Test with one segment ID == test ID
+                }
+                else if (blueprintSegmentElements.Count() == 1 &&
+                         !blueprintSegmentElements.First()
+                             .ChildNodeWithName("identifier")
+                             .ValueForAttribute("uniqueid")
+                             .Equals(blueprintId, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Test with one segment ID == test ID
                     result.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
@@ -68,8 +74,14 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         PackageType = PackageType
                     });
                 }
-                else if(blueprintSegmentElements.Any(x => x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Equals(blueprintId, StringComparison.OrdinalIgnoreCase)))
-                { // Test with multiple segments must not be same as test ID
+                else if (
+                    blueprintSegmentElements.Any(
+                        x =>
+                            x.ChildNodeWithName("identifier")
+                                .ValueForAttribute("uniqueid")
+                                .Equals(blueprintId, StringComparison.OrdinalIgnoreCase)))
+                {
+                    // Test with multiple segments must not be same as test ID
                     result.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
