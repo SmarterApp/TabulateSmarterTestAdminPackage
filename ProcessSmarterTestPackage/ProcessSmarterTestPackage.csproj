@@ -39,6 +39,7 @@
     <Compile Include="External\ContentPackageCrossProcessor.cs" />
     <Compile Include="External\CrossProcessor.cs" />
     <Compile Include="External\TestPackageCrossProcessor.cs" />
+    <Compile Include="PostProcessors\BlueprintElementPostProcessor.cs" />
     <Compile Include="PostProcessors\IPostProcessor.cs" />
     <Compile Include="PostProcessors\PostProcessor.cs" />
     <Compile Include="PostProcessors\TestBlueprintPostProcessor.cs" />

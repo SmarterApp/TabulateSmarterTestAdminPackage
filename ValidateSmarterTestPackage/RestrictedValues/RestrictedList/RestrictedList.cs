@@ -48,14 +48,7 @@ namespace ValidateSmarterTestPackage.RestrictedValues.RestrictedList
                     }
                 },
                 {
-                    RestrictedListItems.BlueprintElementType, new List<string>
-                    {
-                        "test",
-                        "segment",
-                        "strand",
-                        "contentlevel",
-                        "affinitygroup"
-                    }
+                    RestrictedListItems.BlueprintElementType, Enum.GetNames(typeof(BlueprintElementType))
                 },
                 {
                     RestrictedListItems.ErrorSeverity, Enum.GetNames(typeof(ErrorSeverity))

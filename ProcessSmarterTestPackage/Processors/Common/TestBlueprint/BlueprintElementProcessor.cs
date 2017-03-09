@@ -1,4 +1,7 @@
-﻿using System.Xml.XPath;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.XPath;
+using ProcessSmarterTestPackage.PostProcessors;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
@@ -54,6 +57,11 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestBlueprint
                 }
             });
             RemoveAttributeValidation("identifier", "label");
+        }
+
+        public override List<ValidationError> AdditionalValidations()
+        {
+            return new BlueprintElementPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
     }
 }
