@@ -93,6 +93,22 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         PackageType = PackageType
                     });
                 }
+                else if (blueprintSegmentElements.Select(x =>
+                             x.ChildNodeWithName("identifier")
+                                 .ValueForAttribute("uniqueid")).Distinct().Count() != blueprintSegmentElements.Count)
+                {
+                    // segments in multi-segmented tests must have IDs unique from each other
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Severe,
+                        GeneratedMessage =
+                            "[Segment ID must NOT match any other segment ID in multi-segmented assessments]",
+                        Key = "uniqueid",
+                        Location =
+                            $"testspecification/{PackageType.ToString().ToLower()}/testblueprint/bpelement/identifier",
+                        PackageType = PackageType
+                    });
+                }
             }
             else
             {
