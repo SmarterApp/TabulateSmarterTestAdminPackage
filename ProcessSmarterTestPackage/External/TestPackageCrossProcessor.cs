@@ -30,7 +30,7 @@ namespace ProcessSmarterTestPackage.External
             return result;
         }
 
-        private IEnumerable<CrossPackageValidationError> CrossValidatePackageItems(
+        private static IEnumerable<CrossPackageValidationError> CrossValidatePackageItems(
             IEnumerable<TestItemProcessor> adminItemProcessors, IEnumerable<TestItemProcessor> scoringItemProcessors)
         {
             var result = new List<CrossPackageValidationError>();
@@ -54,7 +54,7 @@ namespace ProcessSmarterTestPackage.External
             return result;
         }
 
-        private IEnumerable<CrossPackageValidationError> CrossValidatePackagePassages(
+        private static IEnumerable<CrossPackageValidationError> CrossValidatePackagePassages(
             IEnumerable<PassageProcessor> adminItemProcessors, IEnumerable<PassageProcessor> scoringItemProcessors)
         {
             var result = new List<CrossPackageValidationError>();

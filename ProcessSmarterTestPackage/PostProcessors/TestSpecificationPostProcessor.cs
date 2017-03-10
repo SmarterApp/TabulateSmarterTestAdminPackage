@@ -74,7 +74,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         PackageType = PackageType
                     });
                 }
-                else if (
+                else if (blueprintSegmentElements.Count() > 1 &&
                     blueprintSegmentElements.Any(
                         x =>
                             x.ChildNodeWithName("identifier")
