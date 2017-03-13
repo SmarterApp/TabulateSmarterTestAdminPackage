@@ -41,6 +41,7 @@
     <Compile Include="External\TestPackageCrossProcessor.cs" />
     <Compile Include="PostProcessors\BlueprintElementPostProcessor.cs" />
     <Compile Include="PostProcessors\IPostProcessor.cs" />
+    <Compile Include="PostProcessors\ItemPoolPostProcessor.cs" />
     <Compile Include="PostProcessors\PostProcessor.cs" />
     <Compile Include="PostProcessors\TestBlueprintPostProcessor.cs" />
     <Compile Include="PostProcessors\TestItemPostProcessor.cs" />

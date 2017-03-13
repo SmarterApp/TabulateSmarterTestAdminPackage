@@ -132,6 +132,36 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 Processor.ChildNodeWithName(PackageType.ToString().ToLower())
                     .ChildNodeWithName("itempool")
                     .ChildNodesWithName("testitem")));
+
+            var testForms = Processor.ChildNodeWithName(PackageType.ToString()).ChildNodesWithName("testform");
+            var passageRefs = GetAllPassageRefs().ToList();
+            foreach (var testForm in testForms)
+            {
+                foreach (var formPartition in testForm.ChildNodesWithName("formpartition"))
+                {
+                    foreach (var itemGroup in formPartition.ChildNodesWithName("itemgroup"))
+                    {
+                        foreach (var passageref in itemGroup.ChildNodesWithName("passageref"))
+                        {
+                            if (!passageRefs.Contains(passageref.ValueForAttribute("passageref")))
+                            {
+                                result.Add(new ValidationError
+                                {
+                                    ErrorSeverity = ErrorSeverity.Degraded,
+                                    Location = $"{PackageType}/testform/formpartition/itemgroup/passageref",
+                                    GeneratedMessage =
+                                        $"[No passage ID matches test form item group {itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} passageref {passageref.ValueForAttribute("passageref")}]",
+                                    ItemId = itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                                    Key = "passageref",
+                                    PackageType = PackageType,
+                                    Value = passageref.Navigator.OuterXml
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
             return result;
         }
 
@@ -165,6 +195,15 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 }
             }
             return result;
+        }
+
+        private IEnumerable<string> GetAllPassageRefs()
+        {
+            return
+                Processor.ChildNodeWithName(PackageType.ToString())
+                    .ChildNodeWithName("itempool")
+                    .ChildNodesWithName("passage")
+                    .Select(x => x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")).ToList();
         }
     }
 }
