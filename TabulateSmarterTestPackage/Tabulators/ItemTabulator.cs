@@ -133,39 +133,43 @@ namespace TabulateSmarterTestPackage.Tabulators
                     {
                         if (!string.Equals(gii.IsFieldTest, isFieldTest, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
+                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
-                                "Conflicting isfieldtest info: '{0}' <> '{1}'", isFieldTest, gii.IsFieldTest);
+                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
+                                ErrorSeverity.Degraded, itemId, node.OuterXml,
+                                $"Conflicting isfieldtest info for same itemId {itemId} between forms: '{isFieldTest}' != '{gii.IsFieldTest}'");
                         }
                         if (!string.Equals(gii.IsActive, isActive, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
+                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
-                                "Conflicting isactive info: '{0}' <> '{1}'", isActive, gii.IsActive);
+                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
+                                ErrorSeverity.Degraded, itemId, node.OuterXml,
+                                $"Conflicting isActive info for same itemId {itemId} between forms: '{isActive}' != '{gii.IsActive}'");
                         }
                         if (!string.Equals(gii.ResponseRequired, responseRequired, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
+                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
-                                "Conflicting responserequired info: '{0}' <> '{1}'", responseRequired,
-                                gii.ResponseRequired);
+                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
+                                ErrorSeverity.Degraded, itemId, node.OuterXml,
+                                $"Conflicting responseRequired info for same itemId {itemId} between forms: '{responseRequired}' != '{gii.ResponseRequired}'");
                         }
                         if (!string.Equals(gii.AdminRequired, adminRequired, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
+                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
-                                "Conflicting adminrequired info: '{0}' <> '{1}'", adminRequired, gii.AdminRequired);
+                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
+                                ErrorSeverity.Degraded, itemId, node.OuterXml,
+                                $"Conflicting adminRequired info for same itemId {itemId} between forms: '{adminRequired}' != '{gii.AdminRequired}'");
                         }
                         if (!string.Equals(gii.FormPosition, formPosition, StringComparison.Ordinal))
                         {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentName],
+                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                 testSpecificationProcessor.PackageType,
-                                node.NamespaceURI, ErrorSeverity.Degraded, itemId, string.Empty,
-                                "Conflicting formposition info: '{0} <> '{1}'", formPosition, gii.FormPosition);
+                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
+                                ErrorSeverity.Degraded, itemId, node.OuterXml,
+                                $"Conflicting formPosition info for same itemId {itemId} between forms: '{formPosition}' != '{gii.FormPosition}'");
                         }
                     }
                     else
@@ -274,7 +278,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                                     ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                         testSpecificationProcessor.PackageType,
                                         ppNode.Name,
-                                        ErrorSeverity.Degraded, itemId, string.Empty,
+                                        ErrorSeverity.Degraded, itemId, ppNode.OuterXml,
                                         "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
                                 }
                                 itemFields[fieldIndex] = ppValue;
@@ -285,7 +289,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                 testSpecificationProcessor.PackageType,
                                 ppNode.Name, ErrorSeverity.Degraded,
-                                itemId, string.Empty, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
+                                itemId, ppNode.OuterXml, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
                         }
                     }
                 }
@@ -308,7 +312,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {
                     ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                         testSpecificationProcessor.PackageType, node.Name,
-                        ErrorSeverity.Benign, itemId, string.Empty,
+                        ErrorSeverity.Benign, itemId, node.OuterXml,
                         "'{0}' Unrecognized Measurement Model", itemFields[(int) ItemFieldNames.MeasurementModel]);
                 }
 
@@ -322,7 +326,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                         ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                             testSpecificationProcessor.PackageType,
                             pnNodes.Current.Name, ErrorSeverity.Benign,
-                            itemId, string.Empty, "'{0}' Unrecognized Measurement Parameter", name);
+                            itemId, pnNodes.Current.OuterXml, "'{0}' Unrecognized Measurement Parameter", name);
                     }
                 }
 
