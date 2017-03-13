@@ -75,11 +75,11 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     });
                 }
                 else if (blueprintSegmentElements.Count() > 1 &&
-                    blueprintSegmentElements.Any(
-                        x =>
-                            x.ChildNodeWithName("identifier")
-                                .ValueForAttribute("uniqueid")
-                                .Equals(blueprintId, StringComparison.OrdinalIgnoreCase)))
+                         blueprintSegmentElements.Any(
+                             x =>
+                                 x.ChildNodeWithName("identifier")
+                                     .ValueForAttribute("uniqueid")
+                                     .Equals(blueprintId, StringComparison.OrdinalIgnoreCase)))
                 {
                     // Test with multiple segments must not be same as test ID
                     result.Add(new ValidationError

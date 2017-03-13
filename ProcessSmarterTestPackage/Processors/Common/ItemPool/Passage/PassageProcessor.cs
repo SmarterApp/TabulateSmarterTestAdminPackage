@@ -2,6 +2,7 @@
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
+using ValidateSmarterTestPackage.Validators;
 using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage
@@ -15,6 +16,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage
                 {
                     {
                         "filename", StringValidator.IsValidNonEmptyWithLength(200)
+                            .AddAndReturn(new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, @"^[\S]*[.]xml"))
                     }
                 };
 

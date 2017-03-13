@@ -20,6 +20,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
             {
                 {
                     "filename", StringValidator.IsValidNonEmptyWithLength(200)
+                        .AddAndReturn(new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, @"^[\S]*[.]xml"))
                 },
                 {
                     "itemtype", StringValidator.IsValidNonEmptyWithLength(50)
