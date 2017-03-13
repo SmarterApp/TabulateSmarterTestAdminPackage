@@ -3,6 +3,7 @@ using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
+using ValidateSmarterTestPackage.Validators;
 using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
@@ -15,10 +16,20 @@ namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
             Attributes = new AttributeValidationDictionary
             {
                 {
-                    "maxitems", StringValidator.IsValidNonEmptyWithLength(10)
+                    "maxitems", new ValidatorCollection
+                    {
+                        new RequiredStringValidator(ErrorSeverity.Degraded),
+                        new MaxLengthValidator(ErrorSeverity.Degraded, 10),
+                        new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, @"^(\d+|ALL)")
+                    }
                 },
                 {
-                    "maxresponses", StringValidator.IsValidNonEmptyWithLength(10)
+                    "maxresponses", new ValidatorCollection
+                    {
+                        new RequiredStringValidator(ErrorSeverity.Degraded),
+                        new MaxLengthValidator(ErrorSeverity.Degraded, 10),
+                        new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, @"^(\d+|ALL)")
+                    }
                 },
                 {
                     "formposition", IntValidator.IsValidNonEmptyWithLengthAndMinValue(10, 1)
