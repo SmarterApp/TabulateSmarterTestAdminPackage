@@ -133,15 +133,21 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     .ChildNodeWithName("itempool")
                     .ChildNodesWithName("testitem")));
 
-            // Check passage references actually tie to a passage in the item pool
             var testForms = Processor.ChildNodeWithName(PackageType.ToString()).ChildNodesWithName("testform");
             var passageRefs = GetAllPassageRefs().ToList();
+            var testItems =
+                Processor.ChildNodeWithName(PackageType.ToString())
+                    .ChildNodeWithName("itempool")
+                    .ChildNodesWithName("testitem").ToList();
+            var itemRefs =
+                testItems.Select(x => x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")).ToList();
             foreach (var testForm in testForms)
             {
                 foreach (var formPartition in testForm.ChildNodesWithName("formpartition"))
                 {
                     foreach (var itemGroup in formPartition.ChildNodesWithName("itemgroup"))
                     {
+                        // Check passage references actually tie to a passage in the item pool
                         foreach (var passageref in itemGroup.ChildNodesWithName("passageref"))
                         {
                             if (!passageRefs.Contains(passageref.ValueForAttribute("passageref")))
@@ -159,17 +165,32 @@ namespace ProcessSmarterTestPackage.PostProcessors
                                 });
                             }
                         }
+                        // Check item references actually tie to an item in the item pool
+                        foreach (var groupItem in itemGroup.ChildNodesWithName("groupitem"))
+                        {
+                            if (!itemRefs.Contains(groupItem.ValueForAttribute("itemid")))
+                            {
+                                result.Add(new ValidationError
+                                {
+                                    ErrorSeverity = ErrorSeverity.Degraded,
+                                    Location = $"{PackageType}/testform/formpartition/itemgroup/groupitem",
+                                    GeneratedMessage =
+                                        $"[groupitem ID {groupItem.ValueForAttribute("itemid")} does not match any item in the item pool]",
+                                    ItemId = groupItem.ValueForAttribute("itemid"),
+                                    Key = "itemid",
+                                    PackageType = PackageType,
+                                    Value = groupItem.Navigator.OuterXml
+                                });
+                            }
+                        }
                     }
                 }
             }
 
+            // Ensure that pool property item type info is reflected in the itempool
             var itemPoolProperties = Processor.ChildNodeWithName(PackageType.ToString())
                 .ChildNodesWithName("poolproperty")
                 .Where(x => x.ValueForAttribute("property").Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase));
-            var testItems =
-                Processor.ChildNodeWithName(PackageType.ToString())
-                    .ChildNodeWithName("itempool")
-                    .ChildNodesWithName("testitem").ToList();
             foreach (var poolProperty in itemPoolProperties)
             {
                 int poolItemCount;
@@ -198,6 +219,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 }
             }
 
+            // Ensure that pool property language info is reflected in the itempool
             var itemPoolLanguages = Processor.ChildNodeWithName(PackageType.ToString())
                 .ChildNodesWithName("poolproperty")
                 .Where(x => x.ValueForAttribute("property").Equals("Language", StringComparison.OrdinalIgnoreCase));
