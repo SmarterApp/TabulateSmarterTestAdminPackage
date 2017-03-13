@@ -1,4 +1,7 @@
-﻿using System.Xml.XPath;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.XPath;
+using ProcessSmarterTestPackage.PostProcessors;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
@@ -34,6 +37,11 @@ namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
                 .ForEach(x => Processors.Add(new ItemSelectorProcessor(x, packageType)));
             Navigator.GenerateList("segmentpool").ForEach(x => Processors.Add(new SegmentPoolProcessor(x, packageType)));
             Navigator.GenerateList("segmentform").ForEach(x => Processors.Add(new SegmentFormProcessor(x, packageType)));
+        }
+
+        public override List<ValidationError> AdditionalValidations()
+        {
+            return new AdminSegmentPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
     }
 }
