@@ -44,6 +44,7 @@
     <Compile Include="PostProcessors\ItemGroupPostProcessor.cs" />
     <Compile Include="PostProcessors\ItemPoolPostProcessor.cs" />
     <Compile Include="PostProcessors\PostProcessor.cs" />
+    <Compile Include="PostProcessors\SegmentBlueprintPostProcessor.cs" />
     <Compile Include="PostProcessors\TestBlueprintPostProcessor.cs" />
     <Compile Include="PostProcessors\TestFormPostProcessor.cs" />
     <Compile Include="PostProcessors\TestItemPostProcessor.cs" />
