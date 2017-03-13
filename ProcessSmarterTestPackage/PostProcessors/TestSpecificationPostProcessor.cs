@@ -133,6 +133,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     .ChildNodeWithName("itempool")
                     .ChildNodesWithName("testitem")));
 
+            // Check passage references actually tie to a passage in the item pool
             var testForms = Processor.ChildNodeWithName(PackageType.ToString()).ChildNodesWithName("testform");
             var passageRefs = GetAllPassageRefs().ToList();
             foreach (var testForm in testForms)
@@ -159,6 +160,73 @@ namespace ProcessSmarterTestPackage.PostProcessors
                             }
                         }
                     }
+                }
+            }
+
+            var itemPoolProperties = Processor.ChildNodeWithName(PackageType.ToString())
+                .ChildNodesWithName("poolproperty")
+                .Where(x => x.ValueForAttribute("property").Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase));
+            var testItems =
+                Processor.ChildNodeWithName(PackageType.ToString())
+                    .ChildNodeWithName("itempool")
+                    .ChildNodesWithName("testitem").ToList();
+            foreach (var poolProperty in itemPoolProperties)
+            {
+                int poolItemCount;
+                if (!int.TryParse(poolProperty.ValueForAttribute("itemcount"), out poolItemCount))
+                {
+                    continue;
+                }
+                var testItemCount =
+                    testItems.Count(
+                        x =>
+                            x.ValueForAttribute("itemtype")
+                                .Equals(poolProperty.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase));
+                if (poolItemCount != testItemCount)
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Degraded,
+                        Location = $"{PackageType}/poolproperty",
+                        GeneratedMessage =
+                            $"[poolproperty itemcount {poolItemCount} for type {poolProperty.ValueForAttribute("value")} != testitem count {testItemCount}]",
+                        ItemId = string.Empty,
+                        Key = "itemcount",
+                        PackageType = PackageType,
+                        Value = poolProperty.Navigator.OuterXml
+                    });
+                }
+            }
+
+            var itemPoolLanguages = Processor.ChildNodeWithName(PackageType.ToString())
+                .ChildNodesWithName("poolproperty")
+                .Where(x => x.ValueForAttribute("property").Equals("Language", StringComparison.OrdinalIgnoreCase));
+            foreach (var poolProperty in itemPoolLanguages)
+            {
+                int poolItemCount;
+                if (!int.TryParse(poolProperty.ValueForAttribute("itemcount"), out poolItemCount))
+                {
+                    continue;
+                }
+                var testItemCount = testItems.Count(
+                    x =>
+                        x.ChildNodesWithName("poolproperty")
+                            .Any(y => y.ValueForAttribute("property")
+                                          .Equals("Language", StringComparison.OrdinalIgnoreCase)
+                                      && y.ValueForAttribute("value").Equals(poolProperty.ValueForAttribute("value"))));
+                if (poolItemCount != testItemCount)
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Degraded,
+                        Location = $"{PackageType}/poolproperty",
+                        GeneratedMessage =
+                            $"[poolproperty itemcount {poolItemCount} for type {poolProperty.ValueForAttribute("value")} != testitem count {testItemCount}]",
+                        ItemId = string.Empty,
+                        Key = "itemcount",
+                        PackageType = PackageType,
+                        Value = poolProperty.Navigator.OuterXml
+                    });
                 }
             }
 
