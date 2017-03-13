@@ -48,6 +48,7 @@
     <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
     <Compile Include="Validators\Convenience\DecimalValidator.cs" />
     <Compile Include="Validators\Convenience\IntValidator.cs" />
+    <Compile Include="Validators\Convenience\NoValidator.cs" />
     <Compile Include="Validators\Convenience\StringValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Validators\MaxLengthValidator.cs" />

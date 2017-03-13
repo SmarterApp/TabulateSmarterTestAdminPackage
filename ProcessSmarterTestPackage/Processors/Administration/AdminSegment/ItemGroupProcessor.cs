@@ -19,6 +19,9 @@ namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
                 },
                 {
                     "maxresponses", StringValidator.IsValidNonEmptyWithLength(10)
+                },
+                {
+                    "formposition", IntValidator.IsValidNonEmptyWithLengthAndMinValue(10, 1)
                 }
             };
 

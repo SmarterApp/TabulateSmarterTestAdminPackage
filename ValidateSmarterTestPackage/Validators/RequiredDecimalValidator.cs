@@ -10,7 +10,9 @@ namespace ValidateSmarterTestPackage.Validators
         public override bool IsValid(object value)
         {
             decimal decimalValue;
-            return decimal.TryParse(value as string, out decimalValue);
+            var stringValue = value as string;
+            return !string.IsNullOrEmpty(stringValue)
+                   && decimal.TryParse(stringValue, out decimalValue);
         }
 
         public override string GetMessage()

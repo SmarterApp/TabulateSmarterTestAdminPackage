@@ -11,7 +11,9 @@ namespace ValidateSmarterTestPackage.Validators
         public override bool IsValid(object value)
         {
             DateTime dateTimeValue;
-            return DateTime.TryParse(value as string, out dateTimeValue);
+            var stringValue = value as string;
+            return !string.IsNullOrEmpty(stringValue)
+                   && DateTime.TryParse(stringValue, out dateTimeValue);
         }
 
         public override string GetMessage()

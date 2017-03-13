@@ -27,7 +27,7 @@ namespace ValidateSmarterTestPackage.Validators
             RestrictedListItems restrictedListItem;
             return !Enum.TryParse(Parameter.ToString(), out restrictedListItem)
                 ? $"[IncorrectArgumentProvidedToValidator:{Parameter}]"
-                : $"[RequiredValueIn:{StringifyList(RestrictedList.RestrictedLists[restrictedListItem].ToList())}";
+                : $"[RequiredValueIn:{StringifyList(RestrictedList.RestrictedLists[restrictedListItem].ToList())}]";
         }
 
         private string StringifyList(List<string> list)

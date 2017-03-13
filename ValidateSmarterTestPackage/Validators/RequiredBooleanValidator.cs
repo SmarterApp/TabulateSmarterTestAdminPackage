@@ -10,7 +10,9 @@ namespace ValidateSmarterTestPackage.Validators
         public override bool IsValid(object value)
         {
             bool boolValue;
-            return bool.TryParse(value as string, out boolValue);
+            var stringValue = value as string;
+            return !string.IsNullOrEmpty(stringValue)
+                   && bool.TryParse(stringValue, out boolValue);
         }
 
         public override string GetMessage()

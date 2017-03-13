@@ -27,13 +27,13 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestBlueprint
                     "minopitems", IntValidator.IsValidPositiveNonEmptyWithLength(4)
                 },
                 {
-                    "maxopitems", IntValidator.IsValidNonEmptyWithLengthAndMinValue(4, 1)
+                    "maxopitems", IntValidator.IsValidPositiveNonEmptyWithLength(4)
                 },
                 {
-                    "minftitems", IntValidator.IsValidOptionalPositiveNonEmptyWithLength(4)
+                    "minftitems", new NoValidator(ErrorSeverity.Benign)
                 },
                 {
-                    "maxftitems", IntValidator.IsValidOptionalNonEmptyWithLengthAndMinValue(4, 1)
+                    "maxftitems", new NoValidator(ErrorSeverity.Benign)
                 },
                 {
                     "opitemcount", IntValidator.IsValidNonEmptyWithLengthAndMinValue(4, 1)
@@ -42,9 +42,21 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestBlueprint
                     "ftitemcount", IntValidator.IsValidPositiveNonEmptyWithLength(4)
                 },
                 {
-                    "parentid", StringValidator.IsValidOptionalNonEmptyWithLength(150)
+                    "parentid", new NoValidator(ErrorSeverity.Benign)
                 }
             };
+
+            ApplySecondaryValidation("elementtype", "contentlevel", "parentid",
+                StringValidator.IsValidNonEmptyWithLength(150));
+            ApplySecondaryValidation("elementtype", "test", "minftitems",
+                IntValidator.IsValidPositiveNonEmptyWithLength(4));
+            ApplySecondaryValidation("elementtype", "test", "maxftitems",
+                IntValidator.IsValidPositiveNonEmptyWithLength(4));
+            ApplySecondaryValidation("elementtype", "segment", "minftitems",
+                IntValidator.IsValidPositiveNonEmptyWithLength(4));
+            ApplySecondaryValidation("elementtype", "segment", "maxftitems",
+                IntValidator.IsValidPositiveNonEmptyWithLength(4));
+
 
             Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
             ReplaceAttributeValidation("identifier", new AttributeValidationDictionary

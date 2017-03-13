@@ -33,7 +33,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestForm
 
             Navigator.GenerateList("poolproperty")
                 .ForEach(x => Processors.Add(new PoolPropertyProcessor(x, packageType)));
-            ReplaceAttributeValidation("poolproperty", Attributes = new AttributeValidationDictionary
+            ReplaceAttributeValidation("poolproperty", new AttributeValidationDictionary
             {
                 {
                     "property", StringValidator.IsValidNonEmptyWithLength(200)

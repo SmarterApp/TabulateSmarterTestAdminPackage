@@ -77,8 +77,12 @@ namespace ProcessSmarterTestPackage.PostProcessors
             string op)
         {
             var result = new List<ValidationError>();
-            var a = int.Parse(valueA);
-            var b = int.Parse(valueB);
+            int a;
+            int b;
+            if (!int.TryParse(valueA, out a) || !int.TryParse(valueB, out b))
+            {
+                return result;
+            }
             switch (op)
             {
                 case ">":

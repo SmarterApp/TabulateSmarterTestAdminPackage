@@ -28,9 +28,6 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestForm
                 .ForEach(x => Processors.Add(new ItemGroupProcessor(x, packageType)));
 
             Processors.Where(x => x.Navigator.Name.Equals("itemgroup")).ToList()
-                .ForEach(x => x.Attributes.Add("formposition", IntValidator.IsValidNonEmptyWithLengthAndMinValue(10, 1)));
-
-            Processors.Where(x => x.Navigator.Name.Equals("itemgroup")).ToList()
                 .ForEach(x => x.Navigator.GenerateList("passageref")
                     .ForEach(y => x.Processors.Add(new PassageRefProcessor(y, packageType))));
         }

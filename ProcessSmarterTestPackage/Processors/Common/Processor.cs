@@ -40,6 +40,10 @@ namespace ProcessSmarterTestPackage.Processors.Common
         public IList<ValidationError> GenerateErrorMessages()
         {
             var result = new List<ValidationError>();
+            if (Navigator.Name.Equals("testform"))
+            {
+                Console.WriteLine();
+            }
             ValidatedAttributes
                 .Where(x => !x.Value.IsValid)
                 .ToList()
@@ -99,6 +103,12 @@ namespace ProcessSmarterTestPackage.Processors.Common
                     };
                 }
             }
+        }
+
+        protected void ApplySecondaryValidation(string key, string value, string affectedProperty,
+            ValidatorCollection validatorCollection)
+        {
+            validatorCollection.ForEach(x => ApplySecondaryValidation(key, value, affectedProperty, x));
         }
 
         public IEnumerable<Processor> ChildNodesWithName(string name)

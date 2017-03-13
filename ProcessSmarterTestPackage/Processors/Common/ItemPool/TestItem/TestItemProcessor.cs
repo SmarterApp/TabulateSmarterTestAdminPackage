@@ -36,7 +36,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
                     "uniqueid", StringValidator.IsValidNonEmptyWithLength(150)
                 },
                 {
-                    "name", StringValidator.IsValidOptionalNonEmptyWithLength(80)
+                    "name", new NoValidator(ErrorSeverity.Benign)
                 }
             });
             RemoveAttributeValidation("identifier", "label");
