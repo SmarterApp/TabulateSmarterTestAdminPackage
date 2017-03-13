@@ -1,4 +1,7 @@
-﻿using System.Xml.XPath;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.XPath;
+using ProcessSmarterTestPackage.PostProcessors;
 using ProcessSmarterTestPackage.Processors.Administration;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
@@ -48,6 +51,11 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestForm
 
             Navigator.GenerateList("formpartition")
                 .ForEach(x => Processors.Add(new TestFormPartitionProcessor(x, packageType)));
+        }
+
+        public override List<ValidationError> AdditionalValidations()
+        {
+            return new TestFormPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
     }
 }
