@@ -23,7 +23,7 @@ namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
                     {
                         new RequiredStringValidator(ErrorSeverity.Degraded),
                         new MaxLengthValidator(ErrorSeverity.Degraded, 10),
-                        new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, @"^(\d+|ALL)")
+                        new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, @"^(\d+|ALL)$")
                     }
                 },
                 {
@@ -31,7 +31,7 @@ namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
                     {
                         new RequiredStringValidator(ErrorSeverity.Degraded),
                         new MaxLengthValidator(ErrorSeverity.Degraded, 10),
-                        new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, @"^(\d+|ALL)")
+                        new RequiredRegularExpressionValidator(ErrorSeverity.Degraded, @"^(\d+|ALL)$")
                     }
                 },
                 {
