@@ -139,10 +139,19 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 Processor.ChildNodeWithName(PackageType.ToString())
                     .ChildNodeWithName("itempool")
                     .ChildNodesWithName("testitem").ToList();
-            var itemRefs =
-                testItems.Select(x => x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")).ToList();
             foreach (var testForm in testForms)
             {
+                var formPoolProperties = testForm.ChildNodesWithName("poolproperty").ToList();
+                var languageProperties =
+                    formPoolProperties.Where(
+                            x => x.ValueForAttribute("property").Equals("Language", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                var languageCounter = new Dictionary<string, int>();
+                var itemType =
+                    formPoolProperties.Where(
+                            x => x.ValueForAttribute("property").Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                var itemTypeCounter = new Dictionary<string, int>();
                 foreach (var formPartition in testForm.ChildNodesWithName("formpartition"))
                 {
                     foreach (var itemGroup in formPartition.ChildNodesWithName("itemgroup"))
@@ -155,7 +164,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                                 result.Add(new ValidationError
                                 {
                                     ErrorSeverity = ErrorSeverity.Degraded,
-                                    Location = $"{PackageType}/testform/formpartition/itemgroup/passageref",
+                                    Location =
+                                        $"testspecification/{PackageType}/testform/formpartition/itemgroup/passageref",
                                     GeneratedMessage =
                                         $"[No passage ID matches test form item group {itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} passageref {passageref.ValueForAttribute("passageref")}]",
                                     ItemId = itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
@@ -168,12 +178,20 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         // Check item references actually tie to an item in the item pool
                         foreach (var groupItem in itemGroup.ChildNodesWithName("groupitem"))
                         {
-                            if (!itemRefs.Contains(groupItem.ValueForAttribute("itemid")))
+                            var itemMatch =
+                                testItems.FirstOrDefault(
+                                    x =>
+                                        x.ChildNodeWithName("identifier")
+                                            .ValueForAttribute("uniqueid")
+                                            .Equals(groupItem.ValueForAttribute("itemid"),
+                                                StringComparison.OrdinalIgnoreCase));
+                            if (itemMatch == null)
                             {
                                 result.Add(new ValidationError
                                 {
                                     ErrorSeverity = ErrorSeverity.Degraded,
-                                    Location = $"{PackageType}/testform/formpartition/itemgroup/groupitem",
+                                    Location =
+                                        $"testspecification/{PackageType}/testform/formpartition/itemgroup/groupitem",
                                     GeneratedMessage =
                                         $"[groupitem ID {groupItem.ValueForAttribute("itemid")} does not match any item in the item pool]",
                                     ItemId = groupItem.ValueForAttribute("itemid"),
@@ -182,7 +200,94 @@ namespace ProcessSmarterTestPackage.PostProcessors
                                     Value = groupItem.Navigator.OuterXml
                                 });
                             }
+                            else
+                                //Check that the pool properties of the test form actually correspond to the items in the item pool (itemcounts)
+                            {
+                                var itemProperties = itemMatch.ChildNodesWithName("poolproperty");
+                                var itemTypeProperties =
+                                    itemProperties.Where(
+                                        x =>
+                                            x.ValueForAttribute("property")
+                                                .Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase));
+                                var itemLanguageProperties =
+                                    itemProperties.Where(
+                                        x =>
+                                            x.ValueForAttribute("property")
+                                                .Equals("Language", StringComparison.OrdinalIgnoreCase));
+                                foreach (var type in itemTypeProperties)
+                                {
+                                    if (itemTypeCounter.ContainsKey(type.ValueForAttribute("value")))
+                                    {
+                                        itemTypeCounter[type.ValueForAttribute("value")] =
+                                            itemTypeCounter[type.ValueForAttribute("value")] + 1;
+                                    }
+                                    else
+                                    {
+                                        itemTypeCounter.Add(type.ValueForAttribute("value"), 1);
+                                    }
+                                }
+                                foreach (var language in itemLanguageProperties)
+                                {
+                                    if (languageCounter.ContainsKey(language.ValueForAttribute("value")))
+                                    {
+                                        languageCounter[language.ValueForAttribute("value")] =
+                                            languageCounter[language.ValueForAttribute("value")] + 1;
+                                    }
+                                    else
+                                    {
+                                        languageCounter.Add(language.ValueForAttribute("value"), 1);
+                                    }
+                                }
+                            }
                         }
+                    }
+                }
+                var parsedInt = 0;
+                foreach (var language in languageProperties)
+                {
+                    if (!languageCounter.ContainsKey(language.ValueForAttribute("value")) ||
+                        !int.TryParse(language.ValueForAttribute("itemcount"), out parsedInt) ||
+                        languageCounter[language.ValueForAttribute("value")] != parsedInt)
+                    {
+                        var languageCounterValue = languageCounter.ContainsKey(language.ValueForAttribute("value"))
+                            ? languageCounter[language.ValueForAttribute("value")]
+                            : 0;
+                        // The itemcount is off for languages
+                        result.Add(new ValidationError
+                        {
+                            ErrorSeverity = ErrorSeverity.Degraded,
+                            Location = $"testspecification/{PackageType}/testform/poolproperty",
+                            GeneratedMessage =
+                                $"[poolproperty itemcount {language.ValueForAttribute("itemcount")} for language {language.ValueForAttribute("value")} != groupItem count {languageCounterValue}",
+                            ItemId = testForm.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                            Key = "itemcount",
+                            PackageType = PackageType,
+                            Value = language.Navigator.OuterXml
+                        });
+                    }
+                }
+                foreach (var type in itemType)
+                {
+                    if (!itemTypeCounter.ContainsKey(type.ValueForAttribute("value")) ||
+                        !int.TryParse(type.ValueForAttribute("itemcount"), out parsedInt) ||
+                        itemTypeCounter[type.ValueForAttribute("value")] != parsedInt)
+                    {
+                        // The itemcount is off for item types
+                        var typeCounterValue = itemTypeCounter.ContainsKey(type.ValueForAttribute("value"))
+                            ? itemTypeCounter[type.ValueForAttribute("value")]
+                            : 0;
+                        // The itemcount is off for languages
+                        result.Add(new ValidationError
+                        {
+                            ErrorSeverity = ErrorSeverity.Degraded,
+                            Location = $"testspecification/{PackageType}/testform/poolproperty",
+                            GeneratedMessage =
+                                $"[poolproperty itemcount {type.ValueForAttribute("itemcount")} for type {type.ValueForAttribute("value")} != groupItem count {typeCounterValue}",
+                            ItemId = testForm.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                            Key = "itemcount",
+                            PackageType = PackageType,
+                            Value = type.Navigator.OuterXml
+                        });
                     }
                 }
             }
