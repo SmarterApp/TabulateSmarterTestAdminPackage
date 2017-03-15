@@ -96,13 +96,19 @@ namespace ProcessSmarterTestPackage.PostProcessors
             string propertyName)
         {
             var result = new List<ValidationError>();
-            if (segments.Sum(x => int.Parse(x.ValueForAttribute(propertyName))) !=
-                int.Parse(test.ValueForAttribute(propertyName)))
+            int parsedSegmentSum;
+            int parsedTestValue;
+            var segmentSum = segments.Sum(
+                x => int.TryParse(x.ValueForAttribute(propertyName), out parsedSegmentSum) ? parsedSegmentSum : 0);
+            var testValue = int.TryParse(test.ValueForAttribute(propertyName), out parsedTestValue)
+                ? parsedTestValue
+                : 0;
+            if (segmentSum != testValue)
             {
                 result.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Degraded,
-                    GeneratedMessage = $"[TestBlueprint test {propertyName} != sum of segment properties]",
+                    GeneratedMessage = $"[TestBlueprint test {propertyName} with value {testValue} != {segmentSum} sum of segment properties]",
                     Key = "bpelement",
                     Location = "testblueprint/bpelement",
                     PackageType = PackageType,
