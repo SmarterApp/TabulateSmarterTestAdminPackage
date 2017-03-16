@@ -5,6 +5,9 @@ using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem;
 using SmarterTestPackage.Common.Data;
+using ValidateSmarterTestPackage;
+using ValidateSmarterTestPackage.Validators;
+using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.External
 {
@@ -23,7 +26,7 @@ namespace ProcessSmarterTestPackage.External
                 passages.Cast<PassageProcessor>(),
                 stimuliContent);
             var itemErrors = CrossValidateContentItems(primary.ValueForAttribute("uniqueid"),
-                items.Cast<TestItemProcessor>(),
+                items.Cast<TestItemProcessor>().ToList(),
                 itemContent);
             var result = new List<CrossPackageValidationError>();
             result.AddRange(stimuliErrors);
@@ -32,7 +35,7 @@ namespace ProcessSmarterTestPackage.External
         }
 
         private static IEnumerable<CrossPackageValidationError> CrossValidateContentItems(string key,
-            IEnumerable<TestItemProcessor> processors, IReadOnlyCollection<Dictionary<string, string>> itemContent)
+            IList<TestItemProcessor> processors, IReadOnlyCollection<Dictionary<string, string>> itemContent)
         {
             var errors = new List<CrossPackageValidationError>();
             foreach (var processor in processors)
@@ -80,8 +83,47 @@ namespace ProcessSmarterTestPackage.External
                             $"[ContentPackageItemGrade:{item["Grade"]}!=TestPackageItemType{grade.ValueForAttribute("value")}]",
                             itemId, processor, key, "Grade"));
                 }
+                if (item.ContainsKey("MathematicalPractice") && !string.IsNullOrEmpty(item["MathematicalPractice"]) &&
+                    !processors.First(x => x.Equals(processor))
+                        .ValidatedAttributes.ContainsKey("MathematicalPractice"))
+                {
+                    processors.First(x => x.Equals(processor))
+                        .ValidatedAttributes.Add("MathematicalPractice",
+                            GenerateFromValidationCollection("MathematicalPractice", item["MathematicalPractice"],
+                                IntValidator.IsValidPositiveNonEmptyWithLength(1)));
+                }
+                if (item.ContainsKey("AllowCalculator") && !string.IsNullOrEmpty("AllowCalculator") &&
+                    !processors.First(x => x.Equals(processor))
+                        .ChildNodesWithName("poolproperty")
+                        .Any(
+                            x =>
+                                x.ValueForAttribute("property")
+                                    .Equals("Allow Calculator", StringComparison.OrdinalIgnoreCase)) &&
+                    !processors.First(x => x.Equals(processor))
+                        .ValidatedAttributes.ContainsKey("AllowCalculator"))
+                {
+                    processors.First(x => x.Equals(processor))
+                        .ValidatedAttributes.Add("AllowCalculator",
+                            GenerateFromValidationCollection("AllowCalculator", item["AllowCalculator"],
+                                StringValidator.IsValidNonEmptyWithLength(1)
+                                    .AddAndReturn(new RequiredRegularExpressionValidator(ErrorSeverity.Degraded,
+                                        @"^[YyNn]$"))
+                            ));
+                }
             }
             return errors;
+        }
+
+        private static ValidatedAttribute GenerateFromValidationCollection(string name, string value,
+            IValidator validators)
+        {
+            return new ValidatedAttribute
+            {
+                IsValid = validators.IsValid(value),
+                Name = name,
+                Validator = validators,
+                Value = value
+            };
         }
 
         private static IEnumerable<CrossPackageValidationError> CrossValidateContentStimuli(string key,

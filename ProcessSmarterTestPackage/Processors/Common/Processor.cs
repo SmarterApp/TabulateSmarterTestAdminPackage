@@ -40,10 +40,6 @@ namespace ProcessSmarterTestPackage.Processors.Common
         public IList<ValidationError> GenerateErrorMessages()
         {
             var result = new List<ValidationError>();
-            if (Navigator.Name.Equals("testform"))
-            {
-                Console.WriteLine();
-            }
             ValidatedAttributes
                 .Where(x => !x.Value.IsValid)
                 .ToList()

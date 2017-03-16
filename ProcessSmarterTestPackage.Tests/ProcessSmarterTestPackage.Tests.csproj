@@ -64,10 +64,6 @@
       <Project>{8b1c74f6-8534-45e9-ae12-2ed0eaa5545e}</Project>
       <Name>TabulateSmarterTestPackage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ValidateSmarterTestPackage\ValidateSmarterTestPackage.csproj">
-      <Project>{13D02C2B-F91B-4CE2-8B7C-AF6A37E0D5A1}</Project>
-      <Name>ValidateSmarterTestPackage</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\%28SBAC_PT%29SBAC-IRP-CAT-ELA-3-Summer-2015-2016.xml" />

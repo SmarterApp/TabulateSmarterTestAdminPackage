@@ -149,7 +149,9 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 var languageCounter = new Dictionary<string, int>();
                 var itemType =
                     formPoolProperties.Where(
-                            x => x.ValueForAttribute("property").Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase))
+                            x =>
+                                x.ValueForAttribute("property")
+                                    .Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase))
                         .ToList();
                 var itemTypeCounter = new Dictionary<string, int>();
                 foreach (var formPartition in testForm.ChildNodesWithName("formpartition"))

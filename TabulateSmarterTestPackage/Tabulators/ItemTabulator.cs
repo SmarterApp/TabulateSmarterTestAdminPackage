@@ -95,7 +95,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {"Spanish Translation", (int) ItemFieldNames.Spanish},
                 {"Passage Length", (int) ItemFieldNames.PassageLength},
                 {"TDSPoolFilter", (int) ItemFieldNames.TDSPoolFilter},
-                {"Calculator", (int) ItemFieldNames.Calculator},
+                {"Calculator", (int) ItemFieldNames.AllowCalculator},
                 {"Glossary", (int) ItemFieldNames.Glossary},
                 // Ignore these pool properties
                 // Value of zero means suppress
@@ -249,26 +249,26 @@ namespace TabulateSmarterTestPackage.Tabulators
                         {
                             itemFields[(int) ItemFieldNames.LanguageBraille] = ppValue;
                         }
-
                         // Special case for Spanish language
                         else if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
                                  ppValue.Equals("ESN", StringComparison.Ordinal))
                         {
                             itemFields[(int) ItemFieldNames.Spanish] = "Y";
                         }
-
                         // Special case for Spanish language
                         else if (ppProperty.Equals("Spanish Translation", StringComparison.Ordinal))
                         {
                             itemFields[(int) ItemFieldNames.Spanish] = ppValue;
                         }
-
                         // Special case for Glossary
                         else if (ppProperty.Equals("Glossary", StringComparison.Ordinal))
                         {
                             glossary.Add(ppValue);
                         }
-
+                        else if (ppProperty.Equals("Allow Calculator", StringComparison.OrdinalIgnoreCase))
+                        {
+                            itemFields[(int) ItemFieldNames.AllowCalculator] = ppValue;
+                        }
                         else if (sPoolPropertyMapping.TryGetValue(ppProperty, out fieldIndex))
                         {
                             if (fieldIndex != 0)
@@ -455,6 +455,53 @@ namespace TabulateSmarterTestPackage.Tabulators
                     itemFields[ItemFieldNamesCount + j++] = p.PerfLevel;
                     itemFields[ItemFieldNamesCount + j++] = p.ScaledLow;
                     itemFields[ItemFieldNamesCount + j++] = p.ScaledHigh;
+                }
+
+                var item =
+                    testSpecificationProcessor.ChildNodeWithName(testSpecificationProcessor.PackageType.ToString())
+                        .ChildNodeWithName("itempool")
+                        .ChildNodesWithName("testitem")
+                        .FirstOrDefault(
+                            x =>
+                                x.ChildNodeWithName("identifier")
+                                    .ValueForAttribute("uniqueid")
+                                    .Split('-')
+                                    .Last()
+                                    .Equals(itemFields[(int) ItemFieldNames.ItemId]));
+                itemFields[(int) ItemFieldNames.MathematicalPractice] =
+                    string.IsNullOrEmpty(item.ValueForAttribute("MathematicalPractice"))
+                        ? string.Empty
+                        : item.ValueForAttribute("MathematicalPractice");
+
+                // We're using the backup property from the content package because the item didn't specify
+                if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
+                {
+                    itemFields[(int) ItemFieldNames.AllowCalculator] =
+                        string.IsNullOrEmpty(item.ValueForAttribute("AllowCalculator"))
+                            ? string.Empty
+                            : item.ValueForAttribute("AllowCalculator");
+                }
+
+                if (itemFields[(int) ItemFieldNames.AssessmentSubject].Equals("MATH", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.MathematicalPractice]))
+                    {
+                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                            testSpecificationProcessor.PackageType,
+                            $"testspecification/{testSpecificationProcessor.PackageType}/itempool/testitem",
+                            ErrorSeverity.Degraded, item.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                            item.Navigator.OuterXml,
+                            $"Item {item.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} is a MATH item, but does not have a MathematicalPractice value");
+                    }
+                    if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
+                    {
+                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                            testSpecificationProcessor.PackageType,
+                            $"testspecification/{testSpecificationProcessor.PackageType}/itempool/testitem",
+                            ErrorSeverity.Degraded, item.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                            item.Navigator.OuterXml,
+                            $"Item {item.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} is a MATH item, but does not have an AllowCalculator value");
+                    }
                 }
 
                 // Write one line to the CSV

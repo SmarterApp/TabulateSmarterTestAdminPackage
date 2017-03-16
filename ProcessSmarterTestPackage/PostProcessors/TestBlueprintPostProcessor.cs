@@ -108,7 +108,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 result.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Degraded,
-                    GeneratedMessage = $"[TestBlueprint test {propertyName} with value {testValue} != {segmentSum} sum of segment properties]",
+                    GeneratedMessage =
+                        $"[TestBlueprint test {propertyName} with value {testValue} != {segmentSum} sum of segment properties]",
                     Key = "bpelement",
                     Location = "testblueprint/bpelement",
                     PackageType = PackageType,

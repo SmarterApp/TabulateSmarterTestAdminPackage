@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.XPath;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProcessSmarterTestPackage.Processors.Common;
@@ -25,7 +26,9 @@ namespace ProcessSmarterTestAdminPackage.Tests.Processors
             var errors = testspecification.GenerateErrorMessages();
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
+            Assert.IsTrue(testspecification.ValueForAttribute("version")
+                .Equals("1.0", StringComparison.OrdinalIgnoreCase));
         }
     }
 }
