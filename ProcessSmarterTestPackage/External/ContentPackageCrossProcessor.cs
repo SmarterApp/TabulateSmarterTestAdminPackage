@@ -174,7 +174,8 @@ namespace ProcessSmarterTestPackage.External
                 Value = processor.Navigator.OuterXml,
                 PrimarySource = $"{assessmentId} - {processor.PackageType}",
                 SecondarySource = "Passage Content Package",
-                AssessmentId = assessmentId
+                AssessmentId = assessmentId,
+                PackageType = processor.PackageType
             };
         }
 
@@ -191,7 +192,8 @@ namespace ProcessSmarterTestPackage.External
                 Value = processor.Navigator.OuterXml,
                 PrimarySource = $"{assessmentId} - {processor.PackageType}",
                 SecondarySource = "Item Content Package",
-                AssessmentId = assessmentId
+                AssessmentId = assessmentId,
+                PackageType = processor.PackageType
             };
         }
     }
