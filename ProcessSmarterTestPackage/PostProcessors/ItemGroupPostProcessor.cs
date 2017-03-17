@@ -16,23 +16,23 @@ namespace ProcessSmarterTestPackage.PostProcessors
             var groupItems = Processor.ChildNodesWithName("groupitem").ToList();
             int position;
 
+            if (
+                    groupItems.Any(x => x.ValueForAttribute("formposition") != Processor.ValueForAttribute("formposition")))
+            {
+                result.Add(new ValidationError
+                {
+                    Value = Processor.Navigator.OuterXml,
+                    GeneratedMessage = "[formposition of some group items does not match itemgroup]",
+                    Key = "formposition",
+                    ErrorSeverity = ErrorSeverity.Degraded,
+                    PackageType = Processor.PackageType,
+                    Location = $"itemgroup/{Processor.Navigator.Name}",
+                    ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
+                });
+            }
+
             for (var i = 1; i <= groupItems.Count(); i++)
             {
-                if (
-                    !groupItems.Any(
-                        x => int.TryParse(x.ValueForAttribute("formposition"), out position) && position == i))
-                {
-                    result.Add(new ValidationError
-                    {
-                        Value = Processor.Navigator.OuterXml,
-                        GeneratedMessage = $"[Could not find groupitem within itemgroup with formposition {i}]",
-                        Key = "formposition",
-                        ErrorSeverity = ErrorSeverity.Degraded,
-                        PackageType = Processor.PackageType,
-                        Location = $"itemgroup/{Processor.Navigator.Name}",
-                        ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
-                    });
-                }
                 if (
                     !groupItems.Any(
                         x => int.TryParse(x.ValueForAttribute("groupposition"), out position) && position == i))
@@ -49,21 +49,6 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     });
                 }
             }
-
-            groupItems.Where(
-                    x => int.TryParse(x.ValueForAttribute("formposition"), out position) && position > groupItems.Count)
-                .ToList()
-                .ForEach(x => result.Add(new ValidationError
-                {
-                    Value = Processor.Navigator.OuterXml,
-                    GeneratedMessage =
-                        $"[formposition of groupitem {x.ValueForAttribute("formposition")} > groupitem count]",
-                    Key = "formposition",
-                    ErrorSeverity = ErrorSeverity.Degraded,
-                    PackageType = Processor.PackageType,
-                    Location = $"itemgroup/{Processor.Navigator.Name}",
-                    ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
-                }));
 
             groupItems.Where(
                     x => int.TryParse(x.ValueForAttribute("groupposition"), out position) && position > groupItems.Count)
