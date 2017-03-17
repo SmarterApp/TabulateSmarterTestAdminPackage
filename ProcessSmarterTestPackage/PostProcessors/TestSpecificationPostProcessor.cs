@@ -15,15 +15,16 @@ namespace ProcessSmarterTestPackage.PostProcessors
         {
             var result = new List<ValidationError>();
             var id = ((TestSpecificationProcessor) Processor).GetUniqueId();
+
+            var blueprintElements = Processor.ChildNodeWithName(PackageType.ToString().ToLower())
+                .ChildNodeWithName("testblueprint")
+                .ChildNodesWithName("bpelement").ToList();
+
             var blueprintTestElement =
-                Processor.ChildNodeWithName(PackageType.ToString().ToLower())
-                    .ChildNodeWithName("testblueprint")
-                    .ChildNodesWithName("bpelement")
+                blueprintElements
                     .FirstOrDefault(x => x.ValueForAttribute("elementtype")
                         .Equals("test", StringComparison.OrdinalIgnoreCase));
-            var blueprintSegmentElements = Processor.ChildNodeWithName(PackageType.ToString().ToLower())
-                .ChildNodeWithName("testblueprint")
-                .ChildNodesWithName("bpelement")
+            var blueprintSegmentElements = blueprintElements
                 .Where(x => x.ValueForAttribute("elementtype")
                     .Equals("segment", StringComparison.OrdinalIgnoreCase)).ToList();
             if (blueprintTestElement != null)
@@ -123,10 +124,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 });
             }
             // Getting the identifiers of all items in the testblueprint, then all testitems
-            result.AddRange(CheckBpRef(Processor
-                    .ChildNodeWithName(PackageType.ToString().ToLower())
-                    .ChildNodeWithName("testblueprint")
-                    .ChildNodesWithName("bpelement")
+            result.AddRange(CheckBpRef(blueprintElements
                     .SelectMany(x => x.ChildNodesWithName("identifier"))
                     .Select(x => x.ValueForAttribute("uniqueid")),
                 Processor.ChildNodeWithName(PackageType.ToString().ToLower())
@@ -359,6 +357,14 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 }
             }
 
+            if (Processor.PackageType == PackageType.Scoring)
+            {
+                result.AddRange(ComputationRuleErrors(blueprintElements,
+                    Processor.ChildNodeWithName(PackageType.ToString().ToLower())
+                        .ChildNodeWithName("scoringrules")
+                        .ChildNodesWithName("computationrule")));
+            }
+
             return result;
         }
 
@@ -401,6 +407,37 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     .ChildNodeWithName("itempool")
                     .ChildNodesWithName("passage")
                     .Select(x => x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")).ToList();
+        }
+
+        private IEnumerable<ValidationError> ComputationRuleErrors(IList<Processor> bpElements,
+            IEnumerable<Processor> computationRules)
+        {
+            var result = new List<ValidationError>();
+
+            foreach (var computationRule in computationRules)
+            {
+                var match =
+                    bpElements.FirstOrDefault(
+                        x =>
+                            x.ChildNodeWithName("identifier")
+                                .ValueForAttribute("uniqueid")
+                                .Equals(computationRule.ValueForAttribute("bpelementid")));
+                if (match == null)
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Benign,
+                        GeneratedMessage =
+                            $"[Property bpelementid {computationRule.ValueForAttribute("bpelementid")} of computationrule {computationRule.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} does not exist in the test blueprint]",
+                        Key = "bpelementid",
+                        ItemId = computationRule.ValueForAttribute("bpelementid"),
+                        PackageType = PackageType,
+                        Location = $"testspecification/{PackageType.ToString().ToLower()}/scoringrules/computationrule"
+                    });
+                }
+            }
+
+            return result;
         }
     }
 }
