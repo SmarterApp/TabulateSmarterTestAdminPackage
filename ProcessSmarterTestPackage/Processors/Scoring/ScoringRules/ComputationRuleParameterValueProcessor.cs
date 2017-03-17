@@ -14,7 +14,7 @@ namespace ProcessSmarterTestPackage.Processors.Scoring.ScoringRules
             Attributes = new AttributeValidationDictionary
             {
                 {
-                    "index", IntValidator.IsValidPositiveNonEmptyWithLength(10)
+                    "index", new NoValidator(ErrorSeverity.Benign)
                 },
                 {
                     "value", StringValidator.IsValidNonEmptyWithLength(256)

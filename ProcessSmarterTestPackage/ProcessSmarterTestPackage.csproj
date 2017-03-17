@@ -41,6 +41,7 @@
     <Compile Include="External\TestPackageCrossProcessor.cs" />
     <Compile Include="PostProcessors\AdminSegmentPostProcessor.cs" />
     <Compile Include="PostProcessors\BlueprintElementPostProcessor.cs" />
+    <Compile Include="PostProcessors\ComputationRuleParameterPostProcessor.cs" />
     <Compile Include="PostProcessors\ComputationRulePostProcessor.cs" />
     <Compile Include="PostProcessors\FormPartitionPostProcessor.cs" />
     <Compile Include="PostProcessors\IPostProcessor.cs" />
