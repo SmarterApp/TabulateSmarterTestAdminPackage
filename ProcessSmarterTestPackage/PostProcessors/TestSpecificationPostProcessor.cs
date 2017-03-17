@@ -363,6 +363,10 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     Processor.ChildNodeWithName(PackageType.ToString().ToLower())
                         .ChildNodeWithName("scoringrules")
                         .ChildNodesWithName("computationrule")));
+                result.AddRange(PerformanceLevelErrors(blueprintElements,
+                    Processor.ChildNodeWithName(PackageType.ToString().ToLower())
+                        .ChildNodeWithName("performancelevels")
+                        .ChildNodesWithName("performancelevel")));
             }
 
             return result;
@@ -433,6 +437,38 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         ItemId = computationRule.ValueForAttribute("bpelementid"),
                         PackageType = PackageType,
                         Location = $"testspecification/{PackageType.ToString().ToLower()}/scoringrules/computationrule"
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        private IEnumerable<ValidationError> PerformanceLevelErrors(IList<Processor> bpElements,
+            IEnumerable<Processor> performanceLevels)
+        {
+            var result = new List<ValidationError>();
+
+            foreach (var performanceLevel in performanceLevels)
+            {
+                var match =
+                    bpElements.FirstOrDefault(
+                        x =>
+                            x.ChildNodeWithName("identifier")
+                                .ValueForAttribute("uniqueid")
+                                .Equals(performanceLevel.ValueForAttribute("bpelementid")));
+                if (match == null)
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Benign,
+                        GeneratedMessage =
+                            $"[Performancelevel bpelementid {performanceLevel.ValueForAttribute("bpelementid")} does not exist in the test blueprint]",
+                        Key = "bpelementid",
+                        ItemId = performanceLevel.ValueForAttribute("bpelementid"),
+                        PackageType = PackageType,
+                        Location =
+                            $"testspecification/{PackageType.ToString().ToLower()}/performancelevels/performancelevel"
                     });
                 }
             }

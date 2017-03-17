@@ -32,7 +32,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         Key = "plevel",
                         PackageType = PackageType,
                         Location =
-                            $"testspecification/{PackageType.ToString().ToLower()}/performancelevels/performancelevel"
+                            "performancelevels/performancelevel"
                     });
                 }
                 else if (performanceLevel.Count() > 1)
@@ -45,7 +45,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         Key = "position",
                         PackageType = PackageType,
                         Location =
-                            $"testspecification/{PackageType.ToString().ToLower()}/scoringrules/computationrule/computationruleparameter"
+                            "scoringrules/computationrule/computationruleparameter"
                     });
                 }
             }
