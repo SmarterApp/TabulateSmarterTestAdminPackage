@@ -296,6 +296,22 @@ namespace ProcessSmarterTestPackage.PostProcessors
             var itemPoolProperties = Processor.ChildNodeWithName(PackageType.ToString())
                 .ChildNodesWithName("poolproperty")
                 .Where(x => x.ValueForAttribute("property").Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase));
+            // There's an item in the pool that's not present in the pool properties
+            testItems.Where(
+                    x =>
+                        !itemPoolProperties.Any(y =>
+                            y.ValueForAttribute("value").Equals(x.ValueForAttribute("itemtype"))))
+                .GroupBy(x => x.ValueForAttribute("itemtype")).ToList().ForEach(x =>
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Degraded,
+                        Location = $"{PackageType}/poolproperty",
+                        GeneratedMessage =
+                            $"[Item type {x.Key} is present in assigned testitem(s) <{x.Select(y => y.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")).Aggregate((y, z) => $"{y},{z}")}> not present in poolproperties]",
+                        ItemId = string.Empty,
+                        Key = "itemtype",
+                        PackageType = PackageType
+                    }));
             foreach (var poolProperty in itemPoolProperties)
             {
                 int poolItemCount;
