@@ -57,6 +57,7 @@
     <Compile Include="Validators\RequiredBooleanValidator.cs" />
     <Compile Include="Validators\RequiredDateTimeValidator.cs" />
     <Compile Include="Validators\RequiredDecimalValidator.cs" />
+    <Compile Include="Validators\RequiredDoubleValidator.cs" />
     <Compile Include="Validators\RequiredEnumValidator.cs" />
     <Compile Include="Validators\RequiredIntValidator.cs" />
     <Compile Include="Validators\RequiredRegularExpressionValidator.cs" />
