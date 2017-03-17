@@ -15,7 +15,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
             var result = new List<ValidationError>();
 
             var partitionIdentifier = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
-            foreach (var itemGroup in Processor.ChildNodesWithName("itemgroup"))
+            var itemGroups = Processor.ChildNodesWithName("itemgroup").ToList();
+            foreach (var itemGroup in itemGroups)
             {
                 if (!itemGroup.ChildNodeWithName("identifier")
                     .ValueForAttribute("uniqueid").Split(':').First()
@@ -33,6 +34,40 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     });
                 }
             }
+
+            int parsedInt;
+            for (var i = 1; i < itemGroups.Count(); i++)
+            {
+                if (
+                    !itemGroups.Any(
+                        x => int.TryParse(x.ValueForAttribute("formposition"), out parsedInt) && parsedInt == i))
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Degraded,
+                        GeneratedMessage =
+                            $"[formpartition is missing itemgroup with formposition {i}]",
+                        Key = "formposition",
+                        ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                        PackageType = PackageType,
+                        Location = "itemgroup"
+                    });
+                }
+            }
+
+            itemGroups.Where(
+                    x => int.TryParse(x.ValueForAttribute("formposition"), out parsedInt) && parsedInt > itemGroups.Count())
+                .ToList()
+                .ForEach(x => result.Add(new ValidationError
+                {
+                    ErrorSeverity = ErrorSeverity.Degraded,
+                    GeneratedMessage =
+                        $"[formposition {x.ValueForAttribute("formposition")} > itemgroup count {itemGroups.Count}]",
+                    Key = "formposition",
+                    ItemId = x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
+                    PackageType = PackageType,
+                    Location = "itemgroup"
+                }));
 
             return result;
         }
