@@ -42,6 +42,7 @@
     <Compile Include="PostProcessors\AdminSegmentPostProcessor.cs" />
     <Compile Include="PostProcessors\BlueprintElementPostProcessor.cs" />
     <Compile Include="PostProcessors\ComputationRulePostProcessor.cs" />
+    <Compile Include="PostProcessors\FormPartitionPostProcessor.cs" />
     <Compile Include="PostProcessors\IPostProcessor.cs" />
     <Compile Include="PostProcessors\ItemGroupPostProcessor.cs" />
     <Compile Include="PostProcessors\ItemPoolPostProcessor.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="Processors\Common\PropertyProcessor.cs" />
     <Compile Include="Processors\Common\TestBlueprint\BlueprintElementProcessor.cs" />
     <Compile Include="Processors\Common\TestBlueprint\TestBlueprintProcessor.cs" />
-    <Compile Include="Processors\Common\TestForm\TestFormPartitionProcessor.cs" />
+    <Compile Include="Processors\Common\TestForm\FormPartitionProcessor.cs" />
     <Compile Include="Processors\Common\TestForm\TestFormProcessor.cs" />
     <Compile Include="Processors\Common\TestSpecificationProcessor.cs" />
     <Compile Include="Processors\Scoring\PerformanceLevels\PerformanceLevelProcessor.cs" />

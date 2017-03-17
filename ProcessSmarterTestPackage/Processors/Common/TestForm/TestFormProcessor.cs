@@ -50,7 +50,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestForm
             });
 
             Navigator.GenerateList("formpartition")
-                .ForEach(x => Processors.Add(new TestFormPartitionProcessor(x, packageType)));
+                .ForEach(x => Processors.Add(new FormPartitionProcessor(x, packageType)));
         }
 
         public override List<ValidationError> AdditionalValidations()

@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.XPath;
+using ProcessSmarterTestPackage.PostProcessors;
 using ProcessSmarterTestPackage.Processors.Administration.AdminSegment;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem;
 using SmarterTestPackage.Common.Data;
@@ -9,9 +11,9 @@ using ValidateSmarterTestPackage.Validators.Convenience;
 
 namespace ProcessSmarterTestPackage.Processors.Common.TestForm
 {
-    public class TestFormPartitionProcessor : Processor
+    public class FormPartitionProcessor : Processor
     {
-        public TestFormPartitionProcessor(XPathNavigator navigator, PackageType packageType)
+        public FormPartitionProcessor(XPathNavigator navigator, PackageType packageType)
             : base(navigator, packageType)
         {
             Navigator.GenerateList("identifier")
@@ -30,6 +32,11 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestForm
             Processors.Where(x => x.Navigator.Name.Equals("itemgroup")).ToList()
                 .ForEach(x => x.Navigator.GenerateList("passageref")
                     .ForEach(y => x.Processors.Add(new PassageRefProcessor(y, packageType))));
+        }
+
+        public override List<ValidationError> AdditionalValidations()
+        {
+            return new FormPartitionPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
     }
 }
