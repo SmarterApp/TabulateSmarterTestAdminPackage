@@ -1,4 +1,4 @@
-﻿namespace TabulateSmarterTestPackage.Utilities.Data
+﻿namespace SmarterTestPackage.Common.Data
 {
     public class GroupItemInfo
     {
@@ -7,5 +7,7 @@
         public string IsActive { get; set; }
         public string IsFieldTest { get; set; }
         public string ResponseRequired { get; set; }
+        public string GroupId { get; set; }
+        public string ItemId { get; set; }
     }
 }

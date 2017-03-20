@@ -1,4 +1,7 @@
-﻿using System.Xml.XPath;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.XPath;
+using ProcessSmarterTestPackage.PostProcessors;
 using ProcessSmarterTestPackage.Processors.Administration.AdminSegment;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool;
@@ -22,6 +25,11 @@ namespace ProcessSmarterTestPackage.Processors.Administration
             Navigator.GenerateList("adminsegment")
                 .ForEach(x => Processors.Add(new AdminSegmentProcessor(x, packageType)));
             Navigator.GenerateList("testform").ForEach(x => Processors.Add(new TestFormProcessor(x, packageType)));
+        }
+
+        public override List<ValidationError> AdditionalValidations()
+        {
+            return new AdministrationPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
     }
 }

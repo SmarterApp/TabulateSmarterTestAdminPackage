@@ -7,8 +7,8 @@ using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
+using TabulateSmarterTestPackage.Data;
 using TabulateSmarterTestPackage.Utilities;
-using TabulateSmarterTestPackage.Utilities.Data;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage.Tabulators

@@ -1,4 +1,4 @@
-﻿namespace TabulateSmarterTestPackage.Utilities.Data
+﻿namespace SmarterTestPackage.Common.Data
 {
     public class PerformanceLevel
     {

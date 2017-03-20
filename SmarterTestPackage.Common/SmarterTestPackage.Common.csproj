@@ -37,6 +37,8 @@
   <ItemGroup>
     <Compile Include="ContentPackage\ContentPackage.cs" />
     <Compile Include="Data\CrossPackageValidationError.cs" />
+    <Compile Include="Data\GroupItemInfo.cs" />
+    <Compile Include="Data\PerformanceLevel.cs" />
     <Compile Include="Data\ErrorSeverity.cs" />
     <Compile Include="Data\PackageType.cs" />
     <Compile Include="Data\ProcessingError.cs" />

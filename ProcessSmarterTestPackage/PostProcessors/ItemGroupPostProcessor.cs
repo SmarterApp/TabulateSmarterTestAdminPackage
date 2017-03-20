@@ -17,7 +17,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
             int position;
 
             if (
-                    groupItems.Any(x => x.ValueForAttribute("formposition") != Processor.ValueForAttribute("formposition")))
+                groupItems.Any(x => x.ValueForAttribute("formposition") != Processor.ValueForAttribute("formposition")))
             {
                 result.Add(new ValidationError
                 {

@@ -56,7 +56,9 @@ namespace ProcessSmarterTestPackage.PostProcessors
             }
 
             itemGroups.Where(
-                    x => int.TryParse(x.ValueForAttribute("formposition"), out parsedInt) && parsedInt > itemGroups.Count())
+                    x =>
+                        int.TryParse(x.ValueForAttribute("formposition"), out parsedInt) &&
+                        parsedInt > itemGroups.Count())
                 .ToList()
                 .ForEach(x => result.Add(new ValidationError
                 {

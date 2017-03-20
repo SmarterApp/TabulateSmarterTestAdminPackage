@@ -7,7 +7,6 @@ using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using TabulateSmarterTestPackage.Utilities;
-using TabulateSmarterTestPackage.Utilities.Data;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ValidateSmarterTestPackage.RestrictedValues.RestrictedList;
 
@@ -116,76 +115,34 @@ namespace TabulateSmarterTestPackage.Tabulators
             var resultList = new List<List<string>>();
             // Index the group item info
             var indexGroupItemInfo = new Dictionary<string, GroupItemInfo>();
-            {
-                var groupItemNodes = navigator.Select(sXp_GroupItem);
-                while (groupItemNodes.MoveNext())
-                {
-                    var node = groupItemNodes.Current;
-                    var itemId = FormatHelper.Strip200(node.GetAttribute("itemid", string.Empty));
-                    var isFieldTest = node.GetAttribute("isfieldtest", string.Empty);
-                    var isActive = node.GetAttribute("isactive", string.Empty);
-                    var responseRequired = node.GetAttribute("responserequired", string.Empty);
-                    var adminRequired = node.GetAttribute("adminrequired", string.Empty);
-                    var formPosition = node.GetAttribute("formposition", string.Empty);
 
-                    GroupItemInfo gii;
-                    if (indexGroupItemInfo.TryGetValue(itemId, out gii))
-                    {
-                        if (!string.Equals(gii.IsFieldTest, isFieldTest, StringComparison.Ordinal))
-                        {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                                testSpecificationProcessor.PackageType,
-                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
-                                ErrorSeverity.Degraded, itemId, node.OuterXml,
-                                $"Conflicting isfieldtest info for same itemId {itemId} between forms: '{isFieldTest}' != '{gii.IsFieldTest}'");
-                        }
-                        if (!string.Equals(gii.IsActive, isActive, StringComparison.Ordinal))
-                        {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                                testSpecificationProcessor.PackageType,
-                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
-                                ErrorSeverity.Degraded, itemId, node.OuterXml,
-                                $"Conflicting isActive info for same itemId {itemId} between forms: '{isActive}' != '{gii.IsActive}'");
-                        }
-                        if (!string.Equals(gii.ResponseRequired, responseRequired, StringComparison.Ordinal))
-                        {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                                testSpecificationProcessor.PackageType,
-                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
-                                ErrorSeverity.Degraded, itemId, node.OuterXml,
-                                $"Conflicting responseRequired info for same itemId {itemId} between forms: '{responseRequired}' != '{gii.ResponseRequired}'");
-                        }
-                        if (!string.Equals(gii.AdminRequired, adminRequired, StringComparison.Ordinal))
-                        {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                                testSpecificationProcessor.PackageType,
-                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
-                                ErrorSeverity.Degraded, itemId, node.OuterXml,
-                                $"Conflicting adminRequired info for same itemId {itemId} between forms: '{adminRequired}' != '{gii.AdminRequired}'");
-                        }
-                        if (!string.Equals(gii.FormPosition, formPosition, StringComparison.Ordinal))
-                        {
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                                testSpecificationProcessor.PackageType,
-                                $"testspecification/{testSpecificationProcessor.PackageType}/testform/formpartition/itemgroup/{node.Name}",
-                                ErrorSeverity.Degraded, itemId, node.OuterXml,
-                                $"Conflicting formPosition info for same itemId {itemId} between forms: '{formPosition}' != '{gii.FormPosition}'");
-                        }
-                    }
-                    else
-                    {
-                        gii = new GroupItemInfo
-                        {
-                            IsFieldTest = isFieldTest,
-                            IsActive = isActive,
-                            ResponseRequired = responseRequired,
-                            AdminRequired = adminRequired,
-                            FormPosition = formPosition
-                        };
-                        indexGroupItemInfo.Add(itemId, gii);
-                    }
+            var groupItemNodes = navigator.Select(sXp_GroupItem);
+            while (groupItemNodes.MoveNext())
+            {
+                var node = groupItemNodes.Current;
+                var itemId = FormatHelper.Strip200(node.GetAttribute("itemid", string.Empty));
+                var isFieldTest = node.GetAttribute("isfieldtest", string.Empty);
+                var isActive = node.GetAttribute("isactive", string.Empty);
+                var responseRequired = node.GetAttribute("responserequired", string.Empty);
+                var adminRequired = node.GetAttribute("adminrequired", string.Empty);
+                var formPosition = node.GetAttribute("formposition", string.Empty);
+
+                GroupItemInfo gii;
+                if (indexGroupItemInfo.TryGetValue(itemId, out gii))
+                {
+                    continue;
                 }
+                gii = new GroupItemInfo
+                {
+                    IsFieldTest = isFieldTest,
+                    IsActive = isActive,
+                    ResponseRequired = responseRequired,
+                    AdminRequired = adminRequired,
+                    FormPosition = formPosition
+                };
+                indexGroupItemInfo.Add(itemId, gii);
             }
+
 
             var performanceLevels = new List<PerformanceLevel>();
             if (testSpecificationProcessor.ChildNodesWithName("scoring").Any())
