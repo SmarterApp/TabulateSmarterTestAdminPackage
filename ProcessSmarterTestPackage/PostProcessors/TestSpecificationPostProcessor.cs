@@ -385,7 +385,10 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         .ChildNodesWithName("performancelevel")));
             }
 
-            result.AddRange(GroupItemsConsistenceyErrors(Processor.ChildNodeWithName(PackageType.ToString().ToLower())));
+            var scoringOrAdminRoot = Processor.ChildNodeWithName(PackageType.ToString().ToLower());
+
+            result.AddRange(EnsureFormPartitionIdentifiersDoNotMatch(scoringOrAdminRoot));
+            result.AddRange(GroupItemsConsistenceyErrors(scoringOrAdminRoot));
 
             return result;
         }
@@ -494,7 +497,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
             return result;
         }
 
-        private IList<ValidationError> GroupItemsConsistenceyErrors(Processor processor)
+        private IEnumerable<ValidationError> GroupItemsConsistenceyErrors(Processor processor)
         {
             var result = new List<ValidationError>();
 
@@ -567,6 +570,51 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         indexGroupItemInfo.Add(info.ItemId, info);
                     }
                 }
+            }
+
+            return result;
+        }
+
+        private IEnumerable<ValidationError> EnsureFormPartitionIdentifiersDoNotMatch(Processor processor)
+        {
+            var result = new List<ValidationError>();
+
+            var formPartitions =
+                processor.ChildNodesWithName("testform")
+                    .SelectMany(
+                        x =>
+                            x.ChildNodesWithName("formpartition")
+                                .Select(y => y.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"))).ToList();
+            if (formPartitions.Count != formPartitions.Distinct().Count())
+            {
+                result.Add(new ValidationError
+                {
+                    AssessmentId = ((TestSpecificationProcessor) Processor).GetUniqueId(),
+                    ErrorSeverity = ErrorSeverity.Severe,
+                    GeneratedMessage = "[Formpartition identifiers are not unique]",
+                    Key = "uniqueid",
+                    Location = $"{Processor.PackageType}/testform/formpartition/identifier",
+                    PackageType = Processor.PackageType
+                });
+            }
+
+            if (Processor.PackageType == PackageType.Administration)
+            {
+                processor.ChildNodesWithName("adminsegment")
+                    .SelectMany(
+                        x => x.ChildNodesWithName("segmentform").Select(y => y.ValueForAttribute("formpartitionid")))
+                    .Where(x => !formPartitions.Contains(x))
+                    .ToList()
+                    .ForEach(x => result.Add(new ValidationError
+                    {
+                        AssessmentId = ((TestSpecificationProcessor) Processor).GetUniqueId(),
+                        ErrorSeverity = ErrorSeverity.Severe,
+                        GeneratedMessage = $"[segmentform formpartitionid {x} does not reference a known partition]",
+                        ItemId = x,
+                        Key = "formpartitionid",
+                        Location = $"{Processor.PackageType}/adminsegment/segmentform",
+                        PackageType = Processor.PackageType
+                    }));
             }
 
             return result;
