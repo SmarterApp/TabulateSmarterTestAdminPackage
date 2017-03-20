@@ -47,8 +47,6 @@ namespace ProcessSmarterTestPackage.Processors.Common
                     Navigator.GenerateList("scoring")
                         .ForEach(x => Processors.Add(new ScoringProcessor(x, packageType)));
                     break;
-                default:
-                    break;
             }
         }
 
