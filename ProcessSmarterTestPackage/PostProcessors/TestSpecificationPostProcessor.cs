@@ -203,17 +203,18 @@ namespace ProcessSmarterTestPackage.PostProcessors
                             else
                                 //Check that the pool properties of the test form actually correspond to the items in the item pool (itemcounts)
                             {
-                                var itemProperties = itemMatch.ChildNodesWithName("poolproperty");
+                                var itemProperties = itemMatch.ChildNodesWithName("poolproperty").ToList();
                                 var itemTypeProperties =
                                     itemProperties.Where(
                                         x =>
                                             x.ValueForAttribute("property")
-                                                .Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase));
+                                                .Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase)).ToList();
                                 var itemLanguageProperties =
                                     itemProperties.Where(
                                         x =>
                                             x.ValueForAttribute("property")
-                                                .Equals("Language", StringComparison.OrdinalIgnoreCase));
+                                                .Equals("Language", StringComparison.OrdinalIgnoreCase)).ToList();
+
                                 foreach (var type in itemTypeProperties)
                                 {
                                     if (itemTypeCounter.ContainsKey(type.ValueForAttribute("value")))
@@ -290,6 +291,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         });
                     }
                 }
+
+                result.AddRange(TestFormPartitionPoolPropertyMismatches(testForm, testItems));
             }
 
             // Ensure that pool property item type info is reflected in the itempool
@@ -392,6 +395,119 @@ namespace ProcessSmarterTestPackage.PostProcessors
 
             result.AddRange(EnsureFormPartitionIdentifiersDoNotMatch(scoringOrAdminRoot));
             result.AddRange(GroupItemsConsistenceyErrors(scoringOrAdminRoot, testItems));
+
+            return result;
+        }
+
+        private IEnumerable<ValidationError> TestFormPartitionPoolPropertyMismatches(Processor testForm,
+            IList<Processor> testItems)
+        {
+            var result = new List<ValidationError>();
+
+            var partitionPoolProperties = testForm.ChildNodesWithName("poolproperty").ToList();
+            var itemTypeProperties =
+                partitionPoolProperties.Where(
+                        x => x.ValueForAttribute("property").Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase))
+                    .GroupBy(x => x.ValueForAttribute("value"))
+                    .ToDictionary(x => x.Key, x => x.ToList());
+            var languageTypeProperties =
+                partitionPoolProperties.Where(
+                        x => x.ValueForAttribute("property").Equals("Language", StringComparison.OrdinalIgnoreCase))
+                    .GroupBy(x => x.ValueForAttribute("value"))
+                    .ToDictionary(x => x.Key, x => x.ToList());
+
+            foreach (var key in itemTypeProperties.Keys)
+            {
+                if (itemTypeProperties[key].Count > 1)
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Degraded,
+                        Location = $"{PackageType}/testform/poolproperty",
+                        GeneratedMessage =
+                            $"[Multiple poolproperties exist in testform {testForm.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} with value {key}]",
+                        Key = "value",
+                        PackageType = PackageType,
+                        Value = itemTypeProperties[key].First().Navigator.OuterXml
+                    });
+                }
+            }
+            foreach (var key in languageTypeProperties.Keys)
+            {
+                if (languageTypeProperties[key].Count > 1)
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Degraded,
+                        Location = $"{PackageType}/testform/poolproperty",
+                        GeneratedMessage =
+                            $"[Multiple poolproperties exist in testform {testForm.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} with value {key}]",
+                        Key = "value",
+                        PackageType = PackageType,
+                        Value = itemTypeProperties[key].First().Navigator.OuterXml
+                    });
+                }
+            }
+
+            var testItemsInForm =
+                testForm.ChildNodesWithName("formpartition")
+                    .SelectMany(
+                        x =>
+                            x.ChildNodesWithName("itemgroup")
+                                .SelectMany(
+                                    y => y.ChildNodesWithName("groupitem").Select(z => z.ValueForAttribute("itemid"))));
+            var testItemTypes =
+                testItems.Where(
+                        x => testItemsInForm.Contains(x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")))
+                    .GroupBy(x => x.ValueForAttribute("itemtype"))
+                    .ToDictionary(x => x.Key, x => x.ToList());
+
+            foreach (var key in testItemTypes.Keys)
+            {
+                if (!itemTypeProperties.ContainsKey(key))
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Degraded,
+                        Location = $"{PackageType}/testform/poolproperty",
+                        GeneratedMessage =
+                            $"[Missing itemtype pool property in testform {testForm.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} for key {key}]",
+                        Key = "value",
+                        PackageType = PackageType,
+                        Value = testItemTypes[key].First().Navigator.OuterXml
+                    });
+                }
+            }
+
+            var testLanguageTypes =
+                testItems.Where(
+                        x => testItemsInForm.Contains(x.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")))
+                    .SelectMany(
+                        x =>
+                            x.ChildNodesWithName("property")
+                                .Where(
+                                    y =>
+                                        y.ValueForAttribute("property")
+                                            .Equals("Language", StringComparison.OrdinalIgnoreCase)))
+                    .GroupBy(x => x.ValueForAttribute("value"))
+                    .ToDictionary(x => x.Key, x => x.ToList());
+
+            foreach (var key in testLanguageTypes.Keys)
+            {
+                if (!languageTypeProperties.ContainsKey(key))
+                {
+                    result.Add(new ValidationError
+                    {
+                        ErrorSeverity = ErrorSeverity.Degraded,
+                        Location = $"{PackageType}/testform/poolproperty",
+                        GeneratedMessage =
+                            $"[Missing language pool property in testform {testForm.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} for key {key}]",
+                        Key = "value",
+                        PackageType = PackageType,
+                        Value = testLanguageTypes[key].First().Navigator.OuterXml
+                    });
+                }
+            }
 
             return result;
         }
