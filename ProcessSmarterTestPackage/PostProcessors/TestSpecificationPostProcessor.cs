@@ -690,6 +690,12 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     $"Conflicting formPosition info for same itemId {info.ItemId} between forms: '{info.FormPosition}' != '{gii.FormPosition}'",
                     "formposition", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
             }
+            if (!string.Equals(gii.GroupPosition, info.GroupPosition, StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(GenerateGroupItemValidationError(info,
+                    $"Conflicting groupPosition info for same itemId {info.ItemId} between forms: '{info.GroupPosition}' != '{gii.GroupPosition}'",
+                    "groupposition", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
+            }
             return result;
         }
 
@@ -751,7 +757,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 IsActive = x.ValueForAttribute("isactive"),
                 IsFieldTest = x.ValueForAttribute("isfieldtest"),
                 ResponseRequired = x.ValueForAttribute("responserequired"),
-                ItemId = x.ValueForAttribute("itemid")
+                ItemId = x.ValueForAttribute("itemid"),
+                GroupPosition = x.ValueForAttribute("groupposition")
             }));
 
             return result;
