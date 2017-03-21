@@ -126,7 +126,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
             // Getting the identifiers of all items in the testblueprint, then all testitems
             result.AddRange(CheckBpRef(blueprintElements
                     .SelectMany(x => x.ChildNodesWithName("identifier"))
-                    .Select(x => x.ValueForAttribute("uniqueid")),
+                    .Select(x => x.ValueForAttribute("uniqueid")).ToList(),
                 Processor.ChildNodeWithName(PackageType.ToString().ToLower())
                     .ChildNodeWithName("itempool")
                     .ChildNodesWithName("testitem")));
@@ -258,7 +258,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                             ErrorSeverity = ErrorSeverity.Degraded,
                             Location = $"testspecification/{PackageType}/testform/poolproperty",
                             GeneratedMessage =
-                                $"[poolproperty itemcount {language.ValueForAttribute("itemcount")} for language {language.ValueForAttribute("value")} != groupItem count {languageCounterValue}",
+                                $"[poolproperty itemcount {language.ValueForAttribute("itemcount")} for language {language.ValueForAttribute("value")} != groupItem count {languageCounterValue}]",
                             ItemId = testForm.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
                             Key = "itemcount",
                             PackageType = PackageType,
@@ -282,7 +282,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                             ErrorSeverity = ErrorSeverity.Degraded,
                             Location = $"testspecification/{PackageType}/testform/poolproperty",
                             GeneratedMessage =
-                                $"[poolproperty itemcount {type.ValueForAttribute("itemcount")} for type {type.ValueForAttribute("value")} != groupItem count {typeCounterValue}",
+                                $"[poolproperty itemcount {type.ValueForAttribute("itemcount")} for type {type.ValueForAttribute("value")} != groupItem count {typeCounterValue}]",
                             ItemId = testForm.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
                             Key = "itemcount",
                             PackageType = PackageType,
@@ -391,12 +391,12 @@ namespace ProcessSmarterTestPackage.PostProcessors
             var scoringOrAdminRoot = Processor.ChildNodeWithName(PackageType.ToString().ToLower());
 
             result.AddRange(EnsureFormPartitionIdentifiersDoNotMatch(scoringOrAdminRoot));
-            result.AddRange(GroupItemsConsistenceyErrors(scoringOrAdminRoot));
+            result.AddRange(GroupItemsConsistenceyErrors(scoringOrAdminRoot, testItems));
 
             return result;
         }
 
-        private IEnumerable<ValidationError> CheckBpRef(IEnumerable<string> elementIds,
+        private IEnumerable<ValidationError> CheckBpRef(IList<string> elementIds,
             IEnumerable<Processor> testItems)
         {
             var result = new List<ValidationError>();
@@ -500,7 +500,8 @@ namespace ProcessSmarterTestPackage.PostProcessors
             return result;
         }
 
-        private IEnumerable<ValidationError> GroupItemsConsistenceyErrors(Processor processor)
+        private IEnumerable<ValidationError> GroupItemsConsistenceyErrors(Processor processor,
+            IList<Processor> testItems)
         {
             var result = new List<ValidationError>();
 
@@ -514,9 +515,21 @@ namespace ProcessSmarterTestPackage.PostProcessors
                                         y.ValueForAttribute("name")
                                             .Equals("language", StringComparison.OrdinalIgnoreCase) &&
                                         y.ValueForAttribute("value").ToLower().Contains("braille")));
+            var brailleTestForms = processor.ChildNodesWithName("testform")
+                .Where(
+                    x =>
+                        x.ChildNodesWithName("property")
+                            .Any(
+                                y =>
+                                    y.ValueForAttribute("name")
+                                        .Equals("language", StringComparison.OrdinalIgnoreCase) &&
+                                    y.ValueForAttribute("value").ToLower().Contains("braille"))).ToList();
+
             var testFormItemGroups =
                 nonBrailleTestForms.SelectMany(x => x.ChildNodesWithName("formpartition"))
                     .SelectMany(x => x.ChildNodesWithName("itemgroup"));
+            var brailleTestFormItemGroups = brailleTestForms.SelectMany(x => x.ChildNodesWithName("formpartition"))
+                .SelectMany(x => x.ChildNodesWithName("itemgroup"));
             var segmentPoolItemGroups =
                 processor.ChildNodesWithName("adminsegment")
                     .SelectMany(x => x.ChildNodesWithName("segmentpool"))
@@ -534,38 +547,31 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     GroupItemInfo gii;
                     if (indexGroupItemInfo.TryGetValue(info.ItemId, out gii))
                     {
-                        // Legacy validations
-                        if (!string.Equals(gii.IsFieldTest, info.IsFieldTest, StringComparison.OrdinalIgnoreCase))
+                        var testItem =
+                            testItems.FirstOrDefault(
+                                x =>
+                                    x.ChildNodeWithName("identifier")
+                                        .ValueForAttribute("uniqueid")
+                                        .Equals(info.ItemId, StringComparison.OrdinalIgnoreCase));
+                        if (testItem == null)
                         {
-                            result.Add(GenerateGroupItemValidationError(info,
-                                $"Conflicting isfieldtest info for same itemId {info.ItemId} between forms: '{info.IsFieldTest}' != '{gii.IsFieldTest}'",
-                                "isfieldtest", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
+                            // The item doesn't exist and we have a problem
+                            result.Add(new ValidationError
+                            {
+                                AssessmentId = ((TestSpecificationProcessor) Processor).GetUniqueId(),
+                                ErrorSeverity = ErrorSeverity.Severe,
+                                GeneratedMessage =
+                                    $"[Item referenced in itemgroup {itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} does not exist in item pool]",
+                                Key = "itemid",
+                                Location = $"{Processor.PackageType}/testform/formpartition/itemgroup/groupitem",
+                                PackageType = Processor.PackageType,
+                                ItemId = info.ItemId,
+                                Value = itemGroup.Navigator.OuterXml
+                            });
                         }
-                        if (!string.Equals(gii.IsActive, info.IsActive, StringComparison.OrdinalIgnoreCase))
+                        else
                         {
-                            result.Add(GenerateGroupItemValidationError(info,
-                                $"Conflicting isActive info for same itemId {info.ItemId} between forms: '{info.IsActive}' != '{gii.IsActive}'",
-                                "isactive", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
-                        }
-                        if (
-                            !string.Equals(gii.ResponseRequired, info.ResponseRequired,
-                                StringComparison.OrdinalIgnoreCase))
-                        {
-                            result.Add(GenerateGroupItemValidationError(info,
-                                $"Conflicting responseRequired info for same itemId {info.ItemId} between forms: '{info.ResponseRequired}' != '{gii.ResponseRequired}'",
-                                "responserequired", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
-                        }
-                        if (!string.Equals(gii.AdminRequired, info.AdminRequired, StringComparison.OrdinalIgnoreCase))
-                        {
-                            result.Add(GenerateGroupItemValidationError(info,
-                                $"Conflicting adminRequired info for same itemId {info.ItemId} between forms: '{info.AdminRequired}' != '{gii.AdminRequired}'",
-                                "adminrequired", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
-                        }
-                        if (!string.Equals(gii.FormPosition, info.FormPosition, StringComparison.OrdinalIgnoreCase))
-                        {
-                            result.Add(GenerateGroupItemValidationError(info,
-                                $"Conflicting formPosition info for same itemId {info.ItemId} between forms: '{info.FormPosition}' != '{gii.FormPosition}'",
-                                "formposition", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
+                            result.AddRange(GroupItemInfoInconsistencyErrors(gii, info, itemGroup));
                         }
                     }
                     else
@@ -575,6 +581,115 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 }
             }
 
+            foreach (var itemGroup in brailleTestFormItemGroups)
+            {
+                foreach (var info in GetInfo(itemGroup))
+                {
+                    GroupItemInfo gii;
+                    if (indexGroupItemInfo.TryGetValue(info.ItemId, out gii))
+                    {
+                        var testItem =
+                            testItems.FirstOrDefault(
+                                x =>
+                                    x.ChildNodeWithName("identifier")
+                                        .ValueForAttribute("uniqueid")
+                                        .Equals(info.ItemId, StringComparison.OrdinalIgnoreCase));
+                        if (testItem == null)
+                        {
+                            // The item doesn't exist and we have a problem
+                            result.Add(new ValidationError
+                            {
+                                AssessmentId = ((TestSpecificationProcessor) Processor).GetUniqueId(),
+                                ErrorSeverity = ErrorSeverity.Severe,
+                                GeneratedMessage =
+                                    $"[Item referenced in itemgroup {itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} does not exist in item pool]",
+                                Key = "itemid",
+                                Location = $"{Processor.PackageType}/testform/formpartition/itemgroup/groupitem",
+                                PackageType = Processor.PackageType,
+                                ItemId = info.ItemId,
+                                Value = itemGroup.Navigator.OuterXml
+                            });
+                        }
+                        else if (testItem.ValueForAttribute("itemtype").Equals("GI", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // This item type is illegal for braille tests
+                            result.Add(new ValidationError
+                            {
+                                AssessmentId = ((TestSpecificationProcessor) Processor).GetUniqueId(),
+                                ErrorSeverity = ErrorSeverity.Severe,
+                                GeneratedMessage =
+                                    $"[Item referenced in itemgroup {itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} is of type GI and not suitable for braille tests]",
+                                Key = "itemid",
+                                Location = $"{Processor.PackageType}/testform/formpartition/itemgroup/groupitem",
+                                PackageType = Processor.PackageType,
+                                ItemId = info.ItemId,
+                                Value = itemGroup.Navigator.OuterXml
+                            });
+                        }
+                        else
+                        {
+                            result.AddRange(GroupItemInfoInconsistencyErrors(gii, info, itemGroup));
+                        }
+                    }
+                    else
+                    {
+                        // all other forms have been processed, this form contains additional items not present in the other forms
+                        result.Add(new ValidationError
+                        {
+                            AssessmentId = ((TestSpecificationProcessor) Processor).GetUniqueId(),
+                            ErrorSeverity = ErrorSeverity.Severe,
+                            GeneratedMessage =
+                                $"[Item referenced in itemgroup {itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} is not present in any other forms]",
+                            Key = "itemid",
+                            Location = $"{Processor.PackageType}/testform/formpartition/itemgroup/groupitem",
+                            PackageType = Processor.PackageType,
+                            ItemId = info.ItemId,
+                            Value = itemGroup.Navigator.OuterXml
+                        });
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private IEnumerable<ValidationError> GroupItemInfoInconsistencyErrors(GroupItemInfo gii, GroupItemInfo info,
+            Processor itemGroup)
+        {
+            var result = new List<ValidationError>();
+            // Legacy validations
+            if (!string.Equals(gii.IsFieldTest, info.IsFieldTest, StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(GenerateGroupItemValidationError(info,
+                    $"Conflicting isfieldtest info for same itemId {info.ItemId} between forms: '{info.IsFieldTest}' != '{gii.IsFieldTest}'",
+                    "isfieldtest", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
+            }
+            if (!string.Equals(gii.IsActive, info.IsActive, StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(GenerateGroupItemValidationError(info,
+                    $"Conflicting isActive info for same itemId {info.ItemId} between forms: '{info.IsActive}' != '{gii.IsActive}'",
+                    "isactive", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
+            }
+            if (
+                !string.Equals(gii.ResponseRequired, info.ResponseRequired,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(GenerateGroupItemValidationError(info,
+                    $"Conflicting responseRequired info for same itemId {info.ItemId} between forms: '{info.ResponseRequired}' != '{gii.ResponseRequired}'",
+                    "responserequired", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
+            }
+            if (!string.Equals(gii.AdminRequired, info.AdminRequired, StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(GenerateGroupItemValidationError(info,
+                    $"Conflicting adminRequired info for same itemId {info.ItemId} between forms: '{info.AdminRequired}' != '{gii.AdminRequired}'",
+                    "adminrequired", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
+            }
+            if (!string.Equals(gii.FormPosition, info.FormPosition, StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(GenerateGroupItemValidationError(info,
+                    $"Conflicting formPosition info for same itemId {info.ItemId} between forms: '{info.FormPosition}' != '{gii.FormPosition}'",
+                    "formposition", itemGroup.PackageType, itemGroup.Navigator.OuterXml));
+            }
             return result;
         }
 
