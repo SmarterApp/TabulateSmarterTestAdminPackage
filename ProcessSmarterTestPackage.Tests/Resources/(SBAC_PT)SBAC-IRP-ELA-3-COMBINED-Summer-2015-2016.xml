@@ -1,0 +1,902 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<testspecification purpose="administration" publisher="SBAC_PT" publishdate="12" version="1.0">
+  <identifier uniqueid="(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016" name="SBAC-IRP-ELA-3-COMBINED"
+              version="8175" />
+  <property name="subject" value="ELA" label="ELA" />
+  <property name="grade" value="-2" label="grade 3" />
+  <property name="type" value="summative" label="summative" />
+  <administration>
+    <testblueprint>
+      <bpelement elementtype="test" minopitems="1" maxopitems="12" minftitems="0" maxftitems="0" opitemcount="22"
+                 ftitemcount="0">
+        <identifier uniqueid="(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016" name="SBAC-IRP-ELA-3-COMBINED"
+                    version="8175" />
+      </bpelement>
+      <bpelement elementtype="segment" minopitems="8" maxopitems="8" minftitems="0" maxftitems="0" opitemcount="18"
+                 ftitemcount="0">
+        <identifier uniqueid="(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016" name="SBAC-IRP-CAT-COMBINED-ELA-3"
+                    version="8175" />
+      </bpelement>
+      <bpelement elementtype="segment" minopitems="40" maxopitems="3" minftitems="0" maxftitems="0" opitemcount="3"
+                 ftitemcount="0">
+        <identifier uniqueid="(SBAC_PT)SBAC-IRP-Perf-S1-COMBINED-ELA-3-Summer-2015-2016"
+                    name="SBAC-IRP-Perf-S1-COMBINED-ELA-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="segment" minopitems="1" maxopitems="1" minftitems="0" maxftitems="0" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="(SBAC_PT)SBAC-IRP-Perf-S2-COMBINED-ELA-3-Summer-2015-2016"
+                    name="SBAC-IRP-Perf-S2-COMBINED-ELA-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="affinitygroup" minopitems="1" maxopitems="1" opitemcount="3" ftitemcount="0">
+        <identifier uniqueid="G3_Claim1_T2/12" name="G3_Claim1_T2/12" version="8175" />
+      </bpelement>
+      <bpelement elementtype="affinitygroup" minopitems="2" maxopitems="8" opitemcount="9" ftitemcount="0">
+        <identifier uniqueid="G3_DOK2" name="G3_DOK2" version="8175" />
+      </bpelement>
+      <bpelement elementtype="strand" minopitems="2" maxopitems="8" opitemcount="6" ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT" name="1-IT" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|10-3" name="1-IT|10-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT|10-3" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|10-3|3.RI.4" name="1-IT|10-3|3.RI.4" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|11-KG" name="1-IT|11-KG" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT" minopitems="0" maxopitems="16" opitemcount="2"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|12-3" name="1-IT|12-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT|12-3" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|12-3|3.RI.6" name="1-IT|12-3|3.RI.6" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|13-3" name="1-IT|13-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT|13-3" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|13-3|3.RI.5" name="1-IT|13-3|3.RI.5" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|8-3" name="1-IT|8-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-IT|8-3" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-IT|8-3|3.RI.1" name="1-IT|8-3|3.RI.1" version="8175" />
+      </bpelement>
+      <bpelement elementtype="strand" minopitems="2" maxopitems="8" opitemcount="5" ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-LT" name="1-LT" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-LT" minopitems="0" maxopitems="16" opitemcount="3"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-LT|2-3" name="1-LT|2-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-LT|2-3" minopitems="0" maxopitems="16" opitemcount="3"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-LT|2-3|3.RL.2" name="1-LT|2-3|3.RL.2" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-LT" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-LT|6-3" name="1-LT|6-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-LT|6-3" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-LT|6-3|3.RL.5" name="1-LT|6-3|3.RL.5" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-LTaa" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-LT|7-3" name="1-LT|7-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-1-LT|7-3" minopitems="0" maxopitems="16" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-1-LT|7-3|3.L.5a" name="1-LT|7-3|3.L.5a" version="8175" />
+      </bpelement>
+      <bpelement elementtype="strand" minopitems="1" maxopitems="7" opitemcount="5" ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W" name="2-W" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-2-W" minopitems="0" maxopitems="14" opitemcount="2"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W|1-3" name="2-W|1-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-2-W|1-3" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W|1-3|3.W.3a" name="2-W|1-3|3.W.3a" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-2-W|1-3" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W|1-3|3.W.3b" name="2-W|1-3|3.W.3b" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-2-W" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W|3-3" name="2-W|3-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-2-W|3-3" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W|3-3|3.W.2a" name="2-W|3-3|3.W.2a" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-2-W" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W|8-3" name="2-W|8-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-2-W|8-3" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W|8-3|3.L.6" name="2-W|8-3|3.L.6" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-2-W" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-2-W|9-3" name="2-W|9-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="strand" minopitems="0" maxopitems="8" opitemcount="3" ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-3-L" name="3-L" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-3-L" minopitems="0" maxopitems="16" opitemcount="3"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-3-L|4-3" name="3-L|4-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-3-L|4-3" minopitems="0" maxopitems="16" opitemcount="3"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-3-L|4-3|3.SL.2" name="3-L|4-3|3.SL.2" version="8175" />
+      </bpelement>
+      <bpelement elementtype="strand" minopitems="1" maxopitems="7" opitemcount="3" ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-4-CR" name="4-CR" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-4-CR" minopitems="0" maxopitems="14" opitemcount="2"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-4-CR|2-3" name="4-CR|2-3" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-4-CR|2-3" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-4-CR|2-3|3.RI.7" name="4-CR|2-3|3.RI.7" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-4-CR|2-3" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-4-CR|2-3|3.W.8" name="4-CR|2-3|3.W.8" version="8175" />
+      </bpelement>
+      <bpelement elementtype="contentlevel" parentid="SBAC_PT-4-CR" minopitems="0" maxopitems="14" opitemcount="1"
+                 ftitemcount="0">
+        <identifier uniqueid="SBAC_PT-4-CR|3-1" name="4-CR|3-1" version="8175" />
+      </bpelement>
+    </testblueprint>
+    <poolproperty property="--ITEMTYPE--" value="NOT" label="EBSR" itemcount="3" />
+    <poolproperty property="--ITEMTYPE--" value="ER" label="ER" itemcount="2" />
+    <poolproperty property="--ITEMTYPE--" value="HTQ" label="HTQ" itemcount="4" />
+    <poolproperty property="--ITEMTYPE--" value="MC" label="MC" itemcount="6" />
+    <poolproperty property="--ITEMTYPE--" value="MI" label="MI" itemcount="3" />
+    <poolproperty property="--ITEMTYPE--" value="MS" label="MS" itemcount="3" />
+    <poolproperty property="--ITEMTYPE--" value="WER" label="WER" itemcount="1" />
+    <poolproperty property="Language" value="ENU" label="English" itemcount="22" />
+    <itempool>
+      <passage filename="stim-187-3732.xml">
+        <identifier uniqueid="187-3732" version="8175" />
+      </passage>
+      <passage filename="stim-187-3739.xml">
+        <identifier uniqueid="187-3739" version="8175" />
+      </passage>
+      <passage filename="stim-187-3743.xml">
+        <identifier uniqueid="187-3743" version="8175" />
+      </passage>
+      <passage filename="stim-187-3753.xml">
+        <identifier uniqueid="187-3753" version="8175" />
+      </passage>
+      <testitem filename="item-187-2458.xml" itemtype="EBSR">
+        <identifier uniqueid="187-2458" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-3-L</bpref>
+        <bpref>SBAC_PT-3-L|4-3</bpref>
+        <bpref>SBAC_PT-3-L|4-3|3.SL.2aaa</bpref>
+        <passageref>187-3732</passageref>
+        <poolproperty property="--ITEMTYPE--" value="EBSR" label="EBSR" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="1.000000000000000e+000" />
+          <itemscoreparameter measurementparameter="b" value="1.000000000000000e-015" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2463.xml" itemtype="MC">
+        <identifier uniqueid="187-2463" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-4-CR</bpref>
+        <bpref>SBAC_PT-4-CR|3-1</bpref>
+        <poolproperty property="--ITEMTYPE--" value="MC" label="MC" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="6.331600000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="2.606940000000000e+000" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2467.xml" itemtype="MC">
+        <identifier uniqueid="187-2467" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-3-L</bpref>
+        <bpref>SBAC_PT-3-L|4-3</bpref>
+        <bpref>SBAC_PT-3-L|4-3|3.SL.2</bpref>
+        <passageref>187-3732</passageref>
+        <poolproperty property="--ITEMTYPE--" value="MC" label="MC" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="5.092000000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="8.311900000000000e-001" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2493.xml" itemtype="EBSR">
+        <identifier uniqueid="187-2493" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_Claim1_T2/12</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-1-LT</bpref>
+        <bpref>SBAC_PT-1-LT|2-3</bpref>
+        <bpref>SBAC_PT-1-LT|2-3|3.RL.2</bpref>
+        <passageref>187-3739</passageref>
+        <poolproperty property="--ITEMTYPE--" value="EBSR" label="EBSR" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="1.000000000000000e+000" />
+          <itemscoreparameter measurementparameter="b" value="1.000000000000000e-015" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2497.xml" itemtype="MI">
+        <identifier uniqueid="187-2497" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-4-CR</bpref>
+        <bpref>SBAC_PT-4-CR|2-3</bpref>
+        <bpref>SBAC_PT-4-CR|2-3|3.W.8</bpref>
+        <poolproperty property="--ITEMTYPE--" value="MI" label="MI" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="7.711800000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="-1.408940000000000e+000" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2498.xml" itemtype="MI">
+        <identifier uniqueid="187-2498" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-3-L</bpref>
+        <bpref>SBAC_PT-3-L|4-3</bpref>
+        <bpref>SBAC_PT-3-L|4-3|3.SL.2</bpref>
+        <passageref>187-3732</passageref>
+        <poolproperty property="--ITEMTYPE--" value="MI" label="MI" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="4.172400000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="-1.354820000000000e+000" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2500.xml" itemtype="MC">
+        <identifier uniqueid="187-2500" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-1-LT</bpref>
+        <bpref>SBAC_PT-1-LT|7-3</bpref>
+        <bpref>SBAC_PT-1-LT|7-3|3.L.5a</bpref>
+        <passageref>187-3739</passageref>
+        <poolproperty property="--ITEMTYPE--" value="MC" label="MC" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="8.013900000000001e-001" />
+          <itemscoreparameter measurementparameter="b" value="-6.910700000000000e-001" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2510.xml" itemtype="MC">
+        <identifier uniqueid="187-2510" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-2-W</bpref>
+        <bpref>SBAC_PT-2-W|9-3</bpref>
+        <poolproperty property="--ITEMTYPE--" value="MC" label="MC" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="5.064800000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="1.398600000000000e+000" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2521.xml" itemtype="MC">
+        <identifier uniqueid="187-2521" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-2-W</bpref>
+        <bpref>SBAC_PT-2-W|3-3</bpref>
+        <bpref>SBAC_PT-2-W|3-3|3.W.2a</bpref>
+        <poolproperty property="--ITEMTYPE--" value="MC" label="MC" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="1.000000000000000e+000" />
+          <itemscoreparameter measurementparameter="b" value="1.000000000000000e-015" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2526.xml" itemtype="MS">
+        <identifier uniqueid="187-2526" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-1-LT</bpref>
+        <bpref>SBAC_PT-1-LT|6-3</bpref>
+        <bpref>SBAC_PT-1-LT|6-3|3.RL.5</bpref>
+        <passageref>187-3739</passageref>
+        <poolproperty property="--ITEMTYPE--" value="MS" label="MS" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="6.027400000000001e-001" />
+          <itemscoreparameter measurementparameter="b" value="1.027880000000000e+000" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2558.xml" itemtype="WER">
+        <identifier uniqueid="187-2558" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-Perf-S2-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-4-CR</bpref>
+        <bpref>SBAC_PT-4-CR|2-3</bpref>
+        <bpref>SBAC_PT-4-CR|2-3|3.RI.7</bpref>
+        <passageref>187-3743</passageref>
+        <poolproperty property="--ITEMTYPE--" value="WER" label="WER" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRTGPC" dimension="C" scorepoints="2" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="1.352850000000000e+000" />
+          <itemscoreparameter measurementparameter="b0" value="-3.809100000000000e-001" />
+          <itemscoreparameter measurementparameter="b1" value="2.658900000000000e-001" />
+        </itemscoredimension>
+        <itemscoredimension measurementmodel="IRTGPC" dimension="D" scorepoints="4" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="8.708500000000000e-001" />
+          <itemscoreparameter measurementparameter="b0" value="-1.193560000000000e+000" />
+          <itemscoreparameter measurementparameter="b1" value="2.008400000000000e-001" />
+          <itemscoreparameter measurementparameter="b2" value="1.689430000000000e+000" />
+          <itemscoreparameter measurementparameter="b3" value="3.354930000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2564.xml" itemtype="HTQ">
+        <identifier uniqueid="187-2564" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_Claim1_T2/12</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-1-LT</bpref>
+        <bpref>SBAC_PT-1-LT|2-3</bpref>
+        <bpref>SBAC_PT-1-LT|2-3|3.RL.2</bpref>
+        <passageref>187-3739</passageref>
+        <poolproperty property="--ITEMTYPE--" value="HTQ" label="HTQ" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="1.000000000000000e+000" />
+          <itemscoreparameter measurementparameter="b" value="1.000000000000000e-015" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2577.xml" itemtype="HTQ">
+        <identifier uniqueid="187-2577" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-2-W</bpref>
+        <bpref>SBAC_PT-2-W|1-3</bpref>
+        <bpref>SBAC_PT-2-W|1-3|3.W.3a</bpref>
+        <poolproperty property="--ITEMTYPE--" value="HTQ" label="HTQ" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="7.504000000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="1.850040000000000e+000" />
+          <itemscoreparameter measurementparameter="z" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2604.xml" itemtype="MS">
+        <identifier uniqueid="187-2604" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-2-W</bpref>
+        <bpref>SBAC_PT-2-W|8-3</bpref>
+        <bpref>SBAC_PT-2-W|8-3|3.L.6</bpref>
+        <poolproperty property="--ITEMTYPE--" value="MS" label="MS" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="9.339800000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="3.513700000000000e-001" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2643.xml" itemtype="MI">
+        <identifier uniqueid="187-2643" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-Perf-S1-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-2-W</bpref>
+        <bpref>SBAC_PT-2-W|1-3</bpref>
+        <bpref>SBAC_PT-2-W|1-3|3.W.3b</bpref>
+        <passageref>187-3743</passageref>
+        <poolproperty property="--ITEMTYPE--" value="MI" label="MI" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="7.759600000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="-6.076000000000000e-001" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2644.xml" itemtype="ER">
+        <identifier uniqueid="187-2644" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-Perf-S1-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-1-LT</bpref>
+        <bpref>SBAC_PT-1-LT|2-3</bpref>
+        <bpref>SBAC_PT-1-LT|2-3|3.RL.2</bpref>
+        <passageref>187-3743</passageref>
+        <poolproperty property="--ITEMTYPE--" value="ER" label="ER" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRTGPC" scorepoints="2" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="9.082400000000001e-001" />
+          <itemscoreparameter measurementparameter="b0" value="6.852200000000001e-001" />
+          <itemscoreparameter measurementparameter="b1" value="1.316260000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2645.xml" itemtype="ER">
+        <identifier uniqueid="187-2645" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-Perf-S1-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-1-IT</bpref>
+        <bpref>SBAC_PT-1-IT|12-3</bpref>
+        <bpref>SBAC_PT-1-IT|12-3|3.RI.6</bpref>
+        <passageref>187-3743</passageref>
+        <poolproperty property="--ITEMTYPE--" value="ER" label="ER" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRTGPC" scorepoints="2" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="7.059200000000000e-001" />
+          <itemscoreparameter measurementparameter="b0" value="1.227220000000000e+000" />
+          <itemscoreparameter measurementparameter="b1" value="2.473820000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2659.xml" itemtype="MC">
+        <identifier uniqueid="187-2659" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-1-IT</bpref>
+        <bpref>SBAC_PT-1-IT|13-3</bpref>
+        <bpref>SBAC_PT-1-IT|13-3|3.RI.5</bpref>
+        <passageref>187-3753</passageref>
+        <poolproperty property="--ITEMTYPE--" value="MC" label="MC" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="3.724500000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="2.305030000000000e+000" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2660.xml" itemtype="HTQ">
+        <identifier uniqueid="187-2660" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-1-IT</bpref>
+        <bpref>SBAC_PT-1-IT|11-KG</bpref>
+        <passageref>187-3753</passageref>
+        <poolproperty property="--ITEMTYPE--" value="HTQ" label="HTQ" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="6.604800000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="1.059700000000000e+000" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2661.xml" itemtype="MS">
+        <identifier uniqueid="187-2661" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_DOK2</bpref>
+        <bpref>SBAC_PT-1-IT</bpref>
+        <bpref>SBAC_PT-1-IT|8-3</bpref>
+        <bpref>SBAC_PT-1-IT|8-3|3.RI.1</bpref>
+        <passageref>187-3753</passageref>
+        <poolproperty property="--ITEMTYPE--" value="MS" label="MS" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="5.686000000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="8.208800000000001e-001" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2684.xml" itemtype="EBSR">
+        <identifier uniqueid="187-2684" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>G3_Claim1_T2/12</bpref>
+        <bpref>SBAC_PT-1-IT</bpref>
+        <bpref>SBAC_PT-1-IT|12-3</bpref>
+        <passageref>187-3753</passageref>
+        <poolproperty property="--ITEMTYPE--" value="EBSR" label="EBSR" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="1.000000000000000e+000" />
+          <itemscoreparameter measurementparameter="b" value="1.000000000000000e-015" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+      <testitem filename="item-187-2685.xml" itemtype="HTQ">
+        <identifier uniqueid="187-2685" version="8175" />
+        <bpref>(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016</bpref>
+        <bpref>SBAC_PT-1-IT</bpref>
+        <bpref>SBAC_PT-1-IT|10-3</bpref>
+        <bpref>SBAC_PT-1-IT|10-3|3.RI.4</bpref>
+        <passageref>187-3753</passageref>
+        <poolproperty property="--ITEMTYPE--" value="HTQ" label="HTQ" />
+        <poolproperty property="Language" value="ENU" label="English" />
+        <itemscoredimension measurementmodel="IRT3PLn" scorepoints="1" weight="1.000000000000000e+000">
+          <itemscoreparameter measurementparameter="a" value="7.736100000000000e-001" />
+          <itemscoreparameter measurementparameter="b" value="8.493700000000000e-001" />
+          <itemscoreparameter measurementparameter="c" value="0.000000000000000e+000" />
+        </itemscoredimension>
+      </testitem>
+    </itempool>
+    <testform length="4">
+      <identifier uniqueid="(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016:Default-ENU"
+                  name="(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016:Default-ENU" version="8175" />
+      <property name="language" value="ENU" label="English" />
+      <poolproperty property="--ITEMTYPE--" value="ER" label="ER" itemcount="2" />
+      <poolproperty property="--ITEMTYPE--" value="MI" label="MI" itemcount="1" />
+      <poolproperty property="--ITEMTYPE--" value="WER" label="WER" itemcount="1" />
+      <poolproperty property="Language" value="ENU" label="English" itemcount="4" />
+      <formpartition>
+        <identifier uniqueid="187-774" name="IRP::ELAG3::Perf::S1::SP15::COMBINED" version="8175" />
+        <itemgroup formposition="1" maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="187-774:G-187-3743-2" name="187-774:G-187-3743-2" version="8175" />
+          <passageref>187-3743</passageref>
+          <groupitem itemid="187-2643" formposition="1" groupposition="1" adminrequired="false"
+                     responserequired="false" isactive="true" isfieldtest="false" blockid="A" />
+          <groupitem itemid="187-2644" formposition="2" groupposition="2" adminrequired="false"
+                     responserequired="false" isactive="true" isfieldtest="false" blockid="A" />
+          <groupitem itemid="187-2645" formposition="3" groupposition="3" adminrequired="false"
+                     responserequired="false" isactive="true" isfieldtest="false" blockid="A" />
+        </itemgroup>
+      </formpartition>
+      <formpartition>
+        <identifier uniqueid="187-775" name="IRP::ELAG3::Perf::S2::SP15::COMBINED" version="8175" />
+        <itemgroup formposition="1" maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="187-775:G-187-3743-3" name="187-775:G-187-3743-3" version="8175" />
+          <passageref>187-3743</passageref>
+          <groupitem itemid="187-2558" formposition="1" groupposition="1" adminrequired="false"
+                     responserequired="false" isactive="true" isfieldtest="false" blockid="A" />
+        </itemgroup>
+      </formpartition>
+    </testform>
+    <adminsegment segmentid="(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016" position="1"
+                  itemselection="adaptive2">
+      <segmentblueprint>
+        <segmentbpelement bpelementid="SBAC_PT-1-IT" minopitems="2" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT" minopitems="2" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W" minopitems="1" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-3-L" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-4-CR" minopitems="1" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|10-3" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|11-KG" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|12-3" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|13-3" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|8-3" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT|2-3" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT|6-3" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT|7-3" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|1-3" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|3-3" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|8-3" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|9-3" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-3-L|4-3" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-4-CR|2-3" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-4-CR|3-1" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|10-3|3.RI.4" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|13-3|3.RI.5" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|8-3|3.RI.1" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT|2-3|3.RL.2" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT|6-3|3.RL.5" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT|7-3|3.L.5a" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|1-3|3.W.3a" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|3-3|3.W.2a" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|8-3|3.L.6" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="SBAC_PT-3-L|4-3|3.SL.2" minopitems="0" maxopitems="2" />
+        <segmentbpelement bpelementid="SBAC_PT-4-CR|2-3|3.W.8" minopitems="0" maxopitems="1" />
+        <segmentbpelement bpelementid="G3_Claim1_T2/12" minopitems="1" maxopitems="1" />
+        <segmentbpelement bpelementid="G3_DOK2" minopitems="2" maxopitems="8" />
+      </segmentblueprint>
+      <itemselector type="adaptive">
+        <identifier uniqueid="AIR ADAPTIVE1" name="AIR ADAPTIVE" label="AIR ADAPTIVE" version="1.0" />
+        <itemselectionparameter bpelementid="(SBAC_PT)SBAC-IRP-CAT-COMBINED-ELA-3-Summer-2015-2016">
+          <property name="bpweight" value="1" label="blueprint metric weight relative to ability metric weight of 1.0" />
+          <property name="startability" value="-1.23998" label="start ability" />
+          <property name="startinfo" value="0.2" label="start information" />
+          <property name="cset1size" value="5" label="cset 1 size" />
+          <property name="cset1order" value="ABILITY" label="cset 1 tie breaker" />
+          <property name="cset2random" value="3" label="randomizer for item selection" />
+          <property name="cset2initialrandom" value="18" label="randomizer for first item selection" />
+          <property name="abilityoffset" value="0" label="offset for ability estimate" />
+          <property name="itemweight" value="1"
+                    label="blueprint weight of items in chosen group relative to ability match for final pruning step" />
+          <property name="slope" value="85.8" label="slope" />
+          <property name="intercept" value="2508.2" label="intercept" />
+          <property name="precisiontarget" value="1" label="precision target" />
+          <property name="adaptivecut" value="0" label="adaptive cut" />
+          <property name="toocloseses" value="0" label="too Close SEs" />
+          <property name="abilityweight" value="1" label="ability weight" />
+          <property name="computeabilityestimates" value="false" label="compute ability estimates" />
+          <property name="rcabilityweight" value="0" label="rc ability weight" />
+          <property name="precisionTargetMetWeight" value="1" label="precisionTargetMetWeight" />
+          <property name="precisionTargetNotMetWeight" value="1" label="precisionTargetNotMetWeight" />
+          <property name="terminationOverallInfo" value="false" label="terminationOverallInfo" />
+          <property name="terminationRCInfo" value="false" label="terminationRCInfo" />
+          <property name="terminationMinCount" value="true" label="terminationMinCount" />
+          <property name="terminationTooClose" value="false" label="terminationTooClose" />
+          <property name="terminationFlagsAnd" value="false" label="terminationFlagsAnd" />
+          <property name="offGradeMinItemsAdministered" value="30"
+                    label="Minimum number of on-grade operational items administered before considering for off-grade items" />
+          <property name="proficientPLevel" value="3"
+                    label="Level at which student is considered proficient for the test" />
+          <property name="offGradeProbAffectProficiency" value="0.01"
+                    label="Probability that introducing off-grade items will influence the student proficiency must be less than this value" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT">
+          <property name="isstrictmax" value="true" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+          <property name="adaptivecut" value="-29.2331" label="adaptive cut point" />
+          <property name="startability" value="-29.2331" label="start ability" />
+          <property name="startinfo" value="0" label="start information" />
+          <property name="scalar" value="5" label="relative ability strand weight" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-LT">
+          <property name="isstrictmax" value="true" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+          <property name="adaptivecut" value="-29.2331" label="adaptive cut point" />
+          <property name="startability" value="-29.2331" label="start ability" />
+          <property name="startinfo" value="0" label="start information" />
+          <property name="scalar" value="5" label="relative ability strand weight" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-2-W">
+          <property name="isstrictmax" value="true" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+          <property name="adaptivecut" value="-29.2331" label="adaptive cut point" />
+          <property name="startability" value="-29.2331" label="start ability" />
+          <property name="startinfo" value="0" label="start information" />
+          <property name="scalar" value="5" label="relative ability strand weight" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-3-L">
+          <property name="isstrictmax" value="true" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+          <property name="adaptivecut" value="-29.2331" label="adaptive cut point" />
+          <property name="startability" value="-29.2331" label="start ability" />
+          <property name="startinfo" value="0" label="start information" />
+          <property name="scalar" value="5" label="relative ability strand weight" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-4-CR">
+          <property name="isstrictmax" value="true" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+          <property name="adaptivecut" value="-29.2331" label="adaptive cut point" />
+          <property name="startability" value="-29.2331" label="start ability" />
+          <property name="startinfo" value="0" label="start information" />
+          <property name="scalar" value="5" label="relative ability strand weight" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT|10-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT|11-KG">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT|12-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT|13-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT|8-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-LT|2-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-LT|6-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-LT|7-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-2-W|1-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-2-W|3-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-2-W|8-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-2-W|9-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-3-L|4-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-4-CR|2-3">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-4-CR|3-1">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT|10-3|3.RI.4">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT|13-3|3.RI.5">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-IT|8-3|3.RI.1">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-LT|2-3|3.RL.2">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-LT|6-3|3.RL.5">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-1-LT|7-3|3.L.5a">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-2-W|1-3|3.W.3a">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-2-W|3-3|3.W.2a">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-2-W|8-3|3.L.6">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-3-L|4-3|3.SL.2">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="SBAC_PT-4-CR|2-3|3.W.8">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="G3_Claim1_T2/12">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+          <property name="startinfo" value="0" label="start information" />
+          <property name="precisiontarget" value="1" label="precision target" />
+          <property name="precisiontargetmetweight" value="0" label="precision target met weight" />
+          <property name="precisiontargetnotmetweight" value="0" label="precision target not met weight" />
+        </itemselectionparameter>
+        <itemselectionparameter bpelementid="G3_DOK2">
+          <property name="isstrictmax" value="false" label="Strict maximum flag" />
+          <property name="bpweight" value="1" label="Blueprint weight relative to other elements" />
+          <property name="startinfo" value="0" label="start information" />
+          <property name="precisiontarget" value="1" label="precision target" />
+          <property name="precisiontargetmetweight" value="0" label="precision target met weight" />
+          <property name="precisiontargetnotmetweight" value="0" label="precision target not met weight" />
+        </itemselectionparameter>
+      </itemselector>
+      <segmentpool>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="G-187-3732-1" name="G-187-3732-1" version="8175" />
+          <passageref>187-3732</passageref>
+          <groupitem itemid="187-2498" groupposition="1" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2467" groupposition="2" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2458" groupposition="3" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="G-187-3739-1" name="G-187-3739-1" version="8175" />
+          <passageref>187-3739</passageref>
+          <groupitem itemid="187-2493" groupposition="1" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2564" groupposition="2" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2526" groupposition="3" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2500" groupposition="4" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="G-187-3753-1" name="G-187-3753-1" version="8175" />
+          <passageref>187-3753</passageref>
+          <groupitem itemid="187-2661" groupposition="1" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2685" groupposition="2" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2660" groupposition="3" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2684" groupposition="4" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+          <groupitem itemid="187-2659" groupposition="5" adminrequired="false" responserequired="false"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="I-187-2463" name="I-187-2463" version="8175" />
+          <groupitem itemid="187-2463" groupposition="1" adminrequired="true" responserequired="true"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="I-187-2497" name="I-187-2497" version="8175" />
+          <groupitem itemid="187-2497" groupposition="1" adminrequired="true" responserequired="true"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="I-187-2510" name="I-187-2510" version="8175" />
+          <groupitem itemid="187-2510" groupposition="1" adminrequired="true" responserequired="true"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="I-187-2521" name="I-187-2521" version="8175" />
+          <groupitem itemid="187-2521" groupposition="1" adminrequired="true" responserequired="true"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="I-187-2577" name="I-187-2577" version="8175" />
+          <groupitem itemid="187-2577" groupposition="1" adminrequired="true" responserequired="true"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+        <itemgroup maxitems="ALL" maxresponses="ALL">
+          <identifier uniqueid="I-187-2604" name="I-187-2604" version="8175" />
+          <groupitem itemid="187-2604" groupposition="1" adminrequired="true" responserequired="true"
+                     isfieldtest="false" isactive="true" blockid="A" />
+        </itemgroup>
+      </segmentpool>
+    </adminsegment>
+    <adminsegment segmentid="(SBAC_PT)SBAC-IRP-Perf-S1-COMBINED-ELA-3-Summer-2015-2016" position="2"
+                  itemselection="fixedform">
+      <segmentblueprint>
+        <segmentbpelement bpelementid="SBAC_PT-1-IT" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|12-3" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT|2-3" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|1-3" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-1-IT|12-3|3.RI.6" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-1-LT|2-3|3.RL.2" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-2-W|1-3|3.W.3b" minopitems="0" maxopitems="3" />
+      </segmentblueprint>
+      <itemselector type="fixedform">
+        <identifier uniqueid="AIR FIXEDFORM1" name="AIR FIXEDFORM" label="AIR FIXEDFORM" version="1.0" />
+        <itemselectionparameter bpelementid="(SBAC_PT)SBAC-IRP-Perf-S1-COMBINED-ELA-3-Summer-2015-2016">
+          <property name="slope" value="85.8" label="slope" />
+          <property name="intercept" value="2508.2" label="intercept" />
+        </itemselectionparameter>
+      </itemselector>
+      <segmentform formpartitionid="187-774" />
+    </adminsegment>
+    <adminsegment segmentid="(SBAC_PT)SBAC-IRP-Perf-S2-COMBINED-ELA-3-Summer-2015-2016" position="3"
+                  itemselection="fixedform">
+      <segmentblueprint>
+        <segmentbpelement bpelementid="SBAC_PT-4-CR" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-4-CR|2-3" minopitems="0" maxopitems="3" />
+        <segmentbpelement bpelementid="SBAC_PT-4-CR|2-3|3.RI.7" minopitems="0" maxopitems="3" />
+      </segmentblueprint>
+      <itemselector type="fixedform">
+        <identifier uniqueid="AIR FIXEDFORM1" name="AIR FIXEDFORM" label="AIR FIXEDFORM" version="1.0" />
+        <itemselectionparameter bpelementid="(SBAC_PT)SBAC-IRP-Perf-S2-COMBINED-ELA-3-Summer-2015-2016">
+          <property name="slope" value="85.8" label="slope" />
+          <property name="intercept" value="2508.2" label="intercept" />
+        </itemselectionparameter>
+      </itemselector>
+      <segmentform formpartitionid="187-775" />
+    </adminsegment>
+  </administration>
+</testspecification>

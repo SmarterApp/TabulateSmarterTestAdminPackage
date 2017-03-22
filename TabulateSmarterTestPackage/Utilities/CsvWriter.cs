@@ -1,0 +1,96 @@
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+
+namespace TabulateSmarterTestPackage.Utilities
+{
+    public class CsvWriter : IDisposable
+    {
+        private const int cBufSize = 8192;
+        private static readonly UTF8Encoding sUTF8_NoBom = new UTF8Encoding(false);
+        private static readonly char[] sCsvSpecialChars = {',', '"', '\r', '\n', '\t'};
+        private TextWriter mWriter;
+
+
+        public CsvWriter(TextWriter Writer)
+        {
+            mWriter = Writer;
+        }
+
+        public CsvWriter(Stream stream, Encoding encoding = null, bool leaveOpen = false)
+        {
+            if (encoding == null)
+            {
+                encoding = sUTF8_NoBom;
+            }
+            mWriter = new StreamWriter(stream, encoding, cBufSize, leaveOpen);
+        }
+
+        public CsvWriter(string path, bool append, Encoding encoding = null)
+        {
+            if (encoding == null)
+            {
+                encoding = sUTF8_NoBom;
+            }
+            mWriter = new StreamWriter(path, append, encoding, cBufSize);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        public void Write(string[] values)
+        {
+            for (var i = 0; i < values.Length; ++i)
+            {
+                var value = values[i];
+                if (value == null)
+                {
+                    // Do nothing
+                }
+                else if (value.IndexOfAny(sCsvSpecialChars) >= 0)
+                {
+                    mWriter.Write('"');
+                    mWriter.Write(value.IndexOf('"') >= 0
+                        ? value.Replace("\"", "\"\"")
+                        : value);
+                    mWriter.Write('"');
+                }
+                else
+                {
+                    mWriter.Write(value);
+                }
+                if (i < values.Length - 1)
+                {
+                    mWriter.Write(',');
+                }
+            }
+            mWriter.WriteLine();
+        }
+
+        ~CsvWriter()
+        {
+            Dispose(false);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (mWriter != null)
+            {
+                if (!disposing)
+                {
+                    Debug.Fail("Failed to dispose CsvWriter");
+                }
+
+                mWriter.Dispose();
+                mWriter = null;
+            }
+            if (disposing)
+            {
+                GC.SuppressFinalize(this);
+            }
+        }
+    }
+}
