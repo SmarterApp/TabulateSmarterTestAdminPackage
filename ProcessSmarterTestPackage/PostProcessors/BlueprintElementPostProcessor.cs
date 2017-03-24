@@ -27,14 +27,14 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 {
                     var maxopitems = Processor.ValueForAttribute("maxopitems");
                     var minopitems = Processor.ValueForAttribute("minopitems");
-                    result.AddRange(EqualityErrors("maxopitems", maxopitems, "opitemcount", opitemcount, "<="));
+                    result.AddRange(EqualityErrors("opitemcount", opitemcount, "maxopitems", maxopitems, "<="));
                     result.AddRange(EqualityErrors("minopitems", minopitems, "opitemcount", opitemcount, "<="));
                     result.AddRange(EqualityErrors("minopitems", minopitems, "maxopitems", maxopitems, "<="));
                 }
                 else if (Processor.ValidatedAttributes["maxopitems"].IsValid)
                 {
                     var maxopitems = Processor.ValueForAttribute("maxopitems");
-                    result.AddRange(EqualityErrors("maxopitems", maxopitems, "opitemcount", opitemcount, "<="));
+                    result.AddRange(EqualityErrors("opitemcount", opitemcount, "maxopitems", maxopitems, "<="));
                 }
                 else if (Processor.ValidatedAttributes["minopitems"].IsValid)
                 {
@@ -53,14 +53,14 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 {
                     var maxftitems = Processor.ValueForAttribute("maxftitems");
                     var minftitems = Processor.ValueForAttribute("minftitems");
-                    result.AddRange(EqualityErrors("maxftitems", maxftitems, "ftitemcount", ftitemcount, "<="));
+                    result.AddRange(EqualityErrors("ftitemcount", ftitemcount, "maxftitems", maxftitems, "<="));
                     result.AddRange(EqualityErrors("minftitems", minftitems, "ftitemcount", ftitemcount, "<="));
                     result.AddRange(EqualityErrors("minftitems", minftitems, "maxftitems", maxftitems, "<="));
                 }
                 else if (Processor.ValidatedAttributes["maxftitems"].IsValid)
                 {
                     var maxftitems = Processor.ValueForAttribute("maxftitems");
-                    result.AddRange(EqualityErrors("maxftitems", maxftitems, "ftitemcount", ftitemcount, "<="));
+                    result.AddRange(EqualityErrors("ftitemcount", ftitemcount, "maxftitems", maxftitems, "<="));
                 }
                 else if (Processor.ValidatedAttributes["minftitems"].IsValid)
                 {
