@@ -42,6 +42,7 @@
     <Compile Include="Data\ErrorSeverity.cs" />
     <Compile Include="Data\PackageType.cs" />
     <Compile Include="Data\ProcessingError.cs" />
+    <Compile Include="Data\UserSettings.cs" />
     <Compile Include="Data\ValidationError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\XPathNavitagorHelper.cs" />

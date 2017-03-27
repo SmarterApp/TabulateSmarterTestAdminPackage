@@ -50,7 +50,11 @@ namespace TabulateSmarterTestPackage
             -cs <file path>
             If a content tabulator stimuli output file is specified, input test packages will
             be cross-tabulated against that csv output file and any discrepencies will
-            be reported.";
+            be reported.
+
+            -sv
+            If this flag is present and both cs and ci arguments are provided, the tabulator will 
+            write cross tabulation errors for stimuli versions";
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -148,6 +152,9 @@ namespace TabulateSmarterTestPackage
                                     "Invalid command line. '-cs' argument does not refer to valid csv output file.");
                             }
                             ReportingUtility.ContentStimuliDirectoryPath = args[i];
+                            break;
+                        case "-sv":
+                            UserSettings.ValidateStimuliVersion = true;
                             break;
                         default:
                             Logger.Error($"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");

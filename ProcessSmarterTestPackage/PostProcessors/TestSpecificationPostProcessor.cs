@@ -653,6 +653,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
             var indexGroupItemInfo = new Dictionary<string, GroupItemInfo>();
 
             var combinedItemGroups = new List<Processor>();
+
             combinedItemGroups.AddRange(testFormItemGroups);
             combinedItemGroups.AddRange(segmentPoolItemGroups);
 
