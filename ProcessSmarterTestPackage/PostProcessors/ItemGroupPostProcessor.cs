@@ -16,21 +16,6 @@ namespace ProcessSmarterTestPackage.PostProcessors
             var groupItems = Processor.ChildNodesWithName("groupitem").ToList();
             int position;
 
-            if (
-                groupItems.Any(x => x.ValueForAttribute("formposition") != Processor.ValueForAttribute("formposition")))
-            {
-                result.Add(new ValidationError
-                {
-                    Value = Processor.Navigator.OuterXml,
-                    GeneratedMessage = "[formposition of some group items does not match itemgroup]",
-                    Key = "formposition",
-                    ErrorSeverity = ErrorSeverity.Degraded,
-                    PackageType = Processor.PackageType,
-                    Location = $"itemgroup/{Processor.Navigator.Name}",
-                    ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
-                });
-            }
-
             for (var i = 1; i <= groupItems.Count(); i++)
             {
                 if (
