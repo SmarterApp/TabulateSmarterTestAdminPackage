@@ -148,7 +148,7 @@ namespace ProcessSmarterTestPackage.External
                 else
                 {
                     var version = processor.ChildNodeWithName("identifier").ValueForAttribute("version");
-                    if (!version.Equals(stimuli["Version"]))
+                    if (!version.Equals(stimuli["Version"]) && UserSettings.ValidateStimuliVersion)
                     {
                         errors.Add(
                             GenerateStimuliError(

@@ -24,9 +24,18 @@ namespace TabulateSmarterTestPackage.Tabulators
                 File.Delete(ReportingUtility.ErrorFileName);
             }
 #else
-            if (File.Exists(ReportingUtility.ItemFileName)) throw new ApplicationException($"Output file, '{ReportingUtility.ItemFileName}' already exists.");
-            if (File.Exists(ReportingUtility.StimuliFileName)) throw new ApplicationException($"Output file, '{ReportingUtility.StimuliFileName}' already exists.");
-            if (File.Exists(ReportingUtility.ErrorFileName)) throw new ApplicationException($"Output file, '{ReportingUtility.ErrorFileName}' already exists.");
+            if (File.Exists(ReportingUtility.ItemFileName))
+            {
+                throw new ApplicationException($"Output file, '{ReportingUtility.ItemFileName}' already exists.");
+            }
+            if (File.Exists(ReportingUtility.StimuliFileName))
+            {
+                throw new ApplicationException($"Output file, '{ReportingUtility.StimuliFileName}' already exists.");
+            }
+            if (File.Exists(ReportingUtility.ErrorFileName))
+            {
+                throw new ApplicationException($"Output file, '{ReportingUtility.ErrorFileName}' already exists.");
+            }
 #endif
         }
 
