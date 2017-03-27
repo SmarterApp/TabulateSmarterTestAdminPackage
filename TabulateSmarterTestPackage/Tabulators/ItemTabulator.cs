@@ -441,15 +441,6 @@ namespace TabulateSmarterTestPackage.Tabulators
 
                 if (itemFields[(int) ItemFieldNames.AssessmentSubject].Equals("MATH", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.MathematicalPractice]))
-                    {
-                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                            testSpecificationProcessor.PackageType,
-                            $"testspecification/{testSpecificationProcessor.PackageType}/itempool/testitem",
-                            ErrorSeverity.Degraded, item.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
-                            item.Navigator.OuterXml,
-                            $"Item {item.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} is a MATH item, but does not have a MathematicalPractice value");
-                    }
                     if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
                     {
                         ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
