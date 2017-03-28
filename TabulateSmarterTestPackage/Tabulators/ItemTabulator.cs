@@ -159,7 +159,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     testItem.ChildNodeWithName("identifier").ValueForAttribute("version");
                 itemFields[(int) ItemFieldNames.ItemType] = testItem.ValueForAttribute("itemtype");
                 itemFields[(int) ItemFieldNames.PassageRef] =
-                    FormatHelper.Strip200(testItem.ChildNodeWithName("passageref").ValueForAttribute("passageref"));
+                    FormatHelper.Strip200(testItem.ChildNodeWithName("passageref")?.ValueForAttribute("passageref"));
 
                 // Process PoolProperties
                 var glossary = new List<string>();
@@ -210,49 +210,45 @@ namespace TabulateSmarterTestPackage.Tabulators
                         }
                         itemFields[fieldIndex] = ppValue;
                     }
-                    else
-                    {
-                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                            testSpecificationProcessor.PackageType,
-                            $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/itempool/testitem/poolproperty"
-                            , ErrorSeverity.Degraded,
-                            itemId, poolProperty.Navigator.OuterXml, "'{0}={1}' Unrecognized Pool Property", ppProperty,
-                            ppValue);
-                    }
                 }
                 glossary.Sort();
                 itemFields[(int) ItemFieldNames.Glossary] = string.Join(";", glossary);
 
                 var itemScoreDimension = testItem.ChildNodeWithName("itemscoredimension");
-
-                itemFields[(int) ItemFieldNames.MeasurementModel] =
-                    itemScoreDimension.ValueForAttribute("measurementmodel");
-                itemFields[(int) ItemFieldNames.Weight] =
-                    FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
-                itemFields[(int) ItemFieldNames.ScorePoints] = itemScoreDimension.ValueForAttribute("scorepoints");
-                itemFields[(int) ItemFieldNames.a] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter1));
-                itemFields[(int) ItemFieldNames.b0_b] =
-                    FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter2));
-                itemFields[(int) ItemFieldNames.b1_c] =
-                    FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3));
-                itemFields[(int) ItemFieldNames.b2] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4));
-                itemFields[(int) ItemFieldNames.b3] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5));
-                var avg_b = MathHelper.CalculateAverageB(itemFields[(int) ItemFieldNames.MeasurementModel],
-                    itemFields[(int) ItemFieldNames.a], itemFields[(int) ItemFieldNames.b0_b],
-                    itemFields[(int) ItemFieldNames.b1_c], itemFields[(int) ItemFieldNames.b2],
-                    itemFields[(int) ItemFieldNames.b3], itemFields[(int) ItemFieldNames.ScorePoints]);
-                if (!avg_b.Errors.Any())
+                if (itemScoreDimension != null)
                 {
-                    itemFields[(int) ItemFieldNames.avg_b] = avg_b.Value;
-                }
-                else
-                {
-                    avg_b.Errors.ToList().ForEach(x =>
-                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                            testSpecificationProcessor.PackageType,
-                            $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/itempool/testitem/itemscoredimension",
-                            ErrorSeverity.Degraded, itemId, itemScoreDimension.Navigator.OuterXml, x)
-                    );
+                    itemFields[(int) ItemFieldNames.MeasurementModel] =
+                        itemScoreDimension.ValueForAttribute("measurementmodel");
+                    itemFields[(int) ItemFieldNames.Weight] =
+                        FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
+                    itemFields[(int) ItemFieldNames.ScorePoints] = itemScoreDimension.ValueForAttribute("scorepoints");
+                    itemFields[(int) ItemFieldNames.a] =
+                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter1));
+                    itemFields[(int) ItemFieldNames.b0_b] =
+                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter2));
+                    itemFields[(int) ItemFieldNames.b1_c] =
+                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3));
+                    itemFields[(int) ItemFieldNames.b2] =
+                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4));
+                    itemFields[(int) ItemFieldNames.b3] =
+                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5));
+                    var avg_b = MathHelper.CalculateAverageB(itemFields[(int) ItemFieldNames.MeasurementModel],
+                        itemFields[(int) ItemFieldNames.a], itemFields[(int) ItemFieldNames.b0_b],
+                        itemFields[(int) ItemFieldNames.b1_c], itemFields[(int) ItemFieldNames.b2],
+                        itemFields[(int) ItemFieldNames.b3], itemFields[(int) ItemFieldNames.ScorePoints]);
+                    if (!avg_b.Errors.Any())
+                    {
+                        itemFields[(int) ItemFieldNames.avg_b] = avg_b.Value;
+                    }
+                    else
+                    {
+                        avg_b.Errors.ToList().ForEach(x =>
+                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                                testSpecificationProcessor.PackageType,
+                                $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/itempool/testitem/itemscoredimension",
+                                ErrorSeverity.Degraded, itemId, itemScoreDimension.Navigator.OuterXml, x)
+                        );
+                    }
                 }
 
                 // bprefs

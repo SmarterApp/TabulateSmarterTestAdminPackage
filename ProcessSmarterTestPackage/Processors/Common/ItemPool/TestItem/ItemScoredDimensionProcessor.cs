@@ -3,7 +3,6 @@ using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
-using ValidateSmarterTestPackage.RestrictedValues.RestrictedList;
 using ValidateSmarterTestPackage.Validators;
 using ValidateSmarterTestPackage.Validators.Convenience;
 
@@ -19,16 +18,20 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
                 {
                     "measurementmodel", StringValidator.IsValidNonEmptyWithLength(100)
                         .AddAndReturn(new RequiredEnumValidator(ErrorSeverity.Degraded,
-                            RestrictedList.RestrictedLists[RestrictedListItems.MeasurementModel]))
+                            RestrictedListItems.MeasurementModel))
                 },
                 {
                     "scorepoints", IntValidator.IsValidPositiveNonEmptyWithLength(10)
                 },
                 {
-                    "weight", DecimalValidator.IsValidPositiveNonEmptyWithLength(30)
+                    "weight", new ValidatorCollection
+                    {
+                        new RequiredDoubleValidator(ErrorSeverity.Degraded),
+                        new MaxLengthValidator(ErrorSeverity.Degraded, 30)
+                    }
                 },
                 {
-                    "dimension", StringValidator.IsValidOptionalNonEmptyWithLength(200)
+                    "dimension", new NoValidator(ErrorSeverity.Degraded) // Removed validation for optional field
                 }
             };
             Navigator.GenerateList("itemscoreparameter")

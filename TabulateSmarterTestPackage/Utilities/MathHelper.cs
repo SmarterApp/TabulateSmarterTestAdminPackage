@@ -85,7 +85,7 @@ namespace TabulateSmarterTestPackage.Utilities
                 }
             }
 
-            if (a.Equals("1.000000000000000e+000") && bStrings.All(b => b.Equals("1.000000000000000e-015")))
+            if (a.Equals("1") && bStrings.All(b => b.Equals("1E-15")))
             {
                 result.Errors.Add("[Uncalibrated item detected. Not calculating avg_b]");
             }
