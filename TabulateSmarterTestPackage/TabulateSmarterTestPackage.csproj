@@ -94,6 +94,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tabulators\TestPackageTabulator.cs" />
     <Compile Include="Utilities\FormatHelper.cs" />
+    <Compile Include="Utilities\MathHelper.cs" />
     <Compile Include="Utilities\ReportingUtility.cs" />
   </ItemGroup>
   <ItemGroup>
