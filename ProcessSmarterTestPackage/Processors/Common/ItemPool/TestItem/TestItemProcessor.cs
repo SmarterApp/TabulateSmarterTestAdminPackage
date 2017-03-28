@@ -48,7 +48,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
                 .ForEach(x => Processors.Add(new PoolPropertyProcessor(x, packageType)));
             RemoveAttributeValidation("poolproperty", "itemcount");
 
-            Navigator.GenerateList("itemscoreddimension")
+            Navigator.GenerateList("itemscoredimension")
                 .ForEach(x => Processors.Add(new ItemScoredDimensionProcessor(x, packageType)));
         }
 

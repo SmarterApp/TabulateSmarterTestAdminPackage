@@ -7,6 +7,10 @@ namespace TabulateSmarterTestPackage.Utilities
     {
         public static string Strip200(string val)
         {
+            if (string.IsNullOrEmpty(val))
+            {
+                return string.Empty;
+            }
             return val.StartsWith("200-", StringComparison.Ordinal) ? val.Substring(4) : val;
         }
 
