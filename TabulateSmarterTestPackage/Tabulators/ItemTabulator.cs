@@ -179,7 +179,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                 itemFields[(int) ItemFieldNames.AssessmentGrade] = testInformation[ItemFieldNames.AssessmentGrade];
                 itemFields[(int) ItemFieldNames.AssessmentType] = testInformation[ItemFieldNames.AssessmentType];
                 itemFields[(int) ItemFieldNames.AssessmentSubtype] = testInformation[ItemFieldNames.AssessmentSubtype];
-                itemFields[(int) ItemFieldNames.AcademicYear] = testInformation[ItemFieldNames.AcademicYear];
+                itemFields[(int) ItemFieldNames.AcademicYear] =
+                    !string.IsNullOrEmpty(testInformation[ItemFieldNames.AcademicYear])
+                        ? testInformation[ItemFieldNames.AcademicYear].Split('-').FirstOrDefault()
+                        : string.Empty;
 
                 var itemId = FormatHelper.Strip200(node.Eval(sXp_ItemId));
                 itemFields[(int) ItemFieldNames.ItemId] = itemId.Split('-').Last();
