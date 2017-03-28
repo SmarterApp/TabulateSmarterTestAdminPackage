@@ -47,11 +47,11 @@ namespace TabulateSmarterTestPackage.Tabulators
 
         private static readonly XPathExpression sXp_Parameter2 =
             XPathExpression.Compile(
-                "itemscoredimension/itemscoreparameter[@measurementparameter='a' or @measurementparameter='b0']/@value");
+                "itemscoredimension/itemscoreparameter[@measurementparameter='b' or @measurementparameter='b0']/@value");
 
         private static readonly XPathExpression sXp_Parameter3 =
             XPathExpression.Compile(
-                "itemscoredimension/itemscoreparameter[@measurementparameter='a' or @measurementparameter='b1']/@value");
+                "itemscoredimension/itemscoreparameter[@measurementparameter='c' or @measurementparameter='b1']/@value");
 
         private static readonly XPathExpression sXp_Parameter4 =
             XPathExpression.Compile("itemscoredimension/itemscoreparameter[@measurementparameter='b2']/@value");
