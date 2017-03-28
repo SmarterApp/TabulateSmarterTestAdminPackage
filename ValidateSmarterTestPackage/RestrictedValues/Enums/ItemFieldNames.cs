@@ -21,7 +21,6 @@
         Claim,
         Target,
         PassageRef,
-        PassageLength,
         HearingImpaired,
         ASL,
         Braille,

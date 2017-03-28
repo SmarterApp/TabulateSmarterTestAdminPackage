@@ -8,7 +8,6 @@ using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
-using ValidateSmarterTestPackage.RestrictedValues.RestrictedList;
 
 namespace TabulateSmarterTestPackage.Tabulators
 {
@@ -19,28 +18,6 @@ namespace TabulateSmarterTestPackage.Tabulators
         private const string c_ElaStdPrefix = "SBAC-ELA-v1:";
 
         private static readonly int ItemFieldNamesCount = Enum.GetNames(typeof(ItemFieldNames)).Length;
-
-        // Item Selector
-        // /testspecification/administration/itempool/testitem
-        private static readonly XPathExpression sXp_Item = XPathExpression.Compile("/testspecification//testitem");
-
-        // Item Info
-        private static readonly XPathExpression sXp_ItemId = XPathExpression.Compile("identifier/@uniqueid");
-        private static readonly XPathExpression sXp_Filename = XPathExpression.Compile("@filename");
-        private static readonly XPathExpression sXp_Version = XPathExpression.Compile("identifier/@version");
-        private static readonly XPathExpression sXp_ItemType = XPathExpression.Compile("@itemtype");
-        private static readonly XPathExpression sXp_PassageRef = XPathExpression.Compile("passageref");
-
-        private static readonly XPathExpression sXp_MeasurementModel =
-            XPathExpression.Compile("itemscoredimension/@measurementmodel");
-
-        private static readonly XPathExpression sXp_Weight = XPathExpression.Compile("itemscoredimension/@weight");
-
-        private static readonly XPathExpression sXp_ScorePoints =
-            XPathExpression.Compile("itemscoredimension/@scorepoints");
-
-        private static readonly XPathExpression sXp_ParameterName =
-            XPathExpression.Compile("itemscoredimension/itemscoreparameter/@measurementparameter");
 
         private static readonly XPathExpression sXp_Parameter1 =
             XPathExpression.Compile("itemscoredimension/itemscoreparameter[@measurementparameter='a']/@value");
@@ -58,13 +35,6 @@ namespace TabulateSmarterTestPackage.Tabulators
 
         private static readonly XPathExpression sXp_Parameter5 =
             XPathExpression.Compile("itemscoredimension/itemscoreparameter[@measurementparameter='b3']/@value");
-
-        private static readonly XPathExpression sXp_Bpref = XPathExpression.Compile("bpref");
-
-        // Pool Properties
-        private static readonly XPathExpression sXp_PoolProperty = XPathExpression.Compile("poolproperty");
-        private static readonly XPathExpression sXp_PPProperty = XPathExpression.Compile("@property");
-        private static readonly XPathExpression sXp_PPValue = XPathExpression.Compile("@value");
 
         // GroupItem Selector
         // /testspecification/administration/testform/formpartition/itemgroup/groupitem
@@ -92,7 +62,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {"Language", (int) ItemFieldNames.Language},
                 {"Scoring Engine", (int) ItemFieldNames.ScoringEngine},
                 {"Spanish Translation", (int) ItemFieldNames.Spanish},
-                {"Passage Length", (int) ItemFieldNames.PassageLength},
                 {"TDSPoolFilter", (int) ItemFieldNames.TDSPoolFilter},
                 {"Calculator", (int) ItemFieldNames.AllowCalculator},
                 {"Glossary", (int) ItemFieldNames.Glossary},
@@ -159,15 +128,12 @@ namespace TabulateSmarterTestPackage.Tabulators
                         }).ToList();
             }
 
-            // Report the item fields
-            var itemCount = 0;
-
-            var nodes = navigator.Select(sXp_Item);
-            while (nodes.MoveNext())
+            var testItems =
+                testSpecificationProcessor.ChildNodeWithName(testSpecificationProcessor.PackageType.ToString().ToLower())
+                    .ChildNodeWithName("itempool")
+                    .ChildNodesWithName("testitem");
+            foreach (var testItem in testItems)
             {
-                ++itemCount;
-                var node = nodes.Current;
-
                 // Collect the item fields
                 var itemFields = new string[ItemFieldNamesCount + performanceLevels.Count * 3];
 
@@ -184,121 +150,102 @@ namespace TabulateSmarterTestPackage.Tabulators
                         ? testInformation[ItemFieldNames.AcademicYear].Split('-').FirstOrDefault()
                         : string.Empty;
 
-                var itemId = FormatHelper.Strip200(node.Eval(sXp_ItemId));
+                var itemId =
+                    FormatHelper.Strip200(testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"));
                 itemFields[(int) ItemFieldNames.ItemId] = itemId.Split('-').Last();
                 itemFields[(int) ItemFieldNames.BankKey] = itemId.Split('-').First();
-                itemFields[(int) ItemFieldNames.Filename] = node.Eval(sXp_Filename);
-                itemFields[(int) ItemFieldNames.Version] = node.Eval(sXp_Version);
-                itemFields[(int) ItemFieldNames.ItemType] = node.Eval(sXp_ItemType);
-                itemFields[(int) ItemFieldNames.PassageRef] = FormatHelper.Strip200(node.Eval(sXp_PassageRef));
+                itemFields[(int) ItemFieldNames.Filename] = testItem.ValueForAttribute("filename");
+                itemFields[(int) ItemFieldNames.Version] =
+                    testItem.ChildNodeWithName("identifier").ValueForAttribute("version");
+                itemFields[(int) ItemFieldNames.ItemType] = testItem.ValueForAttribute("itemtype");
+                itemFields[(int) ItemFieldNames.PassageRef] =
+                    FormatHelper.Strip200(testItem.ChildNodeWithName("passageref").ValueForAttribute("passageref"));
 
                 // Process PoolProperties
                 var glossary = new List<string>();
-                var ppNodes = node.Select(sXp_PoolProperty);
-                while (ppNodes.MoveNext())
+                foreach (var poolProperty in testItem.ChildNodesWithName("poolproperty"))
                 {
-                    var ppNode = ppNodes.Current;
-                    var ppProperty = ppNode.Eval(sXp_PPProperty).Trim();
-                    var ppValue = ppNode.Eval(sXp_PPValue).Trim();
-                    if (!string.IsNullOrEmpty(ppProperty) && !string.IsNullOrEmpty(ppValue))
+                    var ppProperty = poolProperty.ValueForAttribute("property").Trim();
+                    var ppValue = poolProperty.ValueForAttribute("value").Trim();
+                    if (string.IsNullOrEmpty(ppProperty) || string.IsNullOrEmpty(ppValue))
                     {
-                        // Special case for Braille language
-                        int fieldIndex;
-                        if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
-                            ppValue.Equals("ENU-Braille", StringComparison.Ordinal))
-                        {
-                            itemFields[(int) ItemFieldNames.LanguageBraille] = ppValue;
-                        }
-                        // Special case for Spanish language
-                        else if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
-                                 ppValue.Equals("ESN", StringComparison.Ordinal))
-                        {
-                            itemFields[(int) ItemFieldNames.Spanish] = "Y";
-                        }
-                        // Special case for Spanish language
-                        else if (ppProperty.Equals("Spanish Translation", StringComparison.Ordinal))
-                        {
-                            itemFields[(int) ItemFieldNames.Spanish] = ppValue;
-                        }
-                        // Special case for Glossary
-                        else if (ppProperty.Equals("Glossary", StringComparison.Ordinal))
-                        {
-                            glossary.Add(ppValue);
-                        }
-                        else if (ppProperty.Equals("Allow Calculator", StringComparison.OrdinalIgnoreCase))
-                        {
-                            itemFields[(int) ItemFieldNames.AllowCalculator] = ppValue;
-                        }
-                        else if (sPoolPropertyMapping.TryGetValue(ppProperty, out fieldIndex))
-                        {
-                            if (fieldIndex != 0)
-                            {
-                                if (!string.IsNullOrEmpty(itemFields[fieldIndex]))
-                                {
-                                    ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                                        testSpecificationProcessor.PackageType,
-                                        ppNode.Name,
-                                        ErrorSeverity.Degraded, itemId, ppNode.OuterXml,
-                                        "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
-                                }
-                                itemFields[fieldIndex] = ppValue;
-                            }
-                        }
-                        else
+                        continue;
+                    }
+                    // Special case for Braille language
+                    int fieldIndex;
+                    if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
+                        ppValue.Equals("ENU-Braille", StringComparison.Ordinal))
+                    {
+                        itemFields[(int) ItemFieldNames.LanguageBraille] = ppValue;
+                    }
+                    // Special case for Spanish language
+                    else if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
+                             ppValue.Equals("ESN", StringComparison.Ordinal))
+                    {
+                        itemFields[(int) ItemFieldNames.Spanish] = "Y";
+                    }
+                    // Special case for Spanish language
+                    else if (ppProperty.Equals("Spanish Translation", StringComparison.Ordinal))
+                    {
+                        itemFields[(int) ItemFieldNames.Spanish] = ppValue;
+                    }
+                    // Special case for Glossary
+                    else if (ppProperty.Equals("Glossary", StringComparison.Ordinal))
+                    {
+                        glossary.Add(ppValue);
+                    }
+                    else if (ppProperty.Equals("Allow Calculator", StringComparison.OrdinalIgnoreCase))
+                    {
+                        itemFields[(int) ItemFieldNames.AllowCalculator] = ppValue;
+                    }
+                    else if (sPoolPropertyMapping.TryGetValue(ppProperty, out fieldIndex) && fieldIndex != 0)
+                    {
+                        if (!string.IsNullOrEmpty(itemFields[fieldIndex]))
                         {
                             ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                                 testSpecificationProcessor.PackageType,
-                                ppNode.Name, ErrorSeverity.Degraded,
-                                itemId, ppNode.OuterXml, "'{0}={1}' Unrecognized Pool Property", ppProperty, ppValue);
+                                $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/itempool/testitem/poolproperty",
+                                ErrorSeverity.Degraded, itemId, poolProperty.Navigator.OuterXml,
+                                "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
                         }
+                        itemFields[fieldIndex] = ppValue;
+                    }
+                    else
+                    {
+                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                            testSpecificationProcessor.PackageType,
+                            $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/itempool/testitem/poolproperty"
+                            , ErrorSeverity.Degraded,
+                            itemId, poolProperty.Navigator.OuterXml, "'{0}={1}' Unrecognized Pool Property", ppProperty,
+                            ppValue);
                     }
                 }
                 glossary.Sort();
                 itemFields[(int) ItemFieldNames.Glossary] = string.Join(";", glossary);
 
-                itemFields[(int) ItemFieldNames.MeasurementModel] = node.Eval(sXp_MeasurementModel);
-                itemFields[(int) ItemFieldNames.Weight] = FormatHelper.FormatDouble(node.Eval(sXp_Weight));
-                itemFields[(int) ItemFieldNames.ScorePoints] = node.Eval(sXp_ScorePoints);
-                itemFields[(int) ItemFieldNames.a] = FormatHelper.FormatDouble(node.Eval(sXp_Parameter1));
-                itemFields[(int) ItemFieldNames.b0_b] = FormatHelper.FormatDouble(node.Eval(sXp_Parameter2));
-                itemFields[(int) ItemFieldNames.b1_c] = FormatHelper.FormatDouble(node.Eval(sXp_Parameter3));
-                itemFields[(int) ItemFieldNames.b2] = FormatHelper.FormatDouble(node.Eval(sXp_Parameter4));
-                itemFields[(int) ItemFieldNames.b3] = FormatHelper.FormatDouble(node.Eval(sXp_Parameter5));
+                var itemScoreDimension = testItem.ChildNodeWithName("itemscoredimension");
 
-                // Check known measurement model
-                if (
-                    !RestrictedList.RestrictedLists[RestrictedListItems.MeasurementModel]
-                        .Contains(itemFields[(int) ItemFieldNames.MeasurementModel]))
-                {
-                    ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                        testSpecificationProcessor.PackageType, node.Name,
-                        ErrorSeverity.Benign, itemId, node.OuterXml,
-                        "'{0}' Unrecognized Measurement Model", itemFields[(int) ItemFieldNames.MeasurementModel]);
-                }
-
-                // Check known parameters
-                var pnNodes = node.Select(sXp_ParameterName);
-                while (pnNodes.MoveNext())
-                {
-                    var name = pnNodes.Current.Value;
-                    if (!RestrictedList.RestrictedLists[RestrictedListItems.MeasurementParameter].Contains(name))
-                    {
-                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                            testSpecificationProcessor.PackageType,
-                            pnNodes.Current.Name, ErrorSeverity.Benign,
-                            itemId, pnNodes.Current.OuterXml, "'{0}' Unrecognized Measurement Parameter", name);
-                    }
-                }
+                itemFields[(int) ItemFieldNames.MeasurementModel] =
+                    itemScoreDimension.ValueForAttribute("measurementmodel");
+                itemFields[(int) ItemFieldNames.Weight] =
+                    FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
+                itemFields[(int) ItemFieldNames.ScorePoints] = itemScoreDimension.ValueForAttribute("scorepoints");
+                itemFields[(int) ItemFieldNames.a] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter1));
+                itemFields[(int) ItemFieldNames.b0_b] =
+                    FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter2));
+                itemFields[(int) ItemFieldNames.b1_c] =
+                    FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3));
+                itemFields[(int) ItemFieldNames.b2] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4));
+                itemFields[(int) ItemFieldNames.b3] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5));
 
                 // bprefs
-                var bpIndex = 0;
-                var bpNodes = node.Select(sXp_Bpref);
-                while (bpNodes.MoveNext())
+                var bpRefProcessors = testItem.ChildNodesWithName("bpref").ToList();
+                for (var i = 0; i < bpRefProcessors.Count(); i++)
                 {
-                    var bpref = bpNodes.Current.Value;
-                    if (bpIndex < MaxBpRefs)
+                    var bpRef = bpRefProcessors[i].ValueForAttribute("bpref");
+                    if (i < MaxBpRefs)
                     {
-                        itemFields[(int) ItemFieldNames.bpref1 + bpIndex++] = bpref;
+                        itemFields[(int) ItemFieldNames.bpref1 + i++] = bpRef;
                     }
 
                     // Attempt to parse the bpref as an SBAC standard
@@ -311,27 +258,29 @@ namespace TabulateSmarterTestPackage.Tabulators
                     if (testInformation[ItemFieldNames.AssessmentSubject].Equals("Math",
                         StringComparison.OrdinalIgnoreCase))
                     {
-                        var match = s_Rx_BprefMath.Match(bpref);
-                        if (match.Success)
+                        var match = s_Rx_BprefMath.Match(bpRef);
+                        if (!match.Success)
                         {
-                            itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix,
-                                match.Value.Substring(5));
-                            itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value;
-                            itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value;
+                            continue;
                         }
+                        itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix,
+                            match.Value.Substring(5));
+                        itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value;
+                        itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value;
                     }
                     else if (testInformation[ItemFieldNames.AssessmentSubject].Equals("ELA",
                         StringComparison.OrdinalIgnoreCase))
                     {
-                        var match = s_Rx_BprefEla.Match(bpref);
-                        if (match.Success)
+                        var match = s_Rx_BprefEla.Match(bpRef);
+                        if (!match.Success)
                         {
-                            itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix,
-                                match.Value.Substring(5));
-                            itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value + "\t";
-                            // Adding tab character prevents Excel from treating these as dates.
-                            itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value + "\t";
+                            continue;
                         }
+                        itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix,
+                            match.Value.Substring(5));
+                        itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value + "\t";
+                        // Adding tab character prevents Excel from treating these as dates.
+                        itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value + "\t";
                     }
                 }
 
@@ -346,8 +295,7 @@ namespace TabulateSmarterTestPackage.Tabulators
 
                     if (itemFields[(int) ItemFieldNames.Standard] == null)
                     {
-                        if (contentItem != null &&
-                            !string.IsNullOrEmpty(contentItem["Standard"].Replace("\"", string.Empty).Trim()))
+                        if (!string.IsNullOrEmpty(contentItem?["Standard"].Replace("\"", string.Empty).Trim()))
                         {
                             itemFields[(int) ItemFieldNames.Standard] = contentItem["Standard"];
                         }
@@ -361,8 +309,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     }
                     if (itemFields[(int) ItemFieldNames.Claim] == null)
                     {
-                        if (contentItem != null &&
-                            !string.IsNullOrEmpty(contentItem["Claim"].Replace("\"", string.Empty).Trim()))
+                        if (!string.IsNullOrEmpty(contentItem?["Claim"].Replace("\"", string.Empty).Trim()))
                         {
                             itemFields[(int) ItemFieldNames.Claim] = contentItem["Claim"];
                         }
@@ -376,8 +323,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     }
                     if (itemFields[(int) ItemFieldNames.Target] == null)
                     {
-                        if (contentItem != null &&
-                            !string.IsNullOrEmpty(contentItem["Target"].Replace("\"", string.Empty).Trim()))
+                        if (!string.IsNullOrEmpty(contentItem?["Target"].Replace("\"", string.Empty).Trim()))
                         {
                             itemFields[(int) ItemFieldNames.Target] = contentItem["Target"];
                         }
