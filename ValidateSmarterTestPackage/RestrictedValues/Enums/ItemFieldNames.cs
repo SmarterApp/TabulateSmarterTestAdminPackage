@@ -46,6 +46,7 @@
         b1_c,
         b2,
         b3,
+        avg_b,
         bpref1,
         bpref2,
         bpref3,

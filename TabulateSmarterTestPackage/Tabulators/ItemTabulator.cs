@@ -237,6 +237,23 @@ namespace TabulateSmarterTestPackage.Tabulators
                     FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3));
                 itemFields[(int) ItemFieldNames.b2] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4));
                 itemFields[(int) ItemFieldNames.b3] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5));
+                var avg_b = MathHelper.CalculateAverageB(itemFields[(int) ItemFieldNames.MeasurementModel],
+                    itemFields[(int) ItemFieldNames.a], itemFields[(int) ItemFieldNames.b0_b],
+                    itemFields[(int) ItemFieldNames.b1_c], itemFields[(int) ItemFieldNames.b2],
+                    itemFields[(int) ItemFieldNames.b3], itemFields[(int) ItemFieldNames.ScorePoints]);
+                if (!avg_b.Errors.Any())
+                {
+                    itemFields[(int) ItemFieldNames.avg_b] = avg_b.Value;
+                }
+                else
+                {
+                    avg_b.Errors.ToList().ForEach(x =>
+                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                            testSpecificationProcessor.PackageType,
+                            $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/itempool/testitem/itemscoredimension",
+                            ErrorSeverity.Degraded, itemId, itemScoreDimension.Navigator.OuterXml, x)
+                    );
+                }
 
                 // bprefs
                 var bpRefProcessors = testItem.ChildNodesWithName("bpref").ToList();
