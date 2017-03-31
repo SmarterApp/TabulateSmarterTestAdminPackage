@@ -92,6 +92,15 @@ namespace ProcessSmarterTestPackage.External
                             GenerateFromValidationCollection("MathematicalPractice", item["MathematicalPractice"],
                                 IntValidator.IsValidPositiveNonEmptyWithLength(1)));
                 }
+                if (item.ContainsKey("MaxPoints") && !string.IsNullOrEmpty(item["MaxPoints"]) &&
+                    !processors.First(x => x.Equals(processor))
+                        .ValidatedAttributes.ContainsKey("MaxPoints"))
+                {
+                    processors.First(x => x.Equals(processor))
+                        .ValidatedAttributes.Add("MaxPoints",
+                            GenerateFromValidationCollection("MaxPoints", item["MaxPoints"],
+                                IntValidator.IsValidPositiveNonEmptyWithLength(10)));
+                }
                 if (item.ContainsKey("AllowCalculator") && !string.IsNullOrEmpty("AllowCalculator") &&
                     !processors.First(x => x.Equals(processor))
                         .ChildNodesWithName("poolproperty")

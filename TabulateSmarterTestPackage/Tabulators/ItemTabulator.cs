@@ -54,7 +54,6 @@ namespace TabulateSmarterTestPackage.Tabulators
         {
             sPoolPropertyMapping = new Dictionary<string, int>
             {
-                {"Appropriate for Hearing Impaired", (int) ItemFieldNames.HearingImpaired},
                 {"ASL", (int) ItemFieldNames.ASL},
                 {"Braille", (int) ItemFieldNames.Braille},
                 {"Depth of Knowledge", (int) ItemFieldNames.DOK},
@@ -62,7 +61,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {"Language", (int) ItemFieldNames.Language},
                 {"Scoring Engine", (int) ItemFieldNames.ScoringEngine},
                 {"Spanish Translation", (int) ItemFieldNames.Spanish},
-                {"TDSPoolFilter", (int) ItemFieldNames.TDSPoolFilter},
                 {"Calculator", (int) ItemFieldNames.AllowCalculator},
                 {"Glossary", (int) ItemFieldNames.Glossary},
                 // Ignore these pool properties
@@ -151,7 +149,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                         : string.Empty;
 
                 var itemId =
-                    FormatHelper.Strip200(testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"));
+                    testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
+                itemFields[(int) ItemFieldNames.FullItemKey] = itemId;
                 itemFields[(int) ItemFieldNames.ItemId] = itemId.Split('-').Last();
                 itemFields[(int) ItemFieldNames.BankKey] = itemId.Split('-').First();
                 itemFields[(int) ItemFieldNames.Filename] = testItem.ValueForAttribute("filename");
@@ -351,7 +350,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 }
 
                 GroupItemInfo gii;
-                if (indexGroupItemInfo.TryGetValue(itemId, out gii))
+                if (indexGroupItemInfo.TryGetValue(itemId.Split('-').Last(), out gii))
                 {
                     itemFields[(int) ItemFieldNames.IsFieldTest] = gii.IsFieldTest;
                     itemFields[(int) ItemFieldNames.IsActive] = gii.IsActive;
@@ -371,9 +370,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var j = 0;
                 foreach (var p in performanceLevels)
                 {
-                    itemFields[ItemFieldNamesCount + j++] = p.PerfLevel;
-                    itemFields[ItemFieldNamesCount + j++] = p.ScaledLow;
-                    itemFields[ItemFieldNamesCount + j++] = p.ScaledHigh;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.PerfLevel;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.ScaledLow;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.ScaledHigh;
                 }
 
                 var item =
@@ -391,6 +390,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                     string.IsNullOrEmpty(item.ValueForAttribute("MathematicalPractice"))
                         ? string.Empty
                         : item.ValueForAttribute("MathematicalPractice");
+
+                itemFields[(int) ItemFieldNames.MaxPoints] = string.IsNullOrEmpty(item.ValueForAttribute("MaxPoints"))
+                    ? string.Empty
+                    : item.ValueForAttribute("MaxPoints");
 
                 // We're using the backup property from the content package because the item didn't specify
                 if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
