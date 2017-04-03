@@ -323,7 +323,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     {
                         if (!string.IsNullOrEmpty(contentItem?["Claim"].Replace("\"", string.Empty).Trim()))
                         {
-                            itemFields[(int) ItemFieldNames.Claim] = contentItem["Claim"];
+                            itemFields[(int) ItemFieldNames.Claim] =
+                                contentItem["Claim"].Replace("\"", string.Empty).Trim();
                         }
                         else
                         {
@@ -337,7 +338,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     {
                         if (!string.IsNullOrEmpty(contentItem?["Target"].Replace("\"", string.Empty).Trim()))
                         {
-                            itemFields[(int) ItemFieldNames.Target] = contentItem["Target"];
+                            itemFields[(int) ItemFieldNames.Target] =
+                                contentItem["Target"].Replace("\"", string.Empty).Trim();
                         }
                         else
                         {
