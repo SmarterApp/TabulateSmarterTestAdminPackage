@@ -131,7 +131,24 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     .ChildNodeWithName("itempool")
                     .ChildNodesWithName("testitem")));
 
-            var testForms = Processor.ChildNodeWithName(PackageType.ToString()).ChildNodesWithName("testform");
+            var testForms = Processor.ChildNodeWithName(PackageType.ToString()).ChildNodesWithName("testform").ToList();
+            if (
+                !testForms.Any(
+                    x =>
+                        x.ChildNodeWithName("property")
+                            .ValueForAttribute("value")
+                            .Equals("ENU", StringComparison.OrdinalIgnoreCase)))
+            {
+                result.Add(new ValidationError
+                {
+                    ErrorSeverity = ErrorSeverity.Severe,
+                    Location =
+                                        $"testspecification/{PackageType}/testform/property",
+                    GeneratedMessage = "[No English language (ENU) test form present in assessment. Test will fail at runtime in TDS]",
+                    Key = "value",
+                    PackageType = PackageType
+                });
+            }
             var passageRefs = GetAllPassageRefs().ToList();
             var testItems =
                 Processor.ChildNodeWithName(PackageType.ToString())
