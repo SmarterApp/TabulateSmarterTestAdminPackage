@@ -132,6 +132,12 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     .ChildNodesWithName("testitem")));
 
             var testForms = Processor.ChildNodeWithName(PackageType.ToString()).ChildNodesWithName("testform").ToList();
+
+            /**
+             * TDS looks for an English test form at execution time, even if the assessment is being administered in a different language. 
+             * The absence of this form will cause the application to crash at runtime. This validation ensures that the package contains 
+             * at least one English language test form. 
+             **/
             if (
                 !testForms.Any(
                     x =>
