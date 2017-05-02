@@ -14,6 +14,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
             var result = new List<ValidationError>();
 
             var groupItems = Processor.ChildNodesWithName("groupitem").ToList();
+            var identifier = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
             int position;
 
             for (var i = 1; i <= groupItems.Count(); i++)
@@ -30,7 +31,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         ErrorSeverity = ErrorSeverity.Degraded,
                         PackageType = Processor.PackageType,
                         Location = $"itemgroup/{Processor.Navigator.Name}",
-                        ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
+                        ItemId = identifier
                     });
                 }
             }
@@ -47,8 +48,23 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ErrorSeverity = ErrorSeverity.Degraded,
                     PackageType = Processor.PackageType,
                     Location = $"itemgroup/{Processor.Navigator.Name}",
-                    ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
+                    ItemId = identifier
                 }));
+
+            if (identifier.Contains("G-") && !Processor.ChildNodesWithName("passageref").Any())
+            {
+                result.Add(new ValidationError
+                {
+                    Value = Processor.Navigator.OuterXml,
+                    GeneratedMessage =
+                        $"[itemgroup with group identifier {identifier} is a 'G-' group, but does not have an associated passageref child element. Test will fail at runtime in TDS]",
+                    Key = "uniqueid",
+                    ErrorSeverity = ErrorSeverity.Severe,
+                    PackageType = Processor.PackageType,
+                    Location = "itemgroup/identifier",
+                    ItemId = identifier
+                });
+            }
 
             return result;
         }

@@ -143,8 +143,9 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 {
                     ErrorSeverity = ErrorSeverity.Severe,
                     Location =
-                                        $"testspecification/{PackageType}/testform/property",
-                    GeneratedMessage = "[No English language (ENU) test form present in assessment. Test will fail at runtime in TDS]",
+                        $"testspecification/{PackageType}/testform/property",
+                    GeneratedMessage =
+                        "[No English language (ENU) test form present in assessment. Test will fail at runtime in TDS]",
                     Key = "value",
                     PackageType = PackageType
                 });
