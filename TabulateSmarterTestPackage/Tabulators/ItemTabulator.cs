@@ -145,9 +145,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                 itemFields[(int) ItemFieldNames.AssessmentSubtype] = testInformation[ItemFieldNames.AssessmentSubtype];
                 itemFields[(int) ItemFieldNames.AcademicYear] =
                     !string.IsNullOrEmpty(testInformation[ItemFieldNames.AcademicYear])
-                        ? testInformation[ItemFieldNames.AcademicYear].Split('-').FirstOrDefault()
+                        ? testInformation[ItemFieldNames.AcademicYear].Split('-').LastOrDefault()
                         : string.Empty;
-
+                
                 var itemId =
                     testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
                 itemFields[(int) ItemFieldNames.FullItemKey] = itemId;
