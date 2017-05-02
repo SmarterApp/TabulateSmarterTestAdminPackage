@@ -37,20 +37,20 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 }
                 else
                 {
-                    if (!match.Captures[0].Value.Equals(partitionIdentifier))
+                    if (!match.Groups[1].Value.Equals(partitionIdentifier))
                     {
                         result.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign,
                             GeneratedMessage =
-                                $"[Itemgroup identifier {itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} first portion {match.Captures[0]} does not match partition ID and expected value {partitionIdentifier}]",
+                                $"[Itemgroup identifier {itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")} first portion {match.Groups[1]} does not match partition ID and expected value {partitionIdentifier}]",
                             Key = "uniqueid",
                             ItemId = itemGroup.ChildNodeWithName("identifier").ValueForAttribute("uniqueid"),
                             PackageType = PackageType,
                             Location = "itemgroup/identifier"
                         });
                     }
-                    if (match.Captures[1].Value.Equals("G"))
+                    if (match.Groups[2].Value.Equals("G"))
                     {
                         if (itemGroup.ChildNodesWithName("passageref").Count() != 1)
                         {
@@ -65,7 +65,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                                 Location = "itemgroup/identifier"
                             });
                         }
-                        else if (!match.Captures[2].Value.Equals(
+                        else if (!match.Groups[3].Value.Equals(
                             itemGroup.ChildNodeWithName("passageref").ValidatedAttributes["passageref"].Value))
                         {
                             result.Add(new ValidationError
@@ -80,7 +80,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                             });
                         }
                     }
-                    else if (match.Captures[1].Value.Equals("I"))
+                    else if (match.Groups[2].Value.Equals("I"))
                     {
                         if (itemGroup.ChildNodesWithName("groupitem").Count() != 1)
                         {
@@ -95,7 +95,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                                 Location = "itemgroup/identifier"
                             });
                         }
-                        else if (!match.Captures[2].Value.Equals(
+                        else if (!match.Groups[3].Value.Equals(
                             itemGroup.ChildNodeWithName("groupitem").ValueForAttribute("itemid")))
                         {
                             result.Add(new ValidationError
