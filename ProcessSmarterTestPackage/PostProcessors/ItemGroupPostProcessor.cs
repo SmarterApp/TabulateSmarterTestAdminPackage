@@ -51,21 +51,6 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ItemId = identifier
                 }));
 
-            if (identifier.Contains("G-") && !Processor.ChildNodesWithName("passageref").Any())
-            {
-                result.Add(new ValidationError
-                {
-                    Value = Processor.Navigator.OuterXml,
-                    GeneratedMessage =
-                        $"[itemgroup with group identifier {identifier} is a 'G-' group, but does not have an associated passageref child element. Test will fail at runtime in TDS]",
-                    Key = "uniqueid",
-                    ErrorSeverity = ErrorSeverity.Severe,
-                    PackageType = Processor.PackageType,
-                    Location = "itemgroup/identifier",
-                    ItemId = identifier
-                });
-            }
-
             return result;
         }
     }
