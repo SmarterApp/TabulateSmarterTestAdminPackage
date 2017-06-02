@@ -358,8 +358,12 @@ namespace TabulateSmarterTestPackage
                     }
                     Logger.Info($"   Processing: {entry.FullName}");
                     using (var stream = entry.Open())
-                    {
-                        processors.Add(ProcessStream(stream, tabulator));
+                    {                       
+                        var processor = ProcessStream(stream, tabulator);
+                        if (processor != null)
+                        {
+                            processors.Add(processor);
+                        }                        
                     }
                 }
             }
