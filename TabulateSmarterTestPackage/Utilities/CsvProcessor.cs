@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -21,14 +20,7 @@ namespace TabulateSmarterTestPackage.Utilities
 
                     for (var j = 0; j < headers.Count() && j < row.Length; j++)
                     {
-                        try
-                        {
-                            rowDictionary.Add(headers[j], row[j].Trim('\t', '\n', '\r', ' '));
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e.Message);
-                        }
+                        rowDictionary.Add(headers[j], row[j].Trim('\t', '\n', '\r', ' '));
                     }
 
                     result.Add(rowDictionary);
