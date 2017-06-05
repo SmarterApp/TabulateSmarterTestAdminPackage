@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -17,10 +18,19 @@ namespace TabulateSmarterTestPackage.Utilities
                 {
                     var rowDictionary = new Dictionary<string, string>();
                     var row = fileRows[i].Split(',');
-                    for (var j = 0; j < row.Length; j++)
+
+                    for (var j = 0; j < headers.Count() && j < row.Length; j++)
                     {
-                        rowDictionary.Add(headers[j], row[j].Trim('\t', '\n', '\r', ' '));
+                        try
+                        {
+                            rowDictionary.Add(headers[j], row[j].Trim('\t', '\n', '\r', ' '));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
                     }
+
                     result.Add(rowDictionary);
                 }
             }

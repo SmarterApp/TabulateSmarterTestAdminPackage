@@ -304,53 +304,12 @@ namespace TabulateSmarterTestPackage.Tabulators
                              x["ItemId"].Equals(itemFields[(int) ItemFieldNames.ItemId],
                                  StringComparison.OrdinalIgnoreCase));
 
-
-                    if (itemFields[(int) ItemFieldNames.Standard] == null)
-                    {
-                        if (!string.IsNullOrEmpty(contentItem?["Standard"].Replace("\"", string.Empty).Trim()))
-                        {
-                            itemFields[(int) ItemFieldNames.Standard] = contentItem["Standard"];
-                        }
-                        else
-                        {
-                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(
-                                GenerateItemError(
-                                    "[Item standard does not exist in both test package and content package]", itemId,
-                                    testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
-                        }
-                    }
-                    if (itemFields[(int) ItemFieldNames.Claim] == null)
-                    {
-                        if (!string.IsNullOrEmpty(contentItem?["Claim"].Replace("\"", string.Empty).Trim()))
-                        {
-                            itemFields[(int) ItemFieldNames.Claim] =
-                                contentItem["Claim"].Replace("\"", string.Empty).Trim();
-                        }
-                        else
-                        {
-                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(
-                                GenerateItemError(
-                                    "[Item claim does not exist in both test package and content package]", itemId,
-                                    testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
-                        }
-                    }
-                    if (itemFields[(int) ItemFieldNames.Target] == null)
-                    {
-                        if (!string.IsNullOrEmpty(contentItem?["Target"].Replace("\"", string.Empty).Trim()))
-                        {
-                            itemFields[(int) ItemFieldNames.Target] =
-                                contentItem["Target"].Replace("\"", string.Empty).Trim();
-                        }
-                        else
-                        {
-                            ReportingUtility.CrossProcessor.Errors[testSpecificationProcessor.GetUniqueId()].Add(
-                                GenerateItemError(
-                                    "[Item target does not exist in both test package and content package]", itemId,
-                                    testSpecificationProcessor, testSpecificationProcessor.GetUniqueId()));
-                        }
-                    }
+                    itemFields[(int) ItemFieldNames.CommonCore] = contentItem["CommonCore"];
+                    itemFields[(int) ItemFieldNames.ClaimContentTarget] = contentItem["ClaimContentTarget"];
+                    itemFields[(int) ItemFieldNames.SecondaryCommonCore] = contentItem["SecondaryCommonCore"];
+                    itemFields[(int) ItemFieldNames.SecondaryClaimContentTarget] =
+                        contentItem["SecondaryClaimContentTarget"];
                 }
-
                 GroupItemInfo gii;
                 if (indexGroupItemInfo.TryGetValue(itemId.Split('-').Last(), out gii))
                 {

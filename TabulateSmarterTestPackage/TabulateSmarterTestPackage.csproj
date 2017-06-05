@@ -67,10 +67,11 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleHelper.cs" />
-    <Compile Include="Data\TestInformation.cs" />
+    <Compile Include="Models\TestInformation.cs" />
     <Compile Include="Tabulators\ItemTabulator.cs" />
     <Compile Include="Tabulators\StimuliTabulator.cs" />
     <Compile Include="Utilities\CsvProcessor.cs" />
