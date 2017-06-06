@@ -300,16 +300,15 @@ namespace TabulateSmarterTestPackage.Tabulators
                     ReportingUtility.CrossProcessor.ItemContentPackage != null)
                 {
                     var contentItem = ReportingUtility.CrossProcessor.ItemContentPackage.FirstOrDefault(
-                        x => x.ContainsKey("ItemId") &&
-                             x["ItemId"].Equals(itemFields[(int) ItemFieldNames.ItemId],
+                        x => x.ItemId.Equals(itemFields[(int) ItemFieldNames.ItemId],
                                  StringComparison.OrdinalIgnoreCase));
 
-                    itemFields[(int) ItemFieldNames.CommonCore] = contentItem["CommonCore"];
-                    itemFields[(int) ItemFieldNames.ClaimContentTarget] = contentItem["ClaimContentTarget"];
-                    itemFields[(int) ItemFieldNames.SecondaryCommonCore] = contentItem["SecondaryCommonCore"];
-                    itemFields[(int) ItemFieldNames.SecondaryClaimContentTarget] =
-                        contentItem["SecondaryClaimContentTarget"];
+                    itemFields[(int)ItemFieldNames.CommonCore] = contentItem.CommonCore;
+                    itemFields[(int)ItemFieldNames.ClaimContentTarget] = contentItem.ClaimContentTarget;
+                    itemFields[(int)ItemFieldNames.SecondaryCommonCore] = contentItem.SecondaryCommonCore;
+                    itemFields[(int)ItemFieldNames.SecondaryClaimContentTarget] = contentItem.SecondaryClaimContentTarget;
                 }
+
                 GroupItemInfo gii;
                 if (indexGroupItemInfo.TryGetValue(itemId.Split('-').Last(), out gii))
                 {

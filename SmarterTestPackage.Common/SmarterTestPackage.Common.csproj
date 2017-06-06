@@ -36,6 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentPackage\ContentPackage.cs" />
+    <Compile Include="Data\ContentPackageItemRow.cs" />
+    <Compile Include="Data\ContentPackageStimRow.cs" />
     <Compile Include="Data\CrossPackageValidationError.cs" />
     <Compile Include="Data\GroupItemInfo.cs" />
     <Compile Include="Data\OptionalStringOrErrorList.cs" />

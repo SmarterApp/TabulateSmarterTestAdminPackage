@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using ProcessSmarterTestPackage.External;
 using SmarterTestPackage.Common.Data;
+using TabulateSmarterTestPackage.Data;
 
 namespace TabulateSmarterTestPackage.Utilities
 {
@@ -50,26 +51,27 @@ namespace TabulateSmarterTestPackage.Utilities
 
         public static void InitializeCrossProcessor()
         {
-            if (!string.IsNullOrEmpty(ContentItemDirectoryPath) && !string.IsNullOrEmpty(ContentStimuliDirectoryPath))
+            if (string.IsNullOrEmpty(ContentItemDirectoryPath) || string.IsNullOrEmpty(ContentStimuliDirectoryPath))
             {
-                var items = new List<Dictionary<string, string>>();
-                using (
-                    var itemStream = new FileStream(ContentItemDirectoryPath, FileMode.Open, FileAccess.Read,
-                        FileShare.Read))
-                {
-                    items = CsvProcessor.Process(itemStream);
-                }
-
-                var stimuli = new List<Dictionary<string, string>>();
-                using (
-                    var stimuliStream = new FileStream(ContentStimuliDirectoryPath, FileMode.Open, FileAccess.Read,
-                        FileShare.Read))
-                {
-                    stimuli = CsvProcessor.Process(stimuliStream);
-                }
-
-                CrossProcessor = new CrossProcessor(items, stimuli);
+                return;
             }
+            var items = new List<ContentPackageItemRow>();
+            using (
+                var itemStream = new FileStream(ContentItemDirectoryPath, FileMode.Open, FileAccess.Read,
+                    FileShare.Read))
+            {
+                items = CsvProcessor.Process<ContentPackageItemRow>(itemStream).ToList();
+            }
+
+            var stimuli = new List<ContentPackageStimRow>();
+            using (
+                var stimuliStream = new FileStream(ContentStimuliDirectoryPath, FileMode.Open, FileAccess.Read,
+                    FileShare.Read))
+            {
+                stimuli = CsvProcessor.Process<ContentPackageStimRow>(stimuliStream).ToList();
+            }
+
+            CrossProcessor = new CrossProcessor(items, stimuli);
         }
 
         public static void ReportError(string testName, PackageType packageType, string path, ErrorSeverity severity,

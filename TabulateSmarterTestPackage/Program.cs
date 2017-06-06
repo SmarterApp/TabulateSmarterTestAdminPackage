@@ -302,7 +302,7 @@ namespace TabulateSmarterTestPackage
                     var adminPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Administration);
                     if (adminPackage != null)
                     {
-                        tabulator.TabulateResults(new List<TestSpecificationProcessor> { adminPackage },
+                        tabulator.TabulateResults(new List<TestSpecificationProcessor> {adminPackage},
                             ReportingUtility.CrossProcessor.Errors[adminPackage.GetUniqueId()].Cast<ProcessingError>()
                                 .Where(x => x.PackageType == PackageType.Administration).ToList());
                     }
@@ -358,8 +358,12 @@ namespace TabulateSmarterTestPackage
                     }
                     Logger.Info($"   Processing: {entry.FullName}");
                     using (var stream = entry.Open())
-                    {
-                        processors.Add(ProcessStream(stream, tabulator));
+                    {                       
+                        var processor = ProcessStream(stream, tabulator);
+                        if (processor != null)
+                        {
+                            processors.Add(processor);
+                        }                        
                     }
                 }
             }
