@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using ProcessSmarterTestPackage.External;
 using SmarterTestPackage.Common.Data;
-using TabulateSmarterTestPackage.Data;
 
 namespace TabulateSmarterTestPackage.Utilities
 {

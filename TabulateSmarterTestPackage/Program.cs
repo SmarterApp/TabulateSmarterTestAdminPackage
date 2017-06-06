@@ -294,7 +294,7 @@ namespace TabulateSmarterTestPackage
                     var scoringPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Scoring);
                     if (scoringPackage != null)
                     {
-                        tabulator.TabulateResults(new List<TestSpecificationProcessor> { scoringPackage },
+                        tabulator.TabulateResults(new List<TestSpecificationProcessor> {scoringPackage},
                             ReportingUtility.CrossProcessor.Errors[scoringPackage.GetUniqueId()].Cast<ProcessingError>()
                                 .Where(x => x.PackageType == PackageType.Scoring).ToList());
                         continue;
@@ -358,12 +358,12 @@ namespace TabulateSmarterTestPackage
                     }
                     Logger.Info($"   Processing: {entry.FullName}");
                     using (var stream = entry.Open())
-                    {                       
+                    {
                         var processor = ProcessStream(stream, tabulator);
                         if (processor != null)
                         {
                             processors.Add(processor);
-                        }                        
+                        }
                     }
                 }
             }

@@ -147,7 +147,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     !string.IsNullOrEmpty(testInformation[ItemFieldNames.AcademicYear])
                         ? testInformation[ItemFieldNames.AcademicYear].Split('-').LastOrDefault()
                         : string.Empty;
-                
+
                 var itemId =
                     testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
                 itemFields[(int) ItemFieldNames.FullItemKey] = itemId;
@@ -301,12 +301,13 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {
                     var contentItem = ReportingUtility.CrossProcessor.ItemContentPackage.FirstOrDefault(
                         x => x.ItemId.Equals(itemFields[(int) ItemFieldNames.ItemId],
-                                 StringComparison.OrdinalIgnoreCase));
+                            StringComparison.OrdinalIgnoreCase));
 
-                    itemFields[(int)ItemFieldNames.CommonCore] = contentItem.CommonCore;
-                    itemFields[(int)ItemFieldNames.ClaimContentTarget] = contentItem.ClaimContentTarget;
-                    itemFields[(int)ItemFieldNames.SecondaryCommonCore] = contentItem.SecondaryCommonCore;
-                    itemFields[(int)ItemFieldNames.SecondaryClaimContentTarget] = contentItem.SecondaryClaimContentTarget;
+                    itemFields[(int) ItemFieldNames.CommonCore] = contentItem.CommonCore;
+                    itemFields[(int) ItemFieldNames.ClaimContentTarget] = contentItem.ClaimContentTarget;
+                    itemFields[(int) ItemFieldNames.SecondaryCommonCore] = contentItem.SecondaryCommonCore;
+                    itemFields[(int) ItemFieldNames.SecondaryClaimContentTarget] =
+                        contentItem.SecondaryClaimContentTarget;
                 }
 
                 GroupItemInfo gii;
@@ -330,9 +331,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var j = 0;
                 foreach (var p in performanceLevels)
                 {
-                    itemFields[ItemFieldNamesCount - (3 * performanceLevels.Count) + j++] = p.PerfLevel;
-                    itemFields[ItemFieldNamesCount - (3 * performanceLevels.Count) + j++] = p.ScaledLow;
-                    itemFields[ItemFieldNamesCount - (3 * performanceLevels.Count) + j++] = p.ScaledHigh;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.PerfLevel;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.ScaledLow;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.ScaledHigh;
                 }
 
                 var item =
