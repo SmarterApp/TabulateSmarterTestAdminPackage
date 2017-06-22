@@ -7,15 +7,15 @@ namespace ProcessSmarterTestPackage.External
 {
     public class CrossProcessor
     {
-        public CrossProcessor(List<Dictionary<string, string>> itemContentPackage,
-            List<Dictionary<string, string>> stimuliContentPackage)
+        public CrossProcessor(IList<ContentPackageItemRow> itemContentPackage,
+            IList<ContentPackageStimRow> stimuliContentPackage)
         {
             ItemContentPackage = itemContentPackage;
             StimuliContentPackage = stimuliContentPackage;
         }
 
-        public List<Dictionary<string, string>> ItemContentPackage { get; set; }
-        public List<Dictionary<string, string>> StimuliContentPackage { get; set; }
+        public IList<ContentPackageItemRow> ItemContentPackage { get; set; }
+        public IList<ContentPackageStimRow> StimuliContentPackage { get; set; }
 
         public Dictionary<string, List<CrossPackageValidationError>> Errors { get; set; } =
             new Dictionary<string, List<CrossPackageValidationError>>();

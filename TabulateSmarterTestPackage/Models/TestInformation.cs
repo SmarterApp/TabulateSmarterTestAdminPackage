@@ -5,7 +5,7 @@ using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
-namespace TabulateSmarterTestPackage.Data
+namespace TabulateSmarterTestPackage.Models
 {
     public class TestInformation
     {
