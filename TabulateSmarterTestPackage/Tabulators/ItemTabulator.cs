@@ -366,7 +366,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     itemFields[(int) ItemFieldNames.IsActive] = gii.IsActive;
                     itemFields[(int) ItemFieldNames.ResponseRequired] = gii.ResponseRequired;
                     itemFields[(int) ItemFieldNames.AdminRequired] = gii.AdminRequired;
-                    itemFields[(int) ItemFieldNames.FormPosition] = gii.FormPosition;
+                    itemFields[(int) ItemFieldNames.ItemPosition] = gii.FormPosition;
                 }
                 else
                 {
@@ -374,7 +374,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     itemFields[(int) ItemFieldNames.IsActive] = string.Empty;
                     itemFields[(int) ItemFieldNames.ResponseRequired] = string.Empty;
                     itemFields[(int) ItemFieldNames.AdminRequired] = string.Empty;
-                    itemFields[(int) ItemFieldNames.FormPosition] = string.Empty;
+                    itemFields[(int) ItemFieldNames.ItemPosition] = string.Empty;
                 }
 
                 var j = 0;

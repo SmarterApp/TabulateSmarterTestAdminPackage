@@ -37,7 +37,7 @@
         IsActive,
         ResponseRequired,
         AdminRequired,
-        FormPosition,
+        ItemPosition,
         MeasurementModel,
         Weight,
         ScorePoints,
