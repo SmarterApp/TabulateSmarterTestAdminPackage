@@ -291,20 +291,20 @@ namespace TabulateSmarterTestPackage
                     ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count > 1);
                 foreach (var packageSets in crossTabulatedPackages)
                 {
-                    var adminPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Administration);
-                    if (adminPackage != null)
-                    {
-                        tabulator.TabulateResults(new List<TestSpecificationProcessor> {adminPackage},
-                            ReportingUtility.CrossProcessor.Errors[adminPackage.GetUniqueId()].Cast<ProcessingError>()
-                                .Where(x => x.PackageType == PackageType.Administration).ToList());
-                        continue;
-                    }
                     var scoringPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Scoring);
                     if (scoringPackage != null)
                     {
                         tabulator.TabulateResults(new List<TestSpecificationProcessor> {scoringPackage},
                             ReportingUtility.CrossProcessor.Errors[scoringPackage.GetUniqueId()].Cast<ProcessingError>()
                                 .Where(x => x.PackageType == PackageType.Scoring).ToList());
+                        continue;
+                    }
+                    var adminPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Administration);
+                    if (adminPackage != null)
+                    {
+                        tabulator.TabulateResults(new List<TestSpecificationProcessor> {adminPackage},
+                            ReportingUtility.CrossProcessor.Errors[adminPackage.GetUniqueId()].Cast<ProcessingError>()
+                                .Where(x => x.PackageType == PackageType.Administration).ToList());
                     }
                 }
             }
@@ -358,12 +358,12 @@ namespace TabulateSmarterTestPackage
                     }
                     Logger.Info($"   Processing: {entry.FullName}");
                     using (var stream = entry.Open())
-                    {                       
+                    {
                         var processor = ProcessStream(stream, tabulator);
                         if (processor != null)
                         {
                             processors.Add(processor);
-                        }                        
+                        }
                     }
                 }
             }

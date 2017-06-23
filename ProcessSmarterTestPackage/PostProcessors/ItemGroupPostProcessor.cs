@@ -14,6 +14,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
             var result = new List<ValidationError>();
 
             var groupItems = Processor.ChildNodesWithName("groupitem").ToList();
+            var identifier = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
             int position;
 
             for (var i = 1; i <= groupItems.Count(); i++)
@@ -30,7 +31,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                         ErrorSeverity = ErrorSeverity.Degraded,
                         PackageType = Processor.PackageType,
                         Location = $"itemgroup/{Processor.Navigator.Name}",
-                        ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
+                        ItemId = identifier
                     });
                 }
             }
@@ -47,7 +48,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     ErrorSeverity = ErrorSeverity.Degraded,
                     PackageType = Processor.PackageType,
                     Location = $"itemgroup/{Processor.Navigator.Name}",
-                    ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid")
+                    ItemId = identifier
                 }));
 
             return result;

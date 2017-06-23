@@ -7,7 +7,7 @@ using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
-using TabulateSmarterTestPackage.Data;
+using TabulateSmarterTestPackage.Models;
 using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 

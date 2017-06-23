@@ -153,3 +153,5 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+._.DS_Store
+TabulateSmarterTestPackage/._.DS_Store

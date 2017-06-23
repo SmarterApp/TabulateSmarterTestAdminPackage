@@ -14,7 +14,7 @@ namespace ProcessSmarterTestPackage.External
     public class ContentPackageCrossProcessor
     {
         public IList<CrossPackageValidationError> CrossValidateContent(TestSpecificationProcessor primary,
-            List<Dictionary<string, string>> itemContent, List<Dictionary<string, string>> stimuliContent)
+            IList<ContentPackageItemRow> itemContent, IList<ContentPackageStimRow> stimuliContent)
         {
             var itemPool =
                 primary.ChildNodeWithName(primary.PackageType == PackageType.Administration
@@ -35,14 +35,13 @@ namespace ProcessSmarterTestPackage.External
         }
 
         private static IEnumerable<CrossPackageValidationError> CrossValidateContentItems(string key,
-            IList<TestItemProcessor> processors, IReadOnlyCollection<Dictionary<string, string>> itemContent)
+            IList<TestItemProcessor> processors, IList<ContentPackageItemRow> itemContent)
         {
             var errors = new List<CrossPackageValidationError>();
             foreach (var processor in processors)
             {
                 var itemId = processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last();
-                var item =
-                    itemContent.FirstOrDefault(x => x.ContainsKey("ItemId") && x["ItemId"].Equals(itemId));
+                var item = itemContent.FirstOrDefault(x => x.ItemId.Equals(itemId));
                 if (item == null)
                 {
                     errors.Add(GenerateItemError($"[Item {itemId} doesn't exist in content package]", itemId, processor,
@@ -53,11 +52,11 @@ namespace ProcessSmarterTestPackage.External
                 var itemType = poolPropertyProcessors.FirstOrDefault(
                     x => x.ValueForAttribute("property").Equals("--ITEMTYPE--", StringComparison.OrdinalIgnoreCase));
                 if (itemType != null &&
-                    !item["ItemType"].Equals(itemType.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
+                    !item.ItemType.Equals(itemType.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
                 {
                     errors.Add(
                         GenerateItemError(
-                            $"[ContentPackageItemType:{item["ItemType"]}!=TestPackageItemType:{itemType.ValueForAttribute("value")}]",
+                            $"[ContentPackageItemType:{item.ItemType}!=TestPackageItemType:{itemType.ValueForAttribute("value")}]",
                             itemId, processor, key, "ItemType"));
                 }
                 var dok = poolPropertyProcessors.FirstOrDefault(
@@ -66,33 +65,42 @@ namespace ProcessSmarterTestPackage.External
                             .Trim()
                             .Equals("Depth of Knowledge", StringComparison.OrdinalIgnoreCase));
                 if (dok != null &&
-                    !item["DOK"].Equals(dok.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
+                    !item.DOK.Equals(dok.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
                 {
                     errors.Add(
                         GenerateItemError(
-                            $"[ContentPackageItemDOK:{item["DOK"]}!=TestPackageItemType{dok.ValueForAttribute("value")}]",
+                            $"[ContentPackageItemDOK:{item.DOK}!=TestPackageItemType{dok.ValueForAttribute("value")}]",
                             itemId, processor, key, "DOK"));
                 }
                 var grade = poolPropertyProcessors.FirstOrDefault(
                     x => x.ValueForAttribute("property").Equals("Grade", StringComparison.OrdinalIgnoreCase));
                 if (grade != null &&
-                    !item["Grade"].Equals(grade.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
+                    !item.Grade.Equals(grade.ValueForAttribute("value"), StringComparison.OrdinalIgnoreCase))
                 {
                     errors.Add(
                         GenerateItemError(
-                            $"[ContentPackageItemGrade:{item["Grade"]}!=TestPackageItemType{grade.ValueForAttribute("value")}]",
+                            $"[ContentPackageItemGrade:{item.Grade}!=TestPackageItemType{grade.ValueForAttribute("value")}]",
                             itemId, processor, key, "Grade"));
                 }
-                if (item.ContainsKey("MathematicalPractice") && !string.IsNullOrEmpty(item["MathematicalPractice"]) &&
+                if (!string.IsNullOrEmpty(item.MathematicalPractice) &&
                     !processors.First(x => x.Equals(processor))
                         .ValidatedAttributes.ContainsKey("MathematicalPractice"))
                 {
                     processors.First(x => x.Equals(processor))
                         .ValidatedAttributes.Add("MathematicalPractice",
-                            GenerateFromValidationCollection("MathematicalPractice", item["MathematicalPractice"],
+                            GenerateFromValidationCollection("MathematicalPractice", item.MathematicalPractice,
                                 IntValidator.IsValidPositiveNonEmptyWithLength(1)));
                 }
-                if (item.ContainsKey("AllowCalculator") && !string.IsNullOrEmpty("AllowCalculator") &&
+                if (!string.IsNullOrEmpty(item.MaxPoints) &&
+                    !processors.First(x => x.Equals(processor))
+                        .ValidatedAttributes.ContainsKey("MaxPoints"))
+                {
+                    processors.First(x => x.Equals(processor))
+                        .ValidatedAttributes.Add("MaxPoints",
+                            GenerateFromValidationCollection("MaxPoints", item.MaxPoints,
+                                IntValidator.IsValidPositiveNonEmptyWithLength(10)));
+                }
+                if (!string.IsNullOrEmpty(item.AllowCalculator) &&
                     !processors.First(x => x.Equals(processor))
                         .ChildNodesWithName("poolproperty")
                         .Any(
@@ -104,7 +112,7 @@ namespace ProcessSmarterTestPackage.External
                 {
                     processors.First(x => x.Equals(processor))
                         .ValidatedAttributes.Add("AllowCalculator",
-                            GenerateFromValidationCollection("AllowCalculator", item["AllowCalculator"],
+                            GenerateFromValidationCollection("AllowCalculator", item.AllowCalculator,
                                 StringValidator.IsValidNonEmptyWithLength(1)
                                     .AddAndReturn(new RequiredRegularExpressionValidator(ErrorSeverity.Degraded,
                                         @"^[YyNn]$"))
@@ -127,7 +135,7 @@ namespace ProcessSmarterTestPackage.External
         }
 
         private static IEnumerable<CrossPackageValidationError> CrossValidateContentStimuli(string key,
-            IEnumerable<PassageProcessor> processors, IReadOnlyCollection<Dictionary<string, string>> stimuliContent)
+            IEnumerable<PassageProcessor> processors, IList<ContentPackageStimRow> stimuliContent)
         {
             var errors = new List<CrossPackageValidationError>();
             foreach (var processor in processors)
@@ -135,7 +143,7 @@ namespace ProcessSmarterTestPackage.External
                 var stimuliId =
                     processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last();
                 var stimuli =
-                    stimuliContent.FirstOrDefault(x => x.ContainsKey("StimulusId") && x["StimulusId"].Equals(stimuliId));
+                    stimuliContent.FirstOrDefault(x => x.StimulusId.Equals(stimuliId));
                 if (stimuli == null)
                 {
                     var error = GenerateStimuliError($"[Stimuli:{stimuliId} doesn't exist in content package]",
@@ -148,11 +156,11 @@ namespace ProcessSmarterTestPackage.External
                 else
                 {
                     var version = processor.ChildNodeWithName("identifier").ValueForAttribute("version");
-                    if (!version.Equals(stimuli["Version"]) && UserSettings.ValidateStimuliVersion)
+                    if (!version.Equals(stimuli.Version) && UserSettings.ValidateStimuliVersion)
                     {
                         errors.Add(
                             GenerateStimuliError(
-                                $"[StimuliVersion:{version}!=ContentPackageStimuliVersion:{stimuli["Version"]}]",
+                                $"[StimuliVersion:{version}!=ContentPackageStimuliVersion:{stimuli.Version}]",
                                 stimuliId,
                                 processor, key, "Version"));
                     }
