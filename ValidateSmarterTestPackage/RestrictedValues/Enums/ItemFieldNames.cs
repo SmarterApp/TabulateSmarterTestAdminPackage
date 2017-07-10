@@ -21,7 +21,7 @@
         Standard,
         Claim,
         Target,
-        PassageRef,
+        PassageId,
         ASL,
         Braille,
         LanguageBraille,
