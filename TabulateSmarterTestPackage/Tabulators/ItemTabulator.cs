@@ -205,7 +205,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     testItem.ChildNodeWithName("identifier").ValueForAttribute("version");
                 itemFields[(int) ItemFieldNames.ItemType] = testItem.ValueForAttribute("itemtype");
                 itemFields[(int) ItemFieldNames.PassageId] =
-                    FormatHelper.Strip200(testItem.ChildNodeWithName("passageref")?.ValueForAttribute("passageref"));
+                    testItem.ChildNodeWithName("passageref")?.ValueForAttribute("passageref") ?? string.Empty;
 
                 // Process PoolProperties
                 var glossary = new List<string>();
