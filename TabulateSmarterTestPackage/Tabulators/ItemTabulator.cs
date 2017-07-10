@@ -204,7 +204,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 itemFields[(int) ItemFieldNames.Version] =
                     testItem.ChildNodeWithName("identifier").ValueForAttribute("version");
                 itemFields[(int) ItemFieldNames.ItemType] = testItem.ValueForAttribute("itemtype");
-                itemFields[(int) ItemFieldNames.PassageRef] =
+                itemFields[(int) ItemFieldNames.PassageId] =
                     FormatHelper.Strip200(testItem.ChildNodeWithName("passageref")?.ValueForAttribute("passageref"));
 
                 // Process PoolProperties
