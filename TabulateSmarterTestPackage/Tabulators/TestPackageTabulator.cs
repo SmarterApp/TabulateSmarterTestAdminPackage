@@ -104,6 +104,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>().ToList();
                 errors.AddRange(crossTabulationErrors);
                 errors.AddRange(testInfo.Errors);
+                errors.AddRange(ItemTabulator.ItemTabulationErrors);
+                ItemTabulator.ItemTabulationErrors.Clear();
                 var errorList = new List<List<string>>();
                 errorList.AddRange(errors.Select(x => new List<string>
                 {

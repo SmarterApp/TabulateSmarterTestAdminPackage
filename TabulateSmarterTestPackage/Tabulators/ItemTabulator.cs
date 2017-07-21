@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.XPath;
+using NLog;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
@@ -16,6 +17,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         private const int MaxBpRefs = 7;
         private const string c_MathStdPrefix = "SBAC-MA-v6:";
         private const string c_ElaStdPrefix = "SBAC-ELA-v1:";
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly int ItemFieldNamesCount = Enum.GetNames(typeof(ItemFieldNames)).Length;
 
@@ -51,6 +53,8 @@ namespace TabulateSmarterTestPackage.Tabulators
 
         private readonly Dictionary<string, int> sPoolPropertyMapping;
 
+        public static IList<ProcessingError> ItemTabulationErrors { get; set; } = new List<ProcessingError>();
+
         public ItemTabulator()
         {
             sPoolPropertyMapping = new Dictionary<string, int>
@@ -82,79 +86,125 @@ namespace TabulateSmarterTestPackage.Tabulators
         {
             var resultList = new List<List<string>>();
 
-            // Convoluted way of checking whether the test form identifier ends with Default-ENU
-            var testFormPartitions =
-                navigator.Select(
-                        $"/testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform[./identifier[substring(@uniqueid, string-length(@uniqueid) - string-length(':Default-ENU') +1) = ':Default-ENU']]/formpartition")
-                    .OfType<XPathNavigator>()
-                    .ToList();
-            // We want a Default-ENU, failing to find that form, we'll take the first one
-            if (!testFormPartitions.Any())
+            Logger.Info($"Tabulating {testSpecificationProcessor.GetUniqueId()}");
+            var indexGroupItemInfo = new Dictionary<string, GroupItemInfo>();
+
+            var adminSegments = navigator.Select("//adminsegment");
+            // If there are no admin segments, this must be a fixed form assessment
+            if (adminSegments == null || !adminSegments.OfType<XPathNavigator>().Any())
             {
+                var testFormPartitions = new List<XPathNavigator>();
+                // Convoluted way of checking whether the test form identifier ends with Default-ENU
                 testFormPartitions =
                     navigator.Select(
-                            $"/testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform/formpartition")
+                            $"/testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform[./identifier[substring(@uniqueid, string-length(@uniqueid) - string-length(':Default-ENU') +1) = ':Default-ENU']]/formpartition")
                         .OfType<XPathNavigator>()
                         .ToList();
-            }
-            // Get all the partition IDs from within the selected form
-            var partitionIds =
-                testFormPartitions.SelectMany(x => x.Select("./identifier/@uniqueid").OfType<XPathNavigator>())
-                    .Select(x => x.InnerXml);
-            // Get the group items (with relative positions)
-            var groupItems =
-                partitionIds.SelectMany(
-                    x =>
-                        navigator.Select(
-                                $"/testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform/formpartition[./identifier[@uniqueid='{x}']]/itemgroup/groupitem")
-                            .OfType<XPathNavigator>()
-                            .ToList().Select(y => new GroupItemInfo
-                            {
-                                ItemId = FormatHelper.Strip200(y.GetAttribute("itemid", string.Empty)),
-                                IsFieldTest = y.GetAttribute("isfieldtest", string.Empty),
-                                IsActive = y.GetAttribute("isactive", string.Empty),
-                                ResponseRequired = y.GetAttribute("responserequired", string.Empty),
-                                AdminRequired = y.GetAttribute("adminrequired", string.Empty),
-                                FormPosition = y.GetAttribute("formposition", string.Empty)
-                            })).ToList();
-            // Zip the group items against an autonumbering enumerable to get the absolute form position (required for RDW)
-            var indexGroupItemInfo =
-                groupItems.Zip(Enumerable.Range(1, groupItems.Count()),
-                    (groupItem, absolutePosition) => new GroupItemInfo
-                    {
-                        ItemId = groupItem.ItemId,
-                        IsFieldTest = groupItem.IsFieldTest,
-                        IsActive = groupItem.IsActive,
-                        ResponseRequired = groupItem.ResponseRequired,
-                        AdminRequired = groupItem.AdminRequired,
-                        FormPosition = absolutePosition.ToString()
-                    }).ToDictionary(x => x.ItemId, x => x);
-            // This is to deal with any GII that may be present in the admin segment nodes 
-            var groupItemNodes = navigator.Select(sXp_GroupItem);
-            while (groupItemNodes.MoveNext())
-            {
-                var node = groupItemNodes.Current;
-                var itemId = FormatHelper.Strip200(node.GetAttribute("itemid", string.Empty));
-                var isFieldTest = node.GetAttribute("isfieldtest", string.Empty);
-                var isActive = node.GetAttribute("isactive", string.Empty);
-                var responseRequired = node.GetAttribute("responserequired", string.Empty);
-                var adminRequired = node.GetAttribute("adminrequired", string.Empty);
 
-                GroupItemInfo gii;
-                if (indexGroupItemInfo.TryGetValue(itemId, out gii))
+                // We want a Default-ENU, failing to find that form, we'll take the first one (This is an error condition)
+                if (!testFormPartitions.Any())
                 {
-                    continue;
+                    Logger.Error($"{testSpecificationProcessor.GetUniqueId()} - Missing Default-ENU test form for fixed form assessment!");
+                    ItemTabulationErrors.Add(new ValidationError
+                    {
+                        AssessmentId = testSpecificationProcessor.GetUniqueId(),
+                        ErrorSeverity = ErrorSeverity.Severe,
+                        GeneratedMessage = "Missing Default-ENU test form for fixed form assessment",
+                        Key = "testform",
+                        Location = $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform",
+                        PackageType = testSpecificationProcessor.PackageType
+                    });
+                    var testForms =
+                        navigator.Select(
+                                $"/testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform")
+                            .OfType<XPathNavigator>()
+                            .FirstOrDefault();
+                    testFormPartitions = testForms?.Select("./formpartition")
+                        .OfType<XPathNavigator>()
+                        .ToList();
                 }
-                gii = new GroupItemInfo
+
+                // We will do this section only for fixed-form assessments. 
+                // Non -fixed-forms won't have a test form - they will have admin segments instead
+                if (testFormPartitions.Any())
                 {
-                    IsFieldTest = isFieldTest,
-                    IsActive = isActive,
-                    ResponseRequired = responseRequired,
-                    AdminRequired = adminRequired,
-                    FormPosition = string.Empty
-                    // This information should be provided by the test form and will cause confusion if it is pulled from here
-                };
-                indexGroupItemInfo.Add(itemId, gii);
+                    // Get all the partition IDs from within the selected form
+                    var partitionIds =
+                        testFormPartitions.SelectMany(x => x.Select("./identifier/@uniqueid").OfType<XPathNavigator>())
+                            .Select(x => x.InnerXml);
+                    // Get the group items (with relative positions)
+                    var groupItems =
+                        partitionIds.SelectMany(
+                            x =>
+                                navigator.Select(
+                                        $"/testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform/formpartition[./identifier[@uniqueid='{x}']]/itemgroup/groupitem")
+                                    .OfType<XPathNavigator>()
+                                    .ToList().Select(y => new GroupItemInfo
+                                    {
+                                        ItemId = FormatHelper.Strip200(y.GetAttribute("itemid", string.Empty)),
+                                        IsFieldTest = y.GetAttribute("isfieldtest", string.Empty),
+                                        IsActive = y.GetAttribute("isactive", string.Empty),
+                                        ResponseRequired = y.GetAttribute("responserequired", string.Empty),
+                                        AdminRequired = y.GetAttribute("adminrequired", string.Empty),
+                                        FormPosition = y.GetAttribute("formposition", string.Empty)
+                                    })).ToList();
+                    // Zip the group items against an autonumbering enumerable to get the absolute form position (required for RDW)
+                    indexGroupItemInfo =
+                        groupItems.Zip(Enumerable.Range(1, groupItems.Count()),
+                            (groupItem, absolutePosition) => new GroupItemInfo
+                            {
+                                ItemId = groupItem.ItemId,
+                                IsFieldTest = groupItem.IsFieldTest,
+                                IsActive = groupItem.IsActive,
+                                ResponseRequired = groupItem.ResponseRequired,
+                                AdminRequired = groupItem.AdminRequired,
+                                FormPosition = absolutePosition.ToString()
+                            }).ToDictionary(x => x.ItemId, x => x);
+                }
+                else
+                {
+                    Logger.Error($"{testSpecificationProcessor.GetUniqueId()} - " +
+                                "Unable to determine whether this is a fixed form or adaptive assessment. " +
+                                "Missing both admin segments and test forms");
+                    ItemTabulationErrors.Add(new ValidationError
+                    {
+                        AssessmentId = testSpecificationProcessor.GetUniqueId(),
+                        ErrorSeverity = ErrorSeverity.Severe,
+                        GeneratedMessage = "Unable to determine whether this is a fixed form or adaptive assessment. " +
+                                "Missing both admin segments and test forms",
+                        Key = "testform",
+                        Location = $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform",
+                        PackageType = testSpecificationProcessor.PackageType
+                    });
+                }
+
+                // This is to deal with any GII that may be present in the admin segment nodes 
+                var groupItemNodes = navigator.Select(sXp_GroupItem);
+                while (groupItemNodes.MoveNext())
+                {
+                    var node = groupItemNodes.Current;
+                    var itemId = FormatHelper.Strip200(node.GetAttribute("itemid", string.Empty));
+                    var isFieldTest = node.GetAttribute("isfieldtest", string.Empty);
+                    var isActive = node.GetAttribute("isactive", string.Empty);
+                    var responseRequired = node.GetAttribute("responserequired", string.Empty);
+                    var adminRequired = node.GetAttribute("adminrequired", string.Empty);
+
+                    GroupItemInfo gii;
+                    if (indexGroupItemInfo.TryGetValue(itemId, out gii))
+                    {
+                        continue;
+                    }
+                    gii = new GroupItemInfo
+                    {
+                        IsFieldTest = isFieldTest,
+                        IsActive = isActive,
+                        ResponseRequired = responseRequired,
+                        AdminRequired = adminRequired,
+                        FormPosition = string.Empty
+                        // This information should be provided by the test form and will cause confusion if it is pulled from here
+                    };
+                    indexGroupItemInfo.Add(itemId, gii);
+                }
             }
 
 
