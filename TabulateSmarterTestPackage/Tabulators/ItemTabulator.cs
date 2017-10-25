@@ -455,6 +455,14 @@ namespace TabulateSmarterTestPackage.Tabulators
                     ? string.Empty
                     : item.ValueForAttribute("MaxPoints");
 
+                itemFields[(int)ItemFieldNames.AnswerKey] = string.IsNullOrEmpty(item.ValueForAttribute("AnswerKey"))
+                    ? string.Empty
+                    : item.ValueForAttribute("AnswerKey");
+
+                itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = string.IsNullOrEmpty(item.ValueForAttribute("NumberOfAnswerOptions"))
+                    ? string.Empty
+                    : item.ValueForAttribute("NumberOfAnswerOptions");
+
                 // We're using the backup property from the content package because the item didn't specify
                 if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
                 {
