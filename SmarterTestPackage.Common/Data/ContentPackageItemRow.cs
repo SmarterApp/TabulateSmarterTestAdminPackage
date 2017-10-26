@@ -24,5 +24,6 @@
         public string ClaimContentTarget { get; set; } = string.Empty;
         public string SecondaryCommonCore { get; set; } = string.Empty;
         public string SecondaryClaimContentTarget { get; set; } = string.Empty;
+        public string NumberOfAnswerOptions { get; set; } = string.Empty;
     }
 }

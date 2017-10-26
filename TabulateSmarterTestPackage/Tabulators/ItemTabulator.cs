@@ -407,6 +407,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                                                                            string.Empty;
                     itemFields[(int) ItemFieldNames.SecondaryClaimContentTarget] =
                         contentItem?.SecondaryClaimContentTarget ?? string.Empty;
+
+                    itemFields[(int)ItemFieldNames.AnswerKey] = contentItem?.AnswerKey ?? string.Empty;
+
+                    itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.NumberOfAnswerOptions ?? string.Empty;
                 }
 
                 GroupItemInfo gii;
@@ -454,14 +458,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                 itemFields[(int) ItemFieldNames.MaxPoints] = string.IsNullOrEmpty(item.ValueForAttribute("MaxPoints"))
                     ? string.Empty
                     : item.ValueForAttribute("MaxPoints");
-
-                itemFields[(int)ItemFieldNames.AnswerKey] = string.IsNullOrEmpty(item.ValueForAttribute("AnswerKey"))
-                    ? string.Empty
-                    : item.ValueForAttribute("AnswerKey");
-
-                itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = string.IsNullOrEmpty(item.ValueForAttribute("NumberOfAnswerOptions"))
-                    ? string.Empty
-                    : item.ValueForAttribute("NumberOfAnswerOptions");
 
                 // We're using the backup property from the content package because the item didn't specify
                 if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
