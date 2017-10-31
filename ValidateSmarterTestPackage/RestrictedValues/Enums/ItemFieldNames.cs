@@ -58,6 +58,8 @@
         ClaimContentTarget,
         SecondaryCommonCore,
         SecondaryClaimContentTarget,
+        AnswerKey,
+        NumberOfAnswerOptions,
         CutPoint1,
         ScaledLow1,
         ScaledHigh1,

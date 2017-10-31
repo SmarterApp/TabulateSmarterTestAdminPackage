@@ -407,6 +407,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                                                                            string.Empty;
                     itemFields[(int) ItemFieldNames.SecondaryClaimContentTarget] =
                         contentItem?.SecondaryClaimContentTarget ?? string.Empty;
+
+                    itemFields[(int)ItemFieldNames.AnswerKey] = contentItem?.AnswerKey ?? string.Empty;
+
+                    itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.NumberOfAnswerOptions ?? string.Empty;
                 }
 
                 GroupItemInfo gii;
