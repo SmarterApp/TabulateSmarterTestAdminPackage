@@ -141,7 +141,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                                     .OfType<XPathNavigator>()
                                     .ToList().Select(y => new GroupItemInfo
                                     {
-                                        ItemId = FormatHelper.Strip200(y.GetAttribute("itemid", string.Empty)),
+                                        ItemId = FormatHelper.StripItemBankPrefix(y.GetAttribute("itemid", string.Empty)),
                                         IsFieldTest = y.GetAttribute("isfieldtest", string.Empty),
                                         IsActive = y.GetAttribute("isactive", string.Empty),
                                         ResponseRequired = y.GetAttribute("responserequired", string.Empty),
@@ -183,7 +183,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 while (groupItemNodes.MoveNext())
                 {
                     var node = groupItemNodes.Current;
-                    var itemId = FormatHelper.Strip200(node.GetAttribute("itemid", string.Empty));
+                    var itemId = FormatHelper.StripItemBankPrefix(node.GetAttribute("itemid", string.Empty));
                     var isFieldTest = node.GetAttribute("isfieldtest", string.Empty);
                     var isActive = node.GetAttribute("isactive", string.Empty);
                     var responseRequired = node.GetAttribute("responserequired", string.Empty);
