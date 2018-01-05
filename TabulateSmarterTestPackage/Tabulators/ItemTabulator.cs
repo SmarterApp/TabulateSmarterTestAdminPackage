@@ -46,10 +46,10 @@ namespace TabulateSmarterTestPackage.Tabulators
 
         // Parse bpref entries to standard, claim, target
         private static readonly Regex s_Rx_BprefMath =
-            new Regex(@"^SBAC-(\d)\|[A-Z]{1,4}\|[0-9A-Z]{1,4}\|([A-Z]+(?:-\d+)?)$");
+            new Regex(@"^SBAC(_PT)?-(\d)\|[A-Z]{1,4}\|[0-9A-Z]{1,4}\|([A-Z]+(?:-\d+)?)$");
 
         private static readonly Regex s_Rx_BprefEla =
-            new Regex(@"^SBAC-(\d-[A-Z]{1,2})\|(\d{1,2}-\d{1,2})(?:\|[A-Za-z0-9\-\.]+)?$");
+            new Regex(@"^SBAC(_PT)?-(\d-[A-Z]{1,2})\|(\d{1,2}-\d{1,2})(?:\|[A-Za-z0-9\-\.]+)?$");
 
         private readonly Dictionary<string, int> sPoolPropertyMapping;
 
@@ -373,9 +373,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                             continue;
                         }
                         itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix,
-                            match.Value.Substring(5));
-                        itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value;
-                        itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value;
+                            match.Value.Substring(match.Value.IndexOf("-")+1)); // since the regex can handle SBAC and SBAC_PT
+                        itemFields[(int) ItemFieldNames.Claim] = match.Groups[2].Value;
+                        itemFields[(int) ItemFieldNames.Target] = match.Groups[3].Value;
                     }
                     else if (testInformation[ItemFieldNames.AssessmentSubject].Equals("ELA",
                         StringComparison.OrdinalIgnoreCase))
@@ -386,10 +386,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                             continue;
                         }
                         itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix,
-                            match.Value.Substring(5));
-                        itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value + "\t";
+                            match.Value.Substring(match.Value.IndexOf("-")+1)); // since the regex can handle SBAC and SBAC_PT
+                        itemFields[(int) ItemFieldNames.Claim] = match.Groups[2].Value + "\t";
                         // Adding tab character prevents Excel from treating these as dates.
-                        itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value + "\t";
+                        itemFields[(int) ItemFieldNames.Target] = match.Groups[3].Value + "\t";
                     }
                 }
 
