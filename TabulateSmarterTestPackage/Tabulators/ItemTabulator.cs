@@ -118,17 +118,27 @@ namespace TabulateSmarterTestPackage.Tabulators
                                 FormPosition = y.GetAttribute("formposition", string.Empty)
                             })).ToList();
             // Zip the group items against an autonumbering enumerable to get the absolute form position (required for RDW)
-            var indexGroupItemInfo =
-                groupItems.Zip(Enumerable.Range(1, groupItems.Count()),
-                    (groupItem, absolutePosition) => new GroupItemInfo
+            var indexGroupItemInfo = new Dictionary<string, GroupItemInfo>();
+            {
+                int absolutePosition = 1;
+                foreach(var groupItem in groupItems)
+                {
+                    if (!indexGroupItemInfo.ContainsKey(groupItem.ItemId))
                     {
-                        ItemId = groupItem.ItemId,
-                        IsFieldTest = groupItem.IsFieldTest,
-                        IsActive = groupItem.IsActive,
-                        ResponseRequired = groupItem.ResponseRequired,
-                        AdminRequired = groupItem.AdminRequired,
-                        FormPosition = absolutePosition.ToString()
-                    }).ToDictionary(x => x.ItemId, x => x);
+                        indexGroupItemInfo.Add(groupItem.ItemId, new GroupItemInfo
+                        {
+                            ItemId = groupItem.ItemId,
+                            IsFieldTest = groupItem.IsFieldTest,
+                            IsActive = groupItem.IsActive,
+                            ResponseRequired = groupItem.ResponseRequired,
+                            AdminRequired = groupItem.AdminRequired,
+                            FormPosition = absolutePosition.ToString()
+                        });
+                        ++absolutePosition;
+                    }
+                }
+            }
+
             // This is to deal with any GII that may be present in the admin segment nodes 
             var groupItemNodes = navigator.Select(sXp_GroupItem);
             while (groupItemNodes.MoveNext())
