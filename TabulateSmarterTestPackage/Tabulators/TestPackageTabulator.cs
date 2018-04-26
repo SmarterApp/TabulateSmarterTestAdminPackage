@@ -54,15 +54,16 @@ namespace TabulateSmarterTestPackage.Tabulators
             var doc = new XPathDocument(input);
             var nav = doc.CreateNavigator();
             var nodeSelector = "";
+            Logger.Debug("HELLO?");
 
-            if (nav.IsNode && nav.SelectSingleNode("//TestPackage").IsNode)
+            if (nav.IsNode && nav.SelectSingleNode("//TestPackage") != null)
             {
-                Logger.Debug("HELLO?");
+                
                 Logger.Debug("****************************New Type");
                 nodeSelector = "//TestPackage";
                 ExpectedPackageType = PackageType.Combined;
             }
-            else if (nav.IsNode && nav.SelectSingleNode("/testspecification").IsNode)
+            else if (nav.IsNode && nav.SelectSingleNode("/testspecification") != null)
             {
                 nodeSelector = "/testspecification";
                 Logger.Debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^OLD Type");

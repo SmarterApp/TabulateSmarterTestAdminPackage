@@ -42,16 +42,16 @@ namespace ProcessSmarterTestPackage.Processors.Common
             switch (packageType)
             {
                 case PackageType.Administration:
+                    Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
+                    Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
                     Navigator.GenerateList("administration")
                         .ForEach(x => Processors.Add(new AdministrationProcessor(x, packageType)));
-                    Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
-                    Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
                     break;
                 case PackageType.Scoring:
-                    Navigator.GenerateList("scoring")
-                        .ForEach(x => Processors.Add(new ScoringProcessor(x, packageType)));
                     Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
                     Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+                    Navigator.GenerateList("scoring")
+                        .ForEach(x => Processors.Add(new ScoringProcessor(x, packageType)));
                     break;
                 case PackageType.Combined:
                     //Navigator.GenerateList("combined").ForEach((x => Processors.Add(new CombinedProcessor(x, packageType))));
