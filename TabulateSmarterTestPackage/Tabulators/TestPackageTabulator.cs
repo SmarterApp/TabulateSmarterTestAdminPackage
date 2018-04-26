@@ -65,7 +65,7 @@ namespace TabulateSmarterTestPackage.Tabulators
             else if (nav.IsNode && nav.SelectSingleNode("/testspecification").IsNode)
             {
                 nodeSelector = "/testspecification";
-                Logger.Debug("OLD Type");
+                Logger.Debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^OLD Type");
                 // /testspecification
                 var packageType = nav.SelectSingleNode(nodeSelector)
                     .Eval(XPathExpression.Compile("@purpose"));
@@ -77,8 +77,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {
                     ExpectedPackageType = PackageType.Scoring;
                 }
-                
-
             }
             else
             {

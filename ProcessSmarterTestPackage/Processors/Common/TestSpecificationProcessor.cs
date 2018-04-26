@@ -9,11 +9,14 @@ using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
 using ValidateSmarterTestPackage.Validators;
 using ValidateSmarterTestPackage.Validators.Convenience;
+//using NLog;
 
 namespace ProcessSmarterTestPackage.Processors.Common
 {
     public class TestSpecificationProcessor : Processor
     {
+        //private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public TestSpecificationProcessor(XPathNavigator navigator, PackageType packageType)
             : base(navigator, packageType)
         {
@@ -52,8 +55,9 @@ namespace ProcessSmarterTestPackage.Processors.Common
                     break;
                 case PackageType.Combined:
                     //Navigator.GenerateList("combined").ForEach((x => Processors.Add(new CombinedProcessor(x, packageType))));
-                    Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
-                    Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+                    //Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
+                    //Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
+                    //Logger.Debug("Blah blah do stuff with processors for new file...");
                     break;
             }
         }
