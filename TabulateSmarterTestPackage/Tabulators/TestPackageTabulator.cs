@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.XPath;
+using System.Xml.Schema;
 using NLog;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
@@ -54,7 +56,6 @@ namespace TabulateSmarterTestPackage.Tabulators
             var doc = new XPathDocument(input);
             var nav = doc.CreateNavigator();
             var nodeSelector = "";
-            Logger.Debug("HELLO?");
 
             if (nav.IsNode && nav.SelectSingleNode("//TestPackage") != null)
             {
@@ -62,12 +63,18 @@ namespace TabulateSmarterTestPackage.Tabulators
                 Logger.Debug("****************************New Type");
                 nodeSelector = "//TestPackage";
                 ExpectedPackageType = PackageType.Combined;
+
+                //validate with XML schema
+                XmlDocument validateDocument = new XmlDocument();
+                validateDocument.LoadXml(nav.OuterXml);
+                validateDocument.Schemas.Add(null, "v4-test-package.xsd"); //TODO can I put this in a setting or something?
+                ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
+                validateDocument.Validate(validation);
             }
             else if (nav.IsNode && nav.SelectSingleNode("/testspecification") != null)
             {
-                nodeSelector = "/testspecification";
                 Logger.Debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^OLD Type");
-                // /testspecification
+                nodeSelector = "/testspecification";
                 var packageType = nav.SelectSingleNode(nodeSelector)
                     .Eval(XPathExpression.Compile("@purpose"));
                 if (packageType.Equals("administration", StringComparison.OrdinalIgnoreCase))
@@ -90,6 +97,23 @@ namespace TabulateSmarterTestPackage.Tabulators
 
 
         }
+
+        static void SchemaValidationHandler(object sender, ValidationEventArgs e)
+        {
+            Logger.Debug("VALIDATION ERROR!!");
+            switch (e.Severity)
+            {
+                case XmlSeverityType.Error:
+                    Logger.Error("Schema Validation Error: {0}", e.Message);
+                    throw new ArgumentException("XML Validation Failure");
+                case XmlSeverityType.Warning:
+                    Logger.Error("Schema Validation Warning: {0}", e.Message);
+                    throw new ArgumentException("XML Validation Failure");
+                default:
+                    throw new ArgumentException("XML Validation Failure");
+            }
+        }
+
 
         public void TabulateResults(List<TestSpecificationProcessor> testSpecificationProcessors,
             List<ProcessingError> crossTabulationErrors)
