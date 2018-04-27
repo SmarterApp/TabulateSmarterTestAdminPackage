@@ -72,6 +72,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     validateDocument.Schemas.Add(null, "Resources/v4-test-package.xsd"); //TODO can I put this in a setting or something?
                     ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
                     validateDocument.Validate(validation);
+                    Logger.Debug("New package type xml file loaded and validated against XML schema");
                 }
                 catch (XmlException e)
                 {
@@ -99,10 +100,18 @@ namespace TabulateSmarterTestPackage.Tabulators
             {
                 throw new ArgumentException("UnrecognizedPackageType");
             }
-            var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode(nodeSelector),
-                ExpectedPackageType);
-            testSpecificationProcessor.Process();
-            return testSpecificationProcessor;
+
+            //TODO - remove when new type is properly being processed
+            if (ExpectedPackageType != PackageType.Combined)
+            {
+                var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode(nodeSelector),
+                    ExpectedPackageType);
+                testSpecificationProcessor.Process();
+                return testSpecificationProcessor;
+            }
+
+            return null;
+
 
 
         }
