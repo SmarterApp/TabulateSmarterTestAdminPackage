@@ -64,12 +64,21 @@ namespace TabulateSmarterTestPackage.Tabulators
                 nodeSelector = "//TestPackage";
                 ExpectedPackageType = PackageType.Combined;
 
-                //validate with XML schema
-                XmlDocument validateDocument = new XmlDocument();
-                validateDocument.LoadXml(nav.OuterXml);
-                validateDocument.Schemas.Add(null, "v4-test-package.xsd"); //TODO can I put this in a setting or something?
-                ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
-                validateDocument.Validate(validation);
+                //load and validate with XML schema
+                try
+                {
+                    XmlDocument validateDocument = new XmlDocument();
+                    validateDocument.LoadXml(nav.OuterXml);
+                    validateDocument.Schemas.Add(null, "Resources/v4-test-package.xsd"); //TODO can I put this in a setting or something?
+                    ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
+                    validateDocument.Validate(validation);
+                }
+                catch (XmlException e)
+                {
+                    Logger.Error("Schema Validation Error: {0}", e.Message);
+                    throw new ArgumentException("XML Validation Failure");
+                }
+                
             }
             else if (nav.IsNode && nav.SelectSingleNode("/testspecification") != null)
             {
@@ -108,7 +117,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     throw new ArgumentException("XML Validation Failure");
                 case XmlSeverityType.Warning:
                     Logger.Error("Schema Validation Warning: {0}", e.Message);
-                    throw new ArgumentException("XML Validation Failure");
+                    throw new ArgumentException("XML Validation Warning");
                 default:
                     throw new ArgumentException("XML Validation Failure");
             }

@@ -105,6 +105,10 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
+    <None Include="Resources\v4-test-package.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TabulateSmarterTestPackage_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
