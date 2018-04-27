@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified"
+           vc:minVersion="1.1">
+    <xs:element name="TestPackage">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+The root element of the test package. The <TestPackage> element contains an optional <Scoring> element (for test packages that contain COMBINED scoring data, such as ICA assessments).
+]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Blueprint">
+                    <xs:annotation>
+                        <xs:documentation>The assessment-level Blueprint element contains the following attributes:
+
+                            - minExamItems/maxExamItems: the minimum and maximum operational items to administer for this assessment
+                            - minFieldTestItems/maxFieldTestItems: the minimum and maximum field test items to administer for this assessment</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" ref="BlueprintElement"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" ref="Test">
+                    <xs:annotation>
+                        <xs:documentation>The Assessment node contains the following attributes:
+
+                            key: The assessment key
+                            id: The assessment id
+                            publisher: The publisher of the test package, also referred to as the "client name"
+                            publishDate: The creation/publish date of the test package
+                            label: A human-readable label to be displayed in the student and proctor application
+                            subject: The subject of the assessment (e.g., "ELA", "MATH", "Student Help")
+                            type: The test type of the assessment (e.g., "interim", "summative")
+                            version: The version of the test specification
+                            bankKey: The item bank key for all forms and items, typically a 3-digit integer value (e.g., "187", "200")
+                            subType: (OPTIONAL) A subtype classification of the exam (e.g., "ICA", "IAB")
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="bankKey" type="xs:int" use="required"/>
+            <xs:attribute name="publisher" type="xs:token" use="required"/>
+            <xs:attribute name="publishDate" type="xs:dateTime" use="required"/>
+            <xs:attribute name="subject" type="xs:token" use="required"/>
+            <xs:attribute name="type" type="xs:token" use="required"/>
+            <xs:attribute name="version" type="xs:decimal" use="required"/>
+            <xs:attribute name="academicYear" type="xs:token" use="required"/>
+            <xs:attribute name="subType" type="xs:token"/>
+        </xs:complexType>
+        <xs:unique name="UniqueBlueprintElementKey">
+            <xs:selector xpath=".//BlueprintElement"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+        <xs:key name="BlueprintElementKey">
+            <xs:selector xpath=".//BlueprintElement"/>
+            <xs:field id="blueprintid" xpath="@id"/>
+        </xs:key>
+        <xs:keyref name="BlueprintRefKey" refer="BlueprintElementKey">
+            <xs:selector xpath=".//BlueprintReference"/>
+            <xs:field xpath="@idRef"/>
+        </xs:keyref>
+        <xs:keyref name="SegmentBlueprintRefKey" refer="BlueprintElementKey">
+            <xs:selector xpath=".//SegmentBlueprintElement"/>
+            <xs:field xpath="@idRef"/>
+        </xs:keyref>
+    </xs:element>
+    <xs:element name="Test">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="Grades">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="Grade">
+                                <xs:annotation>
+                                    <xs:documentation>The Grade element contains the following attributes:
+                                        value: The grade code/integer value for the grade (e.g., "KR", "1", "12")
+                                        label: The human readable label of the grade (e.g., "Kindergarden", "Grade 12")</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:attribute name="value" type="xs:token" use="required"/>
+                                    <xs:attribute name="label" type="xs:token"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Segments">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Segment" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>Every Assessment must contain one or more segments (an "unsegmented" assessment is actually a single-segment assessment).
+                                        A segment defines a partition of a test wherein various presentational aspects may be controlled (such as isolating calculator items from non-calculator items)
+
+                                        The Segment node contains the following attributes:
+
+                                        key: The segment key
+                                        id: The segment id
+                                        position: The position of the segment in the assessment (1-based)
+                                        label: (OPTIONAL) A human-readable label to be displayed in the student and proctor application - if no label is provided, the segment key will be used.
+                                        entryApproval/exitApproval: (OPTIONAL) A flag indicating that a student will require approval to enter or exit the segment
+
+                                        The Segment contains the following sub-elements:
+
+                                        - Blueprint: The segment blueprint constraints for selecting items, each references an assessment-level BlueprintElement
+                                        The Segment Blueprint is optional for fixed form segments, but required for adaptive segments
+                                        - One of the folowing, depending on the item selection type:
+                                        Pool - The segment pool of items, for adaptive segments
+                                        Forms - A list of forms for the segment, for fixed-form assessments
+                                        - ItemSelector: the method for selecting items for the segment (e.g. "fixedform", "adaptive")
+                                        - Tools: A list of universal tools, accommodations, and designated supports along with various options and dependency rules
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="SegmentBlueprint" minOccurs="0">
+                                            <xs:annotation>
+                                                <xs:documentation>A segment-level Blueprint that defines item selection rules for adaptive segments
+
+                                                    ATTRIBUTES:
+                                                    - minExamItems/maxExamItems: the minimum and maximum operational items to administer from this blueprint category
+                                                    - minFieldTestItems/maxFieldTestItems: (OPTIONAL) the minimum and maximum field test items to administer - default to "0"</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element maxOccurs="unbounded"
+                                                                name="SegmentBlueprintElement">
+                                                        <xs:annotation>
+                                                            <xs:documentation>BlueprintElement
+
+                                                                ATTRIBUTES:
+                                                                - refId: The id of the assessment-level blueprint element reference
+                                                                - minExamItems/maxExamItems: the minimum and maximum operational items to administer from this segment</xs:documentation>
+                                                        </xs:annotation>
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element minOccurs="0" name="ItemSelection">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element maxOccurs="unbounded" minOccurs="1"
+                                                                                        name="Property">
+                                                                                <xs:complexType>
+                                                                                    <xs:attribute name="name" type="xs:token"
+                                                                                                  use="required"/>
+                                                                                    <xs:attribute name="value" type="xs:token"
+                                                                                                  use="required"/>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                            <xs:attribute name="idRef" type="xs:token"
+                                                                          use="required"/>
+                                                            <xs:attribute name="minExamItems" type="xs:int"
+                                                                          use="required"/>
+                                                            <xs:attribute name="maxExamItems" type="xs:int"
+                                                                          use="required"/>
+                                                            <xs:attribute default="0" name="minFieldTestItems"
+                                                                          type="xs:int"/>
+                                                            <xs:attribute default="0" name="maxFieldTestItems"
+                                                                          type="xs:int"/>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:choice>
+                                            <xs:element name="Pool">
+                                                <xs:annotation>
+                                                    <xs:documentation>The Segment's Pool - A list of items/itemgroups that is specific for adaptive segments.
+
+                                                        A pool containing items that can be selected for a segment, based on adaptive algorithm calculations, min/max item constraits at the strand, contentlevel, segment, or assessment levels.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element maxOccurs="unbounded" ref="ItemGroup"
+                                                        />
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="SegmentForms">
+                                                <xs:annotation>
+                                                    <xs:documentation>The forms available form selection for this assessment (typically based on subject and the form cohort), at least one form is required per-segment, for fixed-form segments.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element maxOccurs="unbounded"
+                                                                    name="SegmentForm">
+                                                            <xs:annotation>
+                                                                <xs:documentation>Segment-level form definition. (Only required when segments use the 'fixed form' item selection algorithm)
+
+                                                                    This is used by the test registration/administration module to pre-assign specific forms to examinees.
+                                                                    It also is used to establish the defined and finite set of cohorts to which every segment fixed form must belong.
+
+                                                                    ATTRIBUTES:
+                                                                    name: The form name/identifier
+                                                                    cohort: A string used to link forms of different segments.
+
+                                                                    Example: The Assessment containts two Segments, each with two possibles forms about music:
+
+                                                                    SEGMENT 1:
+                                                                    Form 1 has an id of "Music1-HM" and a cohort of "Heavy Metal"
+                                                                    Form 2 has an id of "Music1-J" and a cohort of "Jazz"
+                                                                    SEGMENT 2:
+                                                                    Form 3 has an id of "Music2-HM" and a cohort of "Heavy Metal"
+                                                                    Form 4 has an id of "Music2-J" and a cohort of "Jazz"
+
+                                                                    If "Music1-HM" is selected for the examinee's first segment, then the linked cohort will ensure that Form 3 is ALWAYS selected for the second segment.
+                                                                    Likewise, if Form 2 is selected for the first segment, Form 4 will always follow in the second segment.
+
+                                                                    SUBELEMENTS:
+                                                                    - Languages: A list of language codes (e.g., "ENU", "ESN") that are compatible with this form. Typically, this list contains a single language, but may contain more than one language with the identical set of ItemGroups. The test delivery system will treat these form/language combinations as individual forms internally
+                                                                    - ItemGroups: One or more groups of items (containg one or more items and potentially a stimuli) that make up the items in the form</xs:documentation>
+                                                            </xs:annotation>
+                                                            <xs:complexType>
+                                                                <xs:sequence>
+                                                                    <xs:element ref="Presentations"/>
+                                                                    <xs:element maxOccurs="unbounded" ref="ItemGroup"
+                                                                    />
+                                                                </xs:sequence>
+                                                                <xs:attribute name="id" type="xs:token"
+                                                                              use="required"/>
+                                                                <xs:attribute default="Default" name="cohort"
+                                                                              type="xs:token" use="optional"/>
+                                                            </xs:complexType>
+                                                            <xs:unique name="UniqueItemGroupPositionInFormKey">
+                                                                <xs:selector xpath="./ItemGroup"/>
+                                                                <xs:field xpath="@position"/>
+                                                            </xs:unique>
+                                                        </xs:element>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:choice>
+                                        <xs:element minOccurs="0" ref="Tools"/>
+                                    </xs:sequence>
+                                    <xs:attribute name="id" type="xs:token" use="required"/>
+                                    <xs:attribute name="algorithmType" type="xs:token"
+                                                  use="required"/>
+                                    <xs:attribute name="algorithmImplementation" type="xs:token"
+                                                  use="required"/>
+                                    <xs:attribute name="position" type="xs:short" use="optional"
+                                                  default="1"/>
+                                    <xs:attribute name="label" type="xs:token"/>
+                                    <xs:attribute default="false" name="entryApproval"
+                                                  type="xs:boolean"/>
+                                    <xs:attribute default="false" name="exitApproval"
+                                                  type="xs:boolean"/>
+                                </xs:complexType>
+                                <xs:unique name="SegmentPositionUniqueKey">
+                                    <xs:selector xpath=".//Segment"/>
+                                    <xs:field xpath="@position"/>
+                                </xs:unique>
+                                <xs:unique name="SegmentKeyUniqueKey">
+                                    <xs:selector xpath=".//Segment"/>
+                                    <xs:field xpath="@key"/>
+                                </xs:unique>
+                                <xs:unique name="SegmentIdUniqueKey">
+                                    <xs:selector xpath=".//Segment"/>
+                                    <xs:field xpath="@id"/>
+                                </xs:unique>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element ref="Tools" minOccurs="0"/>
+            </xs:all>
+            <xs:attribute name="id" type="xs:token" use="required"/>
+            <xs:attribute name="label" type="xs:token" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Tools">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="Tool">
+                    <xs:annotation>
+                        <xs:documentation>A "Tool" is a general term for any universal tools, designated supports, or accommodations. Each Tool respresents a type of tool, such as "Zoom", "American Sign Language", "Masking", and "Calculator" and contains a list of its possible options and dependency rules. Tools can be defined at the assessment-level as well as the segment-level
+
+                            ATTRIBUTES:
+                            name: The tool type "name". This is the string identifying the tool type. The tool type name may contain spaces.
+                            studentPackageFieldName: The name/identifier of the tool/accommodation/designated supports used by ART.
+                            allowChange: A flag indicating whether or not the tool can be changed by the proctor when a student is waiting for approval to enter an assessment or segment
+                            required: A flag indicating whether or not an tool selection is required for this type of tool
+                            sortOrder: An optional ordering of the type (ascending)
+                            disableOnGuest: A flag indicating whether or not an accommodation should be disabled for guest students
+
+                            SUBELEMENTS:
+                            The Options for the Tool</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="Options">
+                                <xs:annotation>
+                                    <xs:documentation>A list of two or more Options for the given Tool. Typically, a tool will have at the very least an "ON" or "OFF" option</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="Option">
+                                            <xs:annotation>
+                                                <xs:documentation>An Option for a Tool. For some tools, the list of Options should contain at least two elements - an "ON" and an "OFF" Option.
+
+                                                    ATTRIBUTES:
+                                                    - code: The ISAAP code corresponding to the Tool Option
+                                                    - sortOrder: The order in which the option should be displayed in the selection dropdown
+                                                    - default: Whether or not the option should be the default Option. A tool cannot have more than one default option
+
+                                                    SUBELEMENTS:
+                                                    - Dependencies: (OPTIONAL) A list of one or more dependencies indicating whether an Option(s) should be enabled based on other Tool selections</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Dependencies" minOccurs="0">
+                                                        <xs:annotation>
+                                                            <xs:documentation>(OPTIONAL) A list of one or more dependencies indicating whether an Option(s) should be enabled based on other Tool selections</xs:documentation>
+                                                        </xs:annotation>
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element maxOccurs="unbounded"
+                                                                            name="Dependency">
+                                                                    <xs:annotation>
+                                                                        <xs:documentation/>
+                                                                        <xs:documentation><![CDATA[
+A Dependency defines a rule for when a specific Tool Option should be enabled or available to an examinee.
+
+ATTRIBUTES:
+    - ifToolType: The conditional tool type of the rule
+    - ifToolCode: The conditional tool code (option) of the rule
+    - enabled: (OPTIONAL, default TRUE) - Indicated whether the option should be ENABLED or DISABLED
+    - default: Whether or not the option should now be marked as the default option, if the Dependency condition is true
+
+The Dependency can be read as:
+   if <ifToolType> is <ifToolCode>, then the option is enabled (or disabled)
+   e.g., "IF <Language> IS <ENU>, THEN <'Emboss' option should be disabled>"
+]]></xs:documentation>
+                                                                    </xs:annotation>
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="ifToolType" type="xs:token"
+                                                                                      use="required"/>
+                                                                        <xs:attribute name="ifToolCode" type="xs:token"
+                                                                                      use="required"/>
+                                                                        <xs:attribute default="false" name="default"
+                                                                                      type="xs:boolean"/>
+                                                                        <xs:attribute default="true" name="enabled"
+                                                                                      type="xs:boolean"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="code" type="xs:token"
+                                                              use="required"/>
+                                                <xs:attribute name="sortOrder" type="xs:int"
+                                                              use="required"/>
+                                                <xs:attribute default="false" name="default"
+                                                              type="xs:boolean"/>
+                                                <xs:attribute name="label" type="xs:token"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                                <xs:unique name="UniqueToolPosition">
+                                    <xs:selector xpath=".//Option"/>
+                                    <xs:field xpath="@sortOrder"/>
+                                </xs:unique>
+                            </xs:element>
+                        </xs:all>
+                        <xs:attribute name="name" type="xs:token" use="required"/>
+                        <xs:attribute name="studentPackageFieldName" type="xs:token"/>
+                        <xs:attribute default="true" name="allowChange" type="xs:boolean"/>
+                        <xs:attribute default="false" name="required" type="xs:boolean"/>
+                        <xs:attribute default="0" name="sortOrder" type="xs:int"/>
+                        <xs:attribute default="false" name="disableOnGuest" type="xs:boolean"/>
+                        <xs:attribute name="type" type="xs:token"/>
+                        <xs:attribute default="false" name="allowMultiple" type="xs:boolean"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ItemGroup">
+        <xs:annotation>
+            <xs:documentation>A collection of items and passages that are selected and administered as an atomic unit.
+
+                It is not necessarily the case that every item in an itemgroup will be administered every time.
+                Beside the fact that an item may be inactive, other forces include item filtering due to examinee accommodations, itemgroup pruning by an adaptive algorithm to avoid violating test constraints, etc.
+
+                ATTRIBUTES:
+                - maxResponses: the maximum number of responses an examinee is required to provide. 'ALL' means every item administered must be responded to.
+                - maxItems: for adaptive segments only, the maximum number of items to administer from this group.
+                maxitems is useful for developing an excess of items to cover various ability levels,
+                for example, and allowing the adaptive algorithm to choose among them as the situation indicates
+                (maxitems may be used in future hybrid fixed-form/adaptive algorithms where, for example, the adaptive algorithm keeps track of the examinee's ability estimate and selects 'maxitems' from the group accordingly)
+
+                SUBELEMENTS:
+                - An (optional) stimuli associated with the item group
+                - One or more Items associated with the ItemGroup</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="Stimulus">
+                    <xs:annotation>
+                        <xs:documentation>The stimuli of the item group, also known as the "passage". An item group may not necessarily contain a stimuli, such as in case where the item group is a singular, self-contained item.
+
+                            ATTRIBUTES:
+                            - id: The stimuli identifier, also referred to as the "passage key". This is an integer value (e.g., 187-<b>1234</b>)</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="id" type="xs:token" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" name="Item">
+                    <xs:annotation>
+                        <xs:documentation>An Item within an ItemGroup
+
+                            ATTRIBUTES:
+                            - id: The item identifier - an integer. For the item id "2112" and bank key "187", the full item key would be "187-2112"
+                            - position: (Optional) The item's relative position within its group (1-based). Position should be honored by the item renderer. The default positional value is "1", but the item positions must be unique (and sequential) within the ItemGroup
+                            - fieldTest: (OPTIONAL, default false) A flag indicating whether or not the item is a field test item
+                            - administrationRequired: (OPTIONAL, default true) If true, the (adaptive) itemselector MUST administer this item (it may not be pruned to meet the itemgroup's 'maxitems' constraint)
+                            - responseRequired: If true, the examinee must respond to this item, if administered
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element ref="Presentations"/>
+                            <xs:element name="BlueprintReferences">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="BlueprintReference">
+                                            <xs:annotation>
+                                                <xs:documentation>A reference to a blueprint element. At least one BlueprintElement reference is required for each item</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:attribute name="idRef" type="xs:token"
+                                                              use="required"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ItemScoreDimension">
+                                <xs:annotation>
+                                    <xs:documentation>A dimension along which an item may be scored.
+                                        ATTRIBUTES:
+                                        - measurementmodel: e.g. IRT3PL, IRTPCL (must be recognizable by the test scoring engine; simulator may also need this info)
+                                        - scorepoints: Maximum number of points an examinee may received for this item
+                                        - dimension: An item may have scores on multiple dimensions, each with its own scales and rules. Typically, however, there is a single dimension
+                                        - weight: Where an item is scored separately on multiple dimensions, a composite score may be computed from a weighted combination of the dimension scores
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="ItemScoreParameter"
+                                                    minOccurs="0">
+                                            <xs:annotation>
+                                                <xs:documentation>A parameter within a dimension. e.g. for IRT3pl there are 3 parameters, named a, b, and c.</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:attribute name="measurementParameter"
+                                                              type="xs:token" use="required"/>
+                                                <xs:attribute name="value" type="xs:float"
+                                                              use="required"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="measurementModel" type="xs:token"
+                                                  use="required"/>
+                                    <xs:attribute name="scorePoints" type="xs:int" use="required"/>
+                                    <xs:attribute name="weight" type="xs:float" use="required"/>
+                                    <xs:attribute name="dimension" type="xs:token"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="TeacherHandScoring" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>Teacher Hand Scoring System configuration. Reference https://github.com/SmarterApp/TDS_TeacherHandScoringSystem</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence minOccurs="0">
+                                                    <xs:element  name="Dimensions" type="xs:string" />
+                                    </xs:sequence>
+                                    <xs:attribute name="exemplar" type="xs:token"/>
+                                    <xs:attribute name="trainingGuide" type="xs:token"/>
+                                    <xs:attribute default="WAI" name="layout" type="xs:token"/>
+                                    <xs:attribute name="description" type="xs:token" use="required"/>
+                                    <xs:attribute name="passage" type="xs:token"/>
+                                    <xs:attribute name="itemname" type="xs:token"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                        <xs:attribute name="id" type="xs:token" use="required"/>
+                        <xs:attribute name="type" type="xs:token" use="required"/>
+                        <xs:attribute default="false" name="fieldTest" type="xs:boolean"/>
+                        <xs:attribute default="true" name="administrationRequired" type="xs:boolean"/>
+                        <xs:attribute default="true" name="active" type="xs:boolean"/>
+                        <xs:attribute default="true" name="responseRequired" type="xs:boolean"/>
+                        <xs:attribute default="false" name="handScored" type="xs:boolean"/>
+                        <xs:attribute default="false" name="doNotScore" type="xs:boolean"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:token" use="required"/>
+            <xs:attribute default="ALL" name="maxItems" type="xs:token"/>
+            <xs:attribute default="ALL" name="maxResponses" type="xs:token"/>
+        </xs:complexType>
+        <xs:unique name="ItemPositionUniqueKey">
+            <xs:selector xpath="./Item"/>
+            <xs:field xpath="@position"/>
+        </xs:unique>
+    </xs:element>
+    <xs:element name="BlueprintElement">
+        <xs:annotation>
+            <xs:documentation>Each element or component of a blueprint must have a corresponding BlueprintElement.
+                A BlueprintElement identifies a set of items for one or both of the following purposes:
+                Creating a test 'form' adaptively,
+                Scoring a test.
+
+                In addition to a subject's taxonomy of content standards, the following are also BlueprintElements:
+                The test itself (for establishing scoring and reporting features)
+                Every test segment (for item selection and administration)
+                Depth of Knowledge categories
+                Other (arbitrary) sets of items (may be useful for ad hoc identification of sets)
+
+                Depth of Knowledge and other arbitrary sets of items are lumped into one object type called an 'AffinityGroup'.
+                This is also used for the SBAC Content Standards Repository object called 'SOCK', an acronym for 'Some Other Category of Knowledge'
+
+                ATTRIBUTES:
+                - id: The id of the blueprint element
+                - type: an arbitrary designation, usually from some aspect of a taxonomy defining the subject-area. (e.g., "strand", "contentlevel")
+                Other elementtypes exist outside of the taxonomy
+                - parentId: the id of another bpelement, segment, or assessment, generally within the taxonomy.
+                Since a BlueprintElement may have at most one parent, at most hierarchies may be expressed.
+                - minExamItems/maxExamItems: the minimum and maximum operational items to administer from this blueprint category
+                - minFieldTestItems/maxFieldTestItems: (OPTIONAL) the minimum and maximum field test items to administer - default to "0"
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="Scoring">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="PerformanceLevels" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation/>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="PerformanceLevel">
+                                            <xs:annotation>
+                                                <xs:documentation>Cutscore that determines a coarse-grained level of skill-attainment
+                                                    Performance levels are part of scoring and reporting.</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:attribute name="pLevel" type="xs:int"
+                                                              use="required"/>
+                                                <xs:attribute name="scaledLo" type="xs:float"
+                                                              use="required"/>
+                                                <xs:attribute name="scaledHi" type="xs:float"
+                                                              use="required"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Rules">
+                                <xs:annotation>
+                                    <xs:documentation>Configurations for scoring the test, consisting of
+                                        - rules for computation
+                                        - score cut points for determining performance levels</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="Rule">
+                                            <xs:annotation>
+                                                <xs:documentation>A rule for computing a score element, such as
+                                                    - overall theta or scaled score
+                                                    - strand score
+                                                    - benchmark score</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element maxOccurs="unbounded" name="Parameter"
+                                                                minOccurs="0">
+                                                        <xs:annotation>
+                                                            <xs:documentation>A parameter for a computation rule</xs:documentation>
+                                                        </xs:annotation>
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element maxOccurs="unbounded" name="Property"
+                                                                            minOccurs="0">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="name" type="xs:token"
+                                                                                      use="required"/>
+                                                                        <xs:attribute name="value" type="xs:token"
+                                                                                      use="required"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element maxOccurs="unbounded" name="Value">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="index" type="xs:token"/>
+                                                                        <xs:attribute name="value" type="xs:token"
+                                                                                      use="required"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                            <xs:attribute name="id" type="xs:token"
+                                                                          use="required"/>
+                                                            <xs:attribute name="type" type="xs:token"
+                                                                          use="required"/>
+                                                            <xs:attribute name="position" type="xs:int"
+                                                                          use="required"/>
+                                                            <xs:attribute name="name" type="xs:token"/>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="computationOrder" type="xs:int"/>
+                                                <xs:attribute name="name" type="xs:token"
+                                                              use="required"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="BlueprintElement"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:token" use="required"/>
+            <xs:attribute name="type" type="xs:token" use="required"/>
+            <xs:attribute name="level" type="xs:token"/>
+            <xs:attribute name="label" type="xs:token"/>
+            <xs:attribute name="description" type="xs:token"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Presentations">
+        <xs:annotation>
+            <xs:documentation>The list of presentations/languages (codes) compatible with the given item or form. For fixed form item selection, an item MUST contain the language of the form it belongs to in order to be compatible.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="Presentation">
+                    <xs:complexType>
+                        <xs:attribute name="code" type="xs:token" use="required"/>
+                        <xs:attribute name="label" type="xs:token"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

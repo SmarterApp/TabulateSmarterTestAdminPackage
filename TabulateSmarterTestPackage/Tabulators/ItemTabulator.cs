@@ -232,29 +232,29 @@ namespace TabulateSmarterTestPackage.Tabulators
                 // Collect the item fields
                 var itemFields = new string[ItemFieldNamesCount + performanceLevels.Count * 3];
 
-                itemFields[(int) ItemFieldNames.AssessmentId] = testInformation[ItemFieldNames.AssessmentId];
-                itemFields[(int) ItemFieldNames.AssessmentName] = testInformation[ItemFieldNames.AssessmentName];
-                itemFields[(int) ItemFieldNames.AssessmentLabel] = testInformation[ItemFieldNames.AssessmentLabel];
-                itemFields[(int) ItemFieldNames.AssessmentVersion] = testInformation[ItemFieldNames.AssessmentVersion];
-                itemFields[(int) ItemFieldNames.AssessmentSubject] = testInformation[ItemFieldNames.AssessmentSubject];
-                itemFields[(int) ItemFieldNames.AssessmentGrade] = testInformation[ItemFieldNames.AssessmentGrade];
-                itemFields[(int) ItemFieldNames.AssessmentType] = testInformation[ItemFieldNames.AssessmentType];
-                itemFields[(int) ItemFieldNames.AssessmentSubtype] = testInformation[ItemFieldNames.AssessmentSubtype];
-                itemFields[(int) ItemFieldNames.AcademicYear] =
+                itemFields[(int)ItemFieldNames.AssessmentId] = testInformation[ItemFieldNames.AssessmentId];
+                itemFields[(int)ItemFieldNames.AssessmentName] = testInformation[ItemFieldNames.AssessmentName];
+                itemFields[(int)ItemFieldNames.AssessmentLabel] = testInformation[ItemFieldNames.AssessmentLabel];
+                itemFields[(int)ItemFieldNames.AssessmentVersion] = testInformation[ItemFieldNames.AssessmentVersion];
+                itemFields[(int)ItemFieldNames.AssessmentSubject] = testInformation[ItemFieldNames.AssessmentSubject];
+                itemFields[(int)ItemFieldNames.AssessmentGrade] = testInformation[ItemFieldNames.AssessmentGrade];
+                itemFields[(int)ItemFieldNames.AssessmentType] = testInformation[ItemFieldNames.AssessmentType];
+                itemFields[(int)ItemFieldNames.AssessmentSubtype] = testInformation[ItemFieldNames.AssessmentSubtype];
+                itemFields[(int)ItemFieldNames.AcademicYear] =
                     !string.IsNullOrEmpty(testInformation[ItemFieldNames.AcademicYear])
                         ? testInformation[ItemFieldNames.AcademicYear].Split('-').LastOrDefault()
                         : string.Empty;
 
                 var itemId =
                     testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
-                itemFields[(int) ItemFieldNames.FullItemKey] = itemId;
-                itemFields[(int) ItemFieldNames.ItemId] = itemId.Split('-').Last();
-                itemFields[(int) ItemFieldNames.BankKey] = itemId.Split('-').First();
-                itemFields[(int) ItemFieldNames.Filename] = testItem.ValueForAttribute("filename");
-                itemFields[(int) ItemFieldNames.Version] =
+                itemFields[(int)ItemFieldNames.FullItemKey] = itemId;
+                itemFields[(int)ItemFieldNames.ItemId] = itemId.Split('-').Last();
+                itemFields[(int)ItemFieldNames.BankKey] = itemId.Split('-').First();
+                itemFields[(int)ItemFieldNames.Filename] = testItem.ValueForAttribute("filename");
+                itemFields[(int)ItemFieldNames.Version] =
                     testItem.ChildNodeWithName("identifier").ValueForAttribute("version");
-                itemFields[(int) ItemFieldNames.ItemType] = testItem.ValueForAttribute("itemtype");
-                itemFields[(int) ItemFieldNames.PassageId] =
+                itemFields[(int)ItemFieldNames.ItemType] = testItem.ValueForAttribute("itemtype");
+                itemFields[(int)ItemFieldNames.PassageId] =
                     testItem.ChildNodeWithName("passageref")?.ValueForAttribute("passageref") ?? string.Empty;
 
                 // Process PoolProperties
@@ -272,18 +272,18 @@ namespace TabulateSmarterTestPackage.Tabulators
                     if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
                         ppValue.Equals("ENU-Braille", StringComparison.Ordinal))
                     {
-                        itemFields[(int) ItemFieldNames.LanguageBraille] = ppValue;
+                        itemFields[(int)ItemFieldNames.LanguageBraille] = ppValue;
                     }
                     // Special case for Spanish language
                     else if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
                              ppValue.Equals("ESN", StringComparison.Ordinal))
                     {
-                        itemFields[(int) ItemFieldNames.Spanish] = "Y";
+                        itemFields[(int)ItemFieldNames.Spanish] = "Y";
                     }
                     // Special case for Spanish language
                     else if (ppProperty.Equals("Spanish Translation", StringComparison.Ordinal))
                     {
-                        itemFields[(int) ItemFieldNames.Spanish] = ppValue;
+                        itemFields[(int)ItemFieldNames.Spanish] = ppValue;
                     }
                     // Special case for Glossary
                     else if (ppProperty.Equals("Glossary", StringComparison.Ordinal))
@@ -292,7 +292,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     }
                     else if (ppProperty.Equals("Allow Calculator", StringComparison.OrdinalIgnoreCase))
                     {
-                        itemFields[(int) ItemFieldNames.AllowCalculator] = ppValue;
+                        itemFields[(int)ItemFieldNames.AllowCalculator] = ppValue;
                     }
                     else if (sPoolPropertyMapping.TryGetValue(ppProperty, out fieldIndex) && fieldIndex != 0)
                     {
@@ -308,33 +308,33 @@ namespace TabulateSmarterTestPackage.Tabulators
                     }
                 }
                 glossary.Sort();
-                itemFields[(int) ItemFieldNames.Glossary] = string.Join(";", glossary);
+                itemFields[(int)ItemFieldNames.Glossary] = string.Join(";", glossary);
 
                 var itemScoreDimension = testItem.ChildNodeWithName("itemscoredimension");
                 if (itemScoreDimension != null)
                 {
-                    itemFields[(int) ItemFieldNames.MeasurementModel] =
+                    itemFields[(int)ItemFieldNames.MeasurementModel] =
                         itemScoreDimension.ValueForAttribute("measurementmodel");
-                    itemFields[(int) ItemFieldNames.Weight] =
+                    itemFields[(int)ItemFieldNames.Weight] =
                         FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
-                    itemFields[(int) ItemFieldNames.ScorePoints] = itemScoreDimension.ValueForAttribute("scorepoints");
-                    itemFields[(int) ItemFieldNames.a] =
+                    itemFields[(int)ItemFieldNames.ScorePoints] = itemScoreDimension.ValueForAttribute("scorepoints");
+                    itemFields[(int)ItemFieldNames.a] =
                         FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter1));
-                    itemFields[(int) ItemFieldNames.b0_b] =
+                    itemFields[(int)ItemFieldNames.b0_b] =
                         FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter2));
-                    itemFields[(int) ItemFieldNames.b1_c] =
+                    itemFields[(int)ItemFieldNames.b1_c] =
                         FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3));
-                    itemFields[(int) ItemFieldNames.b2] =
+                    itemFields[(int)ItemFieldNames.b2] =
                         FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4));
-                    itemFields[(int) ItemFieldNames.b3] =
+                    itemFields[(int)ItemFieldNames.b3] =
                         FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5));
-                    var avg_b = MathHelper.CalculateAverageB(itemFields[(int) ItemFieldNames.MeasurementModel],
-                        itemFields[(int) ItemFieldNames.a], itemFields[(int) ItemFieldNames.b0_b],
-                        itemFields[(int) ItemFieldNames.b1_c], itemFields[(int) ItemFieldNames.b2],
-                        itemFields[(int) ItemFieldNames.b3], itemFields[(int) ItemFieldNames.ScorePoints]);
+                    var avg_b = MathHelper.CalculateAverageB(itemFields[(int)ItemFieldNames.MeasurementModel],
+                        itemFields[(int)ItemFieldNames.a], itemFields[(int)ItemFieldNames.b0_b],
+                        itemFields[(int)ItemFieldNames.b1_c], itemFields[(int)ItemFieldNames.b2],
+                        itemFields[(int)ItemFieldNames.b3], itemFields[(int)ItemFieldNames.ScorePoints]);
                     if (!avg_b.Errors.Any())
                     {
-                        itemFields[(int) ItemFieldNames.avg_b] = avg_b.Value;
+                        itemFields[(int)ItemFieldNames.avg_b] = avg_b.Value;
                     }
                     else
                     {
@@ -354,7 +354,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     var bpRef = bpRefProcessors[i].ValueForAttribute("bpref");
                     if (i < MaxBpRefs)
                     {
-                        itemFields[(int) ItemFieldNames.bpref1 + i++] = bpRef;
+                        itemFields[(int)ItemFieldNames.bpref1 + i++] = bpRef;
                     }
 
                     // Attempt to parse the bpref as an SBAC standard
@@ -372,10 +372,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                         {
                             continue;
                         }
-                        itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix,
+                        itemFields[(int)ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix,
                             match.Value.Substring(5));
-                        itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value;
-                        itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value;
+                        itemFields[(int)ItemFieldNames.Claim] = match.Groups[1].Value;
+                        itemFields[(int)ItemFieldNames.Target] = match.Groups[2].Value;
                     }
                     else if (testInformation[ItemFieldNames.AssessmentSubject].Equals("ELA",
                         StringComparison.OrdinalIgnoreCase))
@@ -385,11 +385,11 @@ namespace TabulateSmarterTestPackage.Tabulators
                         {
                             continue;
                         }
-                        itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix,
+                        itemFields[(int)ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix,
                             match.Value.Substring(5));
-                        itemFields[(int) ItemFieldNames.Claim] = match.Groups[1].Value + "\t";
+                        itemFields[(int)ItemFieldNames.Claim] = match.Groups[1].Value + "\t";
                         // Adding tab character prevents Excel from treating these as dates.
-                        itemFields[(int) ItemFieldNames.Target] = match.Groups[2].Value + "\t";
+                        itemFields[(int)ItemFieldNames.Target] = match.Groups[2].Value + "\t";
                     }
                 }
 
@@ -397,15 +397,15 @@ namespace TabulateSmarterTestPackage.Tabulators
                     ReportingUtility.CrossProcessor.ItemContentPackage != null)
                 {
                     var contentItem = ReportingUtility.CrossProcessor.ItemContentPackage.FirstOrDefault(
-                        x => x.ItemId.Equals(itemFields[(int) ItemFieldNames.ItemId],
+                        x => x.ItemId.Equals(itemFields[(int)ItemFieldNames.ItemId],
                             StringComparison.OrdinalIgnoreCase));
 
-                    itemFields[(int) ItemFieldNames.CommonCore] = contentItem?.CommonCore ?? string.Empty;
-                    itemFields[(int) ItemFieldNames.ClaimContentTarget] = contentItem?.ClaimContentTarget ??
+                    itemFields[(int)ItemFieldNames.CommonCore] = contentItem?.CommonCore ?? string.Empty;
+                    itemFields[(int)ItemFieldNames.ClaimContentTarget] = contentItem?.ClaimContentTarget ??
                                                                           string.Empty;
-                    itemFields[(int) ItemFieldNames.SecondaryCommonCore] = contentItem?.SecondaryCommonCore ??
+                    itemFields[(int)ItemFieldNames.SecondaryCommonCore] = contentItem?.SecondaryCommonCore ??
                                                                            string.Empty;
-                    itemFields[(int) ItemFieldNames.SecondaryClaimContentTarget] =
+                    itemFields[(int)ItemFieldNames.SecondaryClaimContentTarget] =
                         contentItem?.SecondaryClaimContentTarget ?? string.Empty;
 
                     itemFields[(int)ItemFieldNames.AnswerKey] = contentItem?.AnswerKey ?? string.Empty;
@@ -416,19 +416,19 @@ namespace TabulateSmarterTestPackage.Tabulators
                 GroupItemInfo gii;
                 if (indexGroupItemInfo.TryGetValue(itemId.Split('-').Last(), out gii))
                 {
-                    itemFields[(int) ItemFieldNames.IsFieldTest] = gii.IsFieldTest;
-                    itemFields[(int) ItemFieldNames.IsActive] = gii.IsActive;
-                    itemFields[(int) ItemFieldNames.ResponseRequired] = gii.ResponseRequired;
-                    itemFields[(int) ItemFieldNames.AdminRequired] = gii.AdminRequired;
-                    itemFields[(int) ItemFieldNames.ItemPosition] = gii.FormPosition;
+                    itemFields[(int)ItemFieldNames.IsFieldTest] = gii.IsFieldTest;
+                    itemFields[(int)ItemFieldNames.IsActive] = gii.IsActive;
+                    itemFields[(int)ItemFieldNames.ResponseRequired] = gii.ResponseRequired;
+                    itemFields[(int)ItemFieldNames.AdminRequired] = gii.AdminRequired;
+                    itemFields[(int)ItemFieldNames.ItemPosition] = gii.FormPosition;
                 }
                 else
                 {
-                    itemFields[(int) ItemFieldNames.IsFieldTest] = string.Empty;
-                    itemFields[(int) ItemFieldNames.IsActive] = string.Empty;
-                    itemFields[(int) ItemFieldNames.ResponseRequired] = string.Empty;
-                    itemFields[(int) ItemFieldNames.AdminRequired] = string.Empty;
-                    itemFields[(int) ItemFieldNames.ItemPosition] = string.Empty;
+                    itemFields[(int)ItemFieldNames.IsFieldTest] = string.Empty;
+                    itemFields[(int)ItemFieldNames.IsActive] = string.Empty;
+                    itemFields[(int)ItemFieldNames.ResponseRequired] = string.Empty;
+                    itemFields[(int)ItemFieldNames.AdminRequired] = string.Empty;
+                    itemFields[(int)ItemFieldNames.ItemPosition] = string.Empty;
                 }
 
                 var j = 0;
@@ -449,28 +449,28 @@ namespace TabulateSmarterTestPackage.Tabulators
                                     .ValueForAttribute("uniqueid")
                                     .Split('-')
                                     .Last()
-                                    .Equals(itemFields[(int) ItemFieldNames.ItemId]));
-                itemFields[(int) ItemFieldNames.MathematicalPractice] =
+                                    .Equals(itemFields[(int)ItemFieldNames.ItemId]));
+                itemFields[(int)ItemFieldNames.MathematicalPractice] =
                     string.IsNullOrEmpty(item.ValueForAttribute("MathematicalPractice"))
                         ? string.Empty
                         : item.ValueForAttribute("MathematicalPractice");
 
-                itemFields[(int) ItemFieldNames.MaxPoints] = string.IsNullOrEmpty(item.ValueForAttribute("MaxPoints"))
+                itemFields[(int)ItemFieldNames.MaxPoints] = string.IsNullOrEmpty(item.ValueForAttribute("MaxPoints"))
                     ? string.Empty
                     : item.ValueForAttribute("MaxPoints");
 
                 // We're using the backup property from the content package because the item didn't specify
-                if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
+                if (string.IsNullOrEmpty(itemFields[(int)ItemFieldNames.AllowCalculator]))
                 {
-                    itemFields[(int) ItemFieldNames.AllowCalculator] =
+                    itemFields[(int)ItemFieldNames.AllowCalculator] =
                         string.IsNullOrEmpty(item.ValueForAttribute("AllowCalculator"))
                             ? string.Empty
                             : item.ValueForAttribute("AllowCalculator");
                 }
 
-                if (itemFields[(int) ItemFieldNames.AssessmentSubject].Equals("MATH", StringComparison.OrdinalIgnoreCase))
+                if (itemFields[(int)ItemFieldNames.AssessmentSubject].Equals("MATH", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
+                    if (string.IsNullOrEmpty(itemFields[(int)ItemFieldNames.AllowCalculator]))
                     {
                         ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                             testSpecificationProcessor.PackageType,
