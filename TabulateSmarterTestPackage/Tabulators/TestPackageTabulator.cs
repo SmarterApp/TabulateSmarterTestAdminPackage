@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 using NLog;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
@@ -13,6 +14,7 @@ using SmarterTestPackage.Common.Extensions;
 using TabulateSmarterTestPackage.Models;
 using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
+using TabulateSmarterTestPackage.Resources;
 
 namespace TabulateSmarterTestPackage.Tabulators
 {
@@ -73,6 +75,12 @@ namespace TabulateSmarterTestPackage.Tabulators
                     ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
                     validateDocument.Validate(validation);
                     Logger.Debug("New package type xml file loaded and validated against XML schema");
+
+                    //deserialize into class?
+                    TestPackage testPackage;
+                    XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
+                    testPackage = (TestPackage) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
+                    Logger.Debug("testPackage.ToString= " + testPackage.publisher);
                 }
                 catch (XmlException e)
                 {

@@ -69,7 +69,15 @@ namespace ProcessSmarterTestPackage.Processors.Common
 
         public string GetUniqueId()
         {
-            return ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
+            if(PackageType == PackageType.Combined)
+            {
+                return ChildNodeWithName("Test").ValueForAttribute("id");
+            }
+            else
+            {
+                return ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
+                
+            }
         }
     }
 }

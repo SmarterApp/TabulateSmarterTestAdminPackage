@@ -44,6 +44,8 @@
     <Compile Include="RestrictedValues\Enums\StimFieldNames.cs" />
     <Compile Include="RestrictedValues\RestrictedList\RestrictedList.cs" />
     <Compile Include="ValidatedAttribute.cs" />
+    <Compile Include="Validators\Combined\ItemGroupValidator .cs" />
+    <Compile Include="Validators\Combined\ITestPackageValidator.cs" />
     <Compile Include="Validators\Convenience\BooleanValidator.cs" />
     <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
     <Compile Include="Validators\Convenience\DecimalValidator.cs" />

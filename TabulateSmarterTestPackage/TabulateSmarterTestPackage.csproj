@@ -78,6 +78,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\v4-test-package.cs">
+      <DependentUpon>v4-test-package.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Tabulators\ItemTabulator.cs" />
     <Compile Include="Tabulators\StimuliTabulator.cs" />
     <Compile Include="Utilities\CsvProcessor.cs" />
