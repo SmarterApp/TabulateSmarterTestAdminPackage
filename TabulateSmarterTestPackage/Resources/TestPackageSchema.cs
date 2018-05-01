@@ -24,7 +24,7 @@ namespace TabulateSmarterTestPackage.Resources
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlType(AnonymousType=true)]
     [XmlRoot(Namespace="", IsNullable=false)]
-    public partial class TestPackage {
+    public partial class TestPackageSchema {
     
         private BlueprintElement[] blueprintField;
     
