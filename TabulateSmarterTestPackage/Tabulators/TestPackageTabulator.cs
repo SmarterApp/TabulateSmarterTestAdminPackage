@@ -77,9 +77,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                     Logger.Debug("New package type xml file loaded and validated against XML schema");
 
                     //deserialize into class?
-                    TestPackage testPackage;
-                    XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
-                    testPackage = (TestPackage) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
+                    TestPackageSchema testPackage;
+                    XmlSerializer serializer = new XmlSerializer(typeof(TestPackageSchema));
+                    testPackage = (TestPackageSchema) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
                     Logger.Debug("testPackage.ToString= " + testPackage.publisher);
                 }
                 catch (XmlException e)
