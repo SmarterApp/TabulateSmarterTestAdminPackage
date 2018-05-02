@@ -13,8 +13,9 @@ using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using TabulateSmarterTestPackage.Models;
 using TabulateSmarterTestPackage.Utilities;
+using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Resources;
+using ValidateSmarterTestPackage.Validators.Combined;
 
 namespace TabulateSmarterTestPackage.Tabulators
 {
@@ -71,16 +72,27 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {
                     XmlDocument validateDocument = new XmlDocument();
                     validateDocument.LoadXml(nav.OuterXml);
-                    validateDocument.Schemas.Add(null, "Resources/v4-test-package.xsd"); //TODO can I put this in a setting or something?
+                    validateDocument.Schemas.Add(null, "Resources/TestPackageSchema.xsd"); //TODO can I put this in a setting or something?
                     ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
                     validateDocument.Validate(validation);
                     Logger.Debug("New package type xml file loaded and validated against XML schema");
 
                     //deserialize into class?
-                    TestPackageSchema testPackage;
-                    XmlSerializer serializer = new XmlSerializer(typeof(TestPackageSchema));
-                    testPackage = (TestPackageSchema) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
+                    TestPackage testPackage;
+                    XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
+                    testPackage = (TestPackage) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
                     Logger.Debug("testPackage.ToString= " + testPackage.publisher);
+                    ItemGroupValidator itemGroupValidator = new ItemGroupValidator();
+                    List<ValidationError> valErrs = new List<ValidationError>();
+
+                    itemGroupValidator.Validate(testPackage, valErrs);
+
+                    foreach (var error in valErrs)
+                    {
+                        Logger.Debug(error.GeneratedMessage);
+                    }
+
+
                 }
                 catch (XmlException e)
                 {

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -38,9 +41,10 @@
   <ItemGroup>
     <Compile Include="AttributeValidationDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\TestPackageSchema.cs">
+    <Compile Include="Resources\TestPackage.cs">
       <DependentUpon>TestPackageSchema.xsd</DependentUpon>
     </Compile>
+    <Compile Include="RestrictedValues\Enums\Algorithm.cs" />
     <Compile Include="RestrictedValues\Enums\BlueprintElementType.cs" />
     <Compile Include="RestrictedValues\Enums\ItemFieldNames.cs" />
     <Compile Include="RestrictedValues\Enums\RestrictedListItems.cs" />

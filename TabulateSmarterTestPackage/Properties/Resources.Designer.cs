@@ -59,21 +59,5 @@ namespace TabulateSmarterTestPackage.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-        ///&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;
-        ///           xmlns:vc=&quot;http://www.w3.org/2007/XMLSchema-versioning&quot; elementFormDefault=&quot;qualified&quot;
-        ///           vc:minVersion=&quot;1.1&quot;&gt;
-        ///    &lt;xs:element name=&quot;TestPackage&quot;&gt;
-        ///        &lt;xs:annotation&gt;
-        ///            &lt;xs:documentation&gt;&lt;![CDATA[
-        ///The root element of the test package. The &lt;TestPackage&gt; element contains an optional &lt;Scoring&gt; element (for test packages that contain COMBINED scoring data, such as ICA assessments) [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string v4_test_package {
-            get {
-                return ResourceManager.GetString("v4_test_package", resourceCulture);
-            }
-        }
     }
 }
