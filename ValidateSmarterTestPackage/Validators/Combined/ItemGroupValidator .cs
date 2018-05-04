@@ -10,7 +10,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 {
     public class ItemGroupValidator : ITestPackageValidator
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public void Validate(TestPackage testPackage, List<ValidationError> errors)
         {

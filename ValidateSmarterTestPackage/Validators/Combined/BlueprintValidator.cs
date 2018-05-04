@@ -88,25 +88,27 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         }
 
                         // Validate that a "test" blueprint has only child segment
-                        foreach (var segBpel in bpEl.BlueprintElement1)
-                        {
-                            if (!segBpel.type.Equals(CombinedBlueprintElementTypes.SEGMENT,
-                                StringComparison.CurrentCultureIgnoreCase))
+                        if (bpEl.BlueprintElement1 != null)
+                            foreach (var segBpel in bpEl.BlueprintElement1)
                             {
-                                errStr = "Child elements of a 'test' blueprint element should be of a 'segment' blueprint element type.";
-                                Logger.Debug(errStr);
-                                errors.Add(new ValidationError
+                                if (!segBpel.type.Equals(CombinedBlueprintElementTypes.SEGMENT,
+                                    StringComparison.CurrentCultureIgnoreCase))
                                 {
-                                    ErrorSeverity = ErrorSeverity.Severe,
-                                    Location = "BlueprintElement",
-                                    GeneratedMessage = errStr,
-                                    ItemId = segBpel.id,
-                                    Key = "BlueprintElement",
-                                    PackageType = PackageType.Combined,
-                                    Value = segBpel.id
-                                });
+                                    errStr =
+                                        "Child elements of a 'test' blueprint element should be of a 'segment' blueprint element type.";
+                                    Logger.Debug(errStr);
+                                    errors.Add(new ValidationError
+                                    {
+                                        ErrorSeverity = ErrorSeverity.Severe,
+                                        Location = "BlueprintElement",
+                                        GeneratedMessage = errStr,
+                                        ItemId = segBpel.id,
+                                        Key = "BlueprintElement",
+                                        PackageType = PackageType.Combined,
+                                        Value = segBpel.id
+                                    });
+                                }
                             }
-                        }
 
                         break;
 
@@ -145,24 +147,28 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     case CombinedBlueprintElementTypes.CLAIM:
                     case CombinedBlueprintElementTypes.TARGET:
                         // Validate that a "claim" blueprint has only child claims or targets
-                        foreach (var childBpel in bpEl.BlueprintElement1)
-                        {
-                            if(! childBpel.type.Equals(CombinedBlueprintElementTypes.TARGET, StringComparison.CurrentCultureIgnoreCase))
+                        if (bpEl.BlueprintElement1 != null)
+                            foreach (var childBpel in bpEl.BlueprintElement1)
                             {
-                                errStr = "Child elements of a 'claim' or 'target' blueprint element should be of a 'target' blueprint element type.";
-                                Logger.Debug(errStr);
-                                errors.Add(new ValidationError
+                                if (!childBpel.type.Equals(CombinedBlueprintElementTypes.TARGET,
+                                    StringComparison.CurrentCultureIgnoreCase))
                                 {
-                                    ErrorSeverity = ErrorSeverity.Severe,
-                                    Location = "BlueprintElement",
-                                    GeneratedMessage = errStr,
-                                    ItemId = bpEl.id,
-                                    Key = "BlueprintElement",
-                                    PackageType = PackageType.Combined,
-                                    Value = bpEl.id
-                                });
+                                    errStr =
+                                        "Child elements of a 'claim' or 'target' blueprint element should be of a 'target' blueprint element type.";
+                                    Logger.Debug(errStr);
+                                    errors.Add(new ValidationError
+                                    {
+                                        ErrorSeverity = ErrorSeverity.Severe,
+                                        Location = "BlueprintElement",
+                                        GeneratedMessage = errStr,
+                                        ItemId = bpEl.id,
+                                        Key = "BlueprintElement",
+                                        PackageType = PackageType.Combined,
+                                        Value = bpEl.id
+                                    });
+                                }
                             }
-                        }
+
                         break;
 
                     case CombinedBlueprintElementTypes.STRAND:

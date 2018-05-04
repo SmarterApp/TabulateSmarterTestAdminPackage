@@ -55,7 +55,12 @@
     <Compile Include="Validators\Combined\AssessmentValidator.cs" />
     <Compile Include="Validators\Combined\BlueprintValidator.cs" />
     <Compile Include="Validators\Combined\ItemGroupValidator .cs" />
+    <Compile Include="Validators\Combined\ItemScoreDimensionValidator.cs" />
+    <Compile Include="Validators\Combined\ItemValidator.cs" />
     <Compile Include="Validators\Combined\ITestPackageValidator.cs" />
+    <Compile Include="Validators\Combined\SegmentBlueprintValidator.cs" />
+    <Compile Include="Validators\Combined\SegmentFormValidator.cs" />
+    <Compile Include="Validators\Combined\StimulusValidator.cs" />
     <Compile Include="Validators\Convenience\BooleanValidator.cs" />
     <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
     <Compile Include="Validators\Convenience\DecimalValidator.cs" />

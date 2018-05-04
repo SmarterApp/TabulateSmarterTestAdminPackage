@@ -85,11 +85,19 @@ namespace TabulateSmarterTestPackage.Tabulators
                     ItemGroupValidator itemGroupValidator = new ItemGroupValidator();
                     AssessmentValidator assessmentValidator = new AssessmentValidator();
                     BlueprintValidator blueprintValidator = new BlueprintValidator();
+                    ItemScoreDimensionValidator itemScoreDimensionValidator = new ItemScoreDimensionValidator();
+                    ItemValidator itemValidator = new ItemValidator();
+                    SegmentBlueprintValidator segmentBlueprintValidator = new SegmentBlueprintValidator();
+                    SegmentFormValidator segmentFormValidator = new SegmentFormValidator();
                     List<ValidationError> valErrs = new List<ValidationError>();
 
                     itemGroupValidator.Validate(testPackage, valErrs);
                     assessmentValidator.Validate(testPackage, valErrs);
                     blueprintValidator.Validate(testPackage, valErrs);
+                    itemScoreDimensionValidator.Validate(testPackage, valErrs);
+                    itemValidator.Validate(testPackage, valErrs);
+                    segmentBlueprintValidator.Validate(testPackage, valErrs);
+                    segmentFormValidator.Validate(testPackage, valErrs);
 
                     foreach (var error in valErrs)
                     {
