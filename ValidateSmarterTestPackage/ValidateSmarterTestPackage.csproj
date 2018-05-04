@@ -46,11 +46,14 @@
     </Compile>
     <Compile Include="RestrictedValues\Enums\Algorithm.cs" />
     <Compile Include="RestrictedValues\Enums\BlueprintElementType.cs" />
+    <Compile Include="RestrictedValues\Enums\CombinedBlueprintElementTypes.cs" />
     <Compile Include="RestrictedValues\Enums\ItemFieldNames.cs" />
     <Compile Include="RestrictedValues\Enums\RestrictedListItems.cs" />
     <Compile Include="RestrictedValues\Enums\StimFieldNames.cs" />
     <Compile Include="RestrictedValues\RestrictedList\RestrictedList.cs" />
     <Compile Include="ValidatedAttribute.cs" />
+    <Compile Include="Validators\Combined\AssessmentValidator.cs" />
+    <Compile Include="Validators\Combined\BlueprintValidator.cs" />
     <Compile Include="Validators\Combined\ItemGroupValidator .cs" />
     <Compile Include="Validators\Combined\ITestPackageValidator.cs" />
     <Compile Include="Validators\Convenience\BooleanValidator.cs" />

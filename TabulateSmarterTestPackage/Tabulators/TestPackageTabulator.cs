@@ -83,9 +83,13 @@ namespace TabulateSmarterTestPackage.Tabulators
                     testPackage = (TestPackage) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
                     Logger.Debug("testPackage.ToString= " + testPackage.publisher);
                     ItemGroupValidator itemGroupValidator = new ItemGroupValidator();
+                    AssessmentValidator assessmentValidator = new AssessmentValidator();
+                    BlueprintValidator blueprintValidator = new BlueprintValidator();
                     List<ValidationError> valErrs = new List<ValidationError>();
 
                     itemGroupValidator.Validate(testPackage, valErrs);
+                    assessmentValidator.Validate(testPackage, valErrs);
+                    blueprintValidator.Validate(testPackage, valErrs);
 
                     foreach (var error in valErrs)
                     {
