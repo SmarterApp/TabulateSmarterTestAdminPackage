@@ -33,10 +33,10 @@ namespace ValidateSmarterTestPackage.Validators.Combined
             }
 
             validateSegmentFormIdsAreUnique(errors, segForms);
-            validateItemPresentationsAreAlsoAtFormLevel(errors, segForms);
+            validateItemPresentationsAreAlsoAtFormLevel(segForms, errors);
         }
 
-        private void validateItemPresentationsAreAlsoAtFormLevel(List<ValidationError> errors, List<TestSegmentSegmentFormsSegmentForm> segForms)
+        private void validateItemPresentationsAreAlsoAtFormLevel(List<TestSegmentSegmentFormsSegmentForm> segForms, List<ValidationError> errors)
         {
             foreach (var form in segForms)
             {

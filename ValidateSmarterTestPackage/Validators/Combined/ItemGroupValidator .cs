@@ -62,7 +62,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         ItemId =
                             itemGroup.id,
                         Key = "ItemGroup",
-                        //PackageType = PackageType,
+                        PackageType = PackageType.Combined,
                         Value = itemGroup.maxItems
                     });
                 }
@@ -90,7 +90,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         ItemId =
                             itemGroup.id,
                         Key = "passageref",
-                        //PackageType = PackageType,
+                        PackageType = PackageType.Combined,
                         Value = itemGroup.maxResponses
                     });
                 }

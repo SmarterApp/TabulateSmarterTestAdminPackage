@@ -26,7 +26,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
             var maxLengthValidator = new MaxLengthValidator(ErrorSeverity.Severe, 250);
             foreach (var test in testPackage.Test)
             {                
-                Logger.Debug("length is " + ((string)test.id).Length);
                 if (test.id != null && !maxLengthValidator.IsValid(test.id))
                 {
                     var errStr =

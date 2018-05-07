@@ -82,6 +82,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
                     testPackage = (TestPackage) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
                     Logger.Debug("testPackage.ToString= " + testPackage.publisher);
+
+                    //all the validators for the new format
                     ItemGroupValidator itemGroupValidator = new ItemGroupValidator();
                     AssessmentValidator assessmentValidator = new AssessmentValidator();
                     BlueprintValidator blueprintValidator = new BlueprintValidator();
@@ -89,6 +91,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                     ItemValidator itemValidator = new ItemValidator();
                     SegmentBlueprintValidator segmentBlueprintValidator = new SegmentBlueprintValidator();
                     SegmentFormValidator segmentFormValidator = new SegmentFormValidator();
+                    SegmentValidator segmentValidator = new SegmentValidator();
+                    TestPackageRootValidator testPackageRootValidator = new TestPackageRootValidator();
+                    TestPackageValidator testPackageValidator = new TestPackageValidator();
+
                     List<ValidationError> valErrs = new List<ValidationError>();
 
                     itemGroupValidator.Validate(testPackage, valErrs);
@@ -98,6 +104,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                     itemValidator.Validate(testPackage, valErrs);
                     segmentBlueprintValidator.Validate(testPackage, valErrs);
                     segmentFormValidator.Validate(testPackage, valErrs);
+                    segmentValidator.Validate(testPackage, valErrs);
+                    testPackageRootValidator.Validate(testPackage, valErrs);
+                    testPackageValidator.Validate(testPackage, valErrs);
 
                     foreach (var error in valErrs)
                     {

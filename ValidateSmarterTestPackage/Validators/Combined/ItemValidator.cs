@@ -51,10 +51,12 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         }
                         else
                         {
-                            foreach (var itemGroup in (segment.Item as TestSegmentPool).ItemGroup)
-                            {
-                                items.AddRange(itemGroup.Item);
-                            }
+                            var itemGroups = (segment.Item as TestSegmentPool)?.ItemGroup;
+                            if (itemGroups != null)
+                                foreach (var itemGroup in itemGroups)
+                                {
+                                    items.AddRange(itemGroup.Item);
+                                }
                         }
                     }
                     
