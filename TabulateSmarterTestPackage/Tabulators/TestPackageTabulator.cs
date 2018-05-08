@@ -81,7 +81,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                     TestPackage testPackage;
                     XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
                     testPackage = (TestPackage) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
-                    Logger.Debug("testPackage.ToString= " + testPackage.publisher);
 
                     //all the validators for the new format
                     ItemGroupValidator itemGroupValidator = new ItemGroupValidator();
@@ -108,10 +107,19 @@ namespace TabulateSmarterTestPackage.Tabulators
                     testPackageRootValidator.Validate(testPackage, valErrs);
                     testPackageValidator.Validate(testPackage, valErrs);
 
-                    foreach (var error in valErrs)
+                    if (valErrs.Count > 0)
                     {
-                        Logger.Debug(error.GeneratedMessage);
+                        Logger.Debug("Post-schema validation issues found:");
+                        foreach (var error in valErrs)
+                        {
+                            Logger.Debug(error.GeneratedMessage);
+                        }
                     }
+                    else
+                    {
+                        Logger.Debug("No post-schema validation issues found:");
+                    }
+                    
 
 
                 }

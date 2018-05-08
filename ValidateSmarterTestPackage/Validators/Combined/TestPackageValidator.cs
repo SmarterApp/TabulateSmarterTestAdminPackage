@@ -168,7 +168,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
             "TDS_Dict_SD3"
         };
 
-        Dictionary<string, string> _toolDefaultsMap = new Dictionary<string, string>
+        readonly Dictionary<string, string> _toolDefaultsMap = new Dictionary<string, string>
         {
             {"American Sign Language", "TDS_Acc-ASL"},
             {"Audio Playback Controls", "TDSAcc-AudioPlaybackControls"},
@@ -215,16 +215,23 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 
         public void Validate(TestPackage testPackage, List<ValidationError> errors)
         {
-            List<ToolsTool> toolTypes = new List<ToolsTool>();
+            var toolTypes = new List<ToolsTool>();
             foreach (var test in testPackage.Test)
             {
-                toolTypes.AddRange(test.Tools);
+                if (test.Tools != null)
+                {
+                    toolTypes.AddRange(test.Tools);
+                }
+                
                 foreach (var segment in test.Segments)
                 {
-                    toolTypes.AddRange(segment.Tools);
+                    if (segment.Tools != null)
+                    {
+                        toolTypes.AddRange(segment.Tools);
+                    }
+                    
                 }
             }
-
             ValidateTestToolNamesAreRecognized(toolTypes, errors);
             ValidateToolARTFieldNamesAreRecognized(toolTypes, errors);
             ValidateKnownToolCodes(toolTypes, errors);

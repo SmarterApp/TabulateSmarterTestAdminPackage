@@ -49,7 +49,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
         {
             
             bool isMultiTestPackage = testPackage.Test.Length > 1;
-            Logger.Debug($"isMultiTestPackage={isMultiTestPackage}");
             if (isMultiTestPackage)
             {
                 
