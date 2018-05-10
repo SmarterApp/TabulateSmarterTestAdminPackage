@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
+using NLog;
 using ProcessSmarterTestPackage.PostProcessors;
 using ProcessSmarterTestPackage.Processors.Administration;
+using ProcessSmarterTestPackage.Processors.Combined;
 using ProcessSmarterTestPackage.Processors.Scoring;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
 using ValidateSmarterTestPackage.Validators;
 using ValidateSmarterTestPackage.Validators.Convenience;
-//using NLog;
 
 namespace ProcessSmarterTestPackage.Processors.Common
 {
     public class TestSpecificationProcessor : Processor
     {
-        //private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public TestSpecificationProcessor(XPathNavigator navigator, PackageType packageType)
             : base(navigator, packageType)
@@ -54,10 +55,8 @@ namespace ProcessSmarterTestPackage.Processors.Common
                         .ForEach(x => Processors.Add(new ScoringProcessor(x, packageType)));
                     break;
                 case PackageType.Combined:
-                    //Navigator.GenerateList("combined").ForEach((x => Processors.Add(new CombinedProcessor(x, packageType))));
-                    //Navigator.GenerateList("property").ForEach(x => Processors.Add(new PropertyProcessor(x, packageType)));
-                    //Navigator.GenerateList("identifier").ForEach(x => Processors.Add(new IdentifierProcessor(x, packageType)));
-                    //Logger.Debug("Blah blah do stuff with processors for new file...");
+                    Logger.Debug("ADDING CombinedTestProcessor to Processors");
+                    Processors.Add(new CombinedTestProcessor(Navigator, packageType));
                     break;
             }
         }
@@ -67,17 +66,5 @@ namespace ProcessSmarterTestPackage.Processors.Common
             return new TestSpecificationPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
 
-        public string GetUniqueId()
-        {
-            if(PackageType == PackageType.Combined)
-            {
-                return ChildNodeWithName("Test").ValueForAttribute("id");
-            }
-            else
-            {
-                return ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
-                
-            }
-        }
     }
 }

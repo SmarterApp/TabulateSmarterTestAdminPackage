@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -41,6 +45,7 @@
     <Compile Include="External\TestPackageCrossProcessor.cs" />
     <Compile Include="PostProcessors\AdminSegmentPostProcessor.cs" />
     <Compile Include="PostProcessors\BlueprintElementPostProcessor.cs" />
+    <Compile Include="PostProcessors\Combined\CombinedTestPostProcessor.cs" />
     <Compile Include="PostProcessors\ComputationRuleParameterPostProcessor.cs" />
     <Compile Include="PostProcessors\ComputationRulePostProcessor.cs" />
     <Compile Include="PostProcessors\FormPartitionPostProcessor.cs" />
@@ -66,6 +71,7 @@
     <Compile Include="Processors\Administration\AdminSegment\SegmentFormProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\SegmentPoolProcessor.cs" />
     <Compile Include="Processors\Administration\PoolPropertyProcessor.cs" />
+    <Compile Include="Processors\Combined\CombinedTestProcessor.cs" />
     <Compile Include="Processors\Common\IdentifierProcessor.cs" />
     <Compile Include="Processors\Common\ItemPool\ItemPoolProcessor.cs" />
     <Compile Include="Processors\Common\ItemPool\Passage\PassageProcessor.cs" />

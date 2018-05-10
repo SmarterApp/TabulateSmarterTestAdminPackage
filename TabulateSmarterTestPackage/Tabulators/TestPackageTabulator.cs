@@ -7,6 +7,7 @@ using System.Xml.XPath;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using NLog;
+using ProcessSmarterTestPackage.PostProcessors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using SmarterTestPackage.Common.Data;
@@ -15,7 +16,8 @@ using TabulateSmarterTestPackage.Models;
 using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
-using ValidateSmarterTestPackage.Validators.Combined;
+using ProcessSmarterTestPackage.Processors.Combined;
+
 
 namespace TabulateSmarterTestPackage.Tabulators
 {
@@ -54,160 +56,105 @@ namespace TabulateSmarterTestPackage.Tabulators
             Dispose(true);
         }
 
-        public TestSpecificationProcessor ProcessResult(Stream input)
+        public Processor ProcessResult(Stream input)
         {
-            var doc = new XPathDocument(input);
-            var nav = doc.CreateNavigator();
-            var nodeSelector = "";
-
-            if (nav.IsNode && nav.SelectSingleNode("//TestPackage") != null)
+            try
             {
-                
-                Logger.Debug("****************************New Type");
-                nodeSelector = "//TestPackage";
-                ExpectedPackageType = PackageType.Combined;
+                var doc = new XPathDocument(input);
+                var nav = doc.CreateNavigator();
+                var nodeSelector = "";
 
-                //load and validate with XML schema
-                try
+                if (nav.IsNode && nav.SelectSingleNode("//TestPackage") != null)
                 {
-                    XmlDocument validateDocument = new XmlDocument();
-                    validateDocument.LoadXml(nav.OuterXml);
-                    validateDocument.Schemas.Add(null, "Resources/TestPackageSchema.xsd"); //TODO can I put this in a setting or something?
-                    ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
-                    validateDocument.Validate(validation);
-                    Logger.Debug("New package type xml file loaded and validated against XML schema");
 
-                    //deserialize into class?
-                    TestPackage testPackage;
-                    XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
-                    testPackage = (TestPackage) serializer.Deserialize(XmlReader.Create(new StringReader(nav.OuterXml)));
-
-                    //all the validators for the new format
-                    ItemGroupValidator itemGroupValidator = new ItemGroupValidator();
-                    AssessmentValidator assessmentValidator = new AssessmentValidator();
-                    BlueprintValidator blueprintValidator = new BlueprintValidator();
-                    ItemScoreDimensionValidator itemScoreDimensionValidator = new ItemScoreDimensionValidator();
-                    ItemValidator itemValidator = new ItemValidator();
-                    SegmentBlueprintValidator segmentBlueprintValidator = new SegmentBlueprintValidator();
-                    SegmentFormValidator segmentFormValidator = new SegmentFormValidator();
-                    SegmentValidator segmentValidator = new SegmentValidator();
-                    TestPackageRootValidator testPackageRootValidator = new TestPackageRootValidator();
-                    TestPackageValidator testPackageValidator = new TestPackageValidator();
-
-                    List<ValidationError> valErrs = new List<ValidationError>();
-
-                    itemGroupValidator.Validate(testPackage, valErrs);
-                    assessmentValidator.Validate(testPackage, valErrs);
-                    blueprintValidator.Validate(testPackage, valErrs);
-                    itemScoreDimensionValidator.Validate(testPackage, valErrs);
-                    itemValidator.Validate(testPackage, valErrs);
-                    segmentBlueprintValidator.Validate(testPackage, valErrs);
-                    segmentFormValidator.Validate(testPackage, valErrs);
-                    segmentValidator.Validate(testPackage, valErrs);
-                    testPackageRootValidator.Validate(testPackage, valErrs);
-                    testPackageValidator.Validate(testPackage, valErrs);
-
-                    if (valErrs.Count > 0)
+                    Logger.Debug("****************************New Type");
+                    nodeSelector = "//TestPackage";
+                    ExpectedPackageType = PackageType.Combined;
+                }
+                else if (nav.IsNode && nav.SelectSingleNode("/testspecification") != null)
+                {
+                    Logger.Debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^OLD Type");
+                    nodeSelector = "/testspecification";
+                    var packageType = nav.SelectSingleNode(nodeSelector)
+                        .Eval(XPathExpression.Compile("@purpose"));
+                    if (packageType.Equals("administration", StringComparison.OrdinalIgnoreCase))
                     {
-                        Logger.Debug("Post-schema validation issues found:");
-                        foreach (var error in valErrs)
-                        {
-                            Logger.Debug(error.GeneratedMessage);
-                        }
+                        ExpectedPackageType = PackageType.Administration;
                     }
-                    else
+                    else if (packageType.Equals("scoring", StringComparison.OrdinalIgnoreCase))
                     {
-                        Logger.Debug("No post-schema validation issues found:");
+                        ExpectedPackageType = PackageType.Scoring;
                     }
-                    
-
-
                 }
-                catch (XmlException e)
+                else
                 {
-                    Logger.Error("Schema Validation Error: {0}", e.Message);
-                    throw new ArgumentException("XML Validation Failure");
+                    throw new ArgumentException("UnrecognizedPackageType");
                 }
-                
-            }
-            else if (nav.IsNode && nav.SelectSingleNode("/testspecification") != null)
-            {
-                Logger.Debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^OLD Type");
-                nodeSelector = "/testspecification";
-                var packageType = nav.SelectSingleNode(nodeSelector)
-                    .Eval(XPathExpression.Compile("@purpose"));
-                if (packageType.Equals("administration", StringComparison.OrdinalIgnoreCase))
+
+                if (ExpectedPackageType != PackageType.Combined)
                 {
-                    ExpectedPackageType = PackageType.Administration;
+                    var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode(nodeSelector),
+                        ExpectedPackageType);
+                    testSpecificationProcessor.Process();
+                    return testSpecificationProcessor;
                 }
-                else if (packageType.Equals("scoring", StringComparison.OrdinalIgnoreCase))
+                else
                 {
-                    ExpectedPackageType = PackageType.Scoring;
+                    var combinedTestProcessor = new CombinedTestProcessor(nav.SelectSingleNode(nodeSelector), ExpectedPackageType);
+                    combinedTestProcessor.Process();
+                    return combinedTestProcessor;
                 }
             }
-            else
+            catch (XmlException e)
             {
-                throw new ArgumentException("UnrecognizedPackageType");
+                throw new ArgumentException($"XML document parse failure. Error:  \"{e.Message}\" Skipping file.");
             }
-
-            //TODO - remove when new type is properly being processed
-            if (ExpectedPackageType != PackageType.Combined)
-            {
-                var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode(nodeSelector),
-                    ExpectedPackageType);
-                testSpecificationProcessor.Process();
-                return testSpecificationProcessor;
-            }
-
-            return null;
-
-
+            
 
         }
 
-        static void SchemaValidationHandler(object sender, ValidationEventArgs e)
-        {
-            Logger.Debug("VALIDATION ERROR!!");
-            switch (e.Severity)
-            {
-                case XmlSeverityType.Error:
-                    Logger.Error("Schema Validation Error: {0}", e.Message);
-                    throw new ArgumentException("XML Validation Failure");
-                case XmlSeverityType.Warning:
-                    Logger.Error("Schema Validation Warning: {0}", e.Message);
-                    throw new ArgumentException("XML Validation Warning");
-                default:
-                    throw new ArgumentException("XML Validation Failure");
-            }
-        }
-
-
-        public void TabulateResults(List<TestSpecificationProcessor> testSpecificationProcessors,
+       
+        public void TabulateResults(List<Processor> testSpecificationProcessors,
             List<ProcessingError> crossTabulationErrors)
         {
             foreach (var testSpecificationProcessor in testSpecificationProcessors)
             {
                 // Extract the test info
                 var testInfo = new TestInformation();
-                var testInformation = testInfo.RetrieveTestInformation(testSpecificationProcessor);
+                IDictionary<ItemFieldNames, string> testInformation;
 
-                ReportingUtility.TestName = testInformation[ItemFieldNames.AssessmentName];
-
-                var itemTabulator = new ItemTabulator();
-                var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
-                    testInformation);
-                items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
-
-                var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration") ??
-                                     testSpecificationProcessor.ChildNodeWithName("scoring");
-                var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage").ToList();
-                if (passages.Any())
+                //TODO skipping tabulation for the new format for the time being to get errors output
+                if (testSpecificationProcessor is TestSpecificationProcessor)
                 {
-                    var stimuliTabulator = new StimuliTabulator();
-                    var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(),
+                    
+                    if (testSpecificationProcessor is CombinedTestProcessor)
+                    {
+                        testInformation = testInfo.RetrieveTestInformation((CombinedTestProcessor)testSpecificationProcessor);
+                    }
+                    else
+                    {
+                        testInformation = testInfo.RetrieveTestInformation((TestSpecificationProcessor)testSpecificationProcessor);
+                    }
+
+                    ReportingUtility.TestName = testInformation[ItemFieldNames.AssessmentName];
+
+                    var itemTabulator = new ItemTabulator();
+                    var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
                         testInformation);
-                    stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+                    items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
+
+                    var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration") ??
+                                         testSpecificationProcessor.ChildNodeWithName("scoring");
+                    var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage").ToList();
+                    if (passages.Any())
+                    {
+                        var stimuliTabulator = new StimuliTabulator();
+                        var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(),
+                            testInformation);
+                        stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+                    }
                 }
+                
 
                 var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>().ToList();
                 errors.AddRange(crossTabulationErrors);

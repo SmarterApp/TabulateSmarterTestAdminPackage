@@ -214,7 +214,7 @@ namespace TabulateSmarterTestPackage
             Console.ReadKey(true);
         }
 
-        private static IEnumerable<TestSpecificationProcessor> ProcessInputFilename(string filenamePattern,
+        private static IEnumerable<Processor> ProcessInputFilename(string filenamePattern,
             TestPackageTabulator tabulator)
         {
             Logger.Info($"Processing input file: {filenamePattern}");
@@ -225,7 +225,7 @@ namespace TabulateSmarterTestPackage
                 return ProcessDirectory(filenamePattern, tabulator);
             }
 
-            var processors = new List<TestSpecificationProcessor>();
+            var processors = new List<Processor>();
 
             var directory = Path.GetDirectoryName(filenamePattern);
             if (string.IsNullOrEmpty(directory))
@@ -271,7 +271,7 @@ namespace TabulateSmarterTestPackage
             return processors;
         }
 
-        private static void TabulateResults(List<TestSpecificationProcessor> processors, TestPackageTabulator tabulator)
+        private static void TabulateResults(List<Processor> processors, TestPackageTabulator tabulator)
         {
             tabulator.AddTabulationHeaders();
             if (ReportingUtility.CrossProcessor == null)
@@ -285,7 +285,7 @@ namespace TabulateSmarterTestPackage
                     .ToList()
                     .ForEach(
                         x =>
-                            tabulator.TabulateResults(new List<TestSpecificationProcessor> {x},
+                            tabulator.TabulateResults(new List<Processor> {x},
                                 ReportingUtility.CrossProcessor.Errors[x.GetUniqueId()].Cast<ProcessingError>().ToList()));
                 var crossTabulatedPackages =
                     ReportingUtility.CrossProcessor.TestPackages.Values.Where(x => x.Count > 1);
@@ -294,7 +294,7 @@ namespace TabulateSmarterTestPackage
                     var scoringPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Scoring);
                     if (scoringPackage != null)
                     {
-                        tabulator.TabulateResults(new List<TestSpecificationProcessor> {scoringPackage},
+                        tabulator.TabulateResults(new List<Processor> {scoringPackage},
                             ReportingUtility.CrossProcessor.Errors[scoringPackage.GetUniqueId()].Cast<ProcessingError>()
                                 .Where(x => x.PackageType == PackageType.Scoring).ToList());
                         continue;
@@ -302,7 +302,7 @@ namespace TabulateSmarterTestPackage
                     var adminPackage = packageSets.FirstOrDefault(x => x.PackageType == PackageType.Administration);
                     if (adminPackage != null)
                     {
-                        tabulator.TabulateResults(new List<TestSpecificationProcessor> {adminPackage},
+                        tabulator.TabulateResults(new List<Processor> {adminPackage},
                             ReportingUtility.CrossProcessor.Errors[adminPackage.GetUniqueId()].Cast<ProcessingError>()
                                 .Where(x => x.PackageType == PackageType.Administration).ToList());
                     }
@@ -310,7 +310,7 @@ namespace TabulateSmarterTestPackage
             }
         }
 
-        private static TestSpecificationProcessor ProcessInputXmlFile(string filename, TestPackageTabulator tabulator)
+        private static Processor ProcessInputXmlFile(string filename, TestPackageTabulator tabulator)
         {
             Logger.Info($"Processing: {filename}");
             using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -319,12 +319,12 @@ namespace TabulateSmarterTestPackage
             }
         }
 
-        private static TestSpecificationProcessor ProcessStream(Stream stream, TestPackageTabulator tabulator)
+        private static Processor ProcessStream(Stream stream, TestPackageTabulator tabulator)
         {
-            TestSpecificationProcessor processor;
+            Processor processor;
             try
             {
-                processor = tabulator.ProcessResult(stream);
+                 processor = tabulator.ProcessResult(stream);
             }
             catch (ArgumentException ex)
             {
@@ -334,18 +334,18 @@ namespace TabulateSmarterTestPackage
 
             if (ReportingUtility.CrossProcessor != null)
             {
-                ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
-                ReportingUtility.CrossProcessor.AddCrossProcessingErrors(processor,
+                ReportingUtility.CrossProcessor.AddProcessedTestPackage((TestSpecificationProcessor)processor);
+                ReportingUtility.CrossProcessor.AddCrossProcessingErrors((TestSpecificationProcessor)processor,
                     ReportingUtility.CrossProcessor.ExecuteValidation());
             }
             return processor;
         }
 
-        private static IEnumerable<TestSpecificationProcessor> ProcessInputZipFile(string filename,
+        private static IEnumerable<Processor> ProcessInputZipFile(string filename,
             TestPackageTabulator tabulator)
         {
             Logger.Info($"Processing input zip file: {filename}");
-            var processors = new List<TestSpecificationProcessor>();
+            var processors = new List<Processor>();
             using (var zip = ZipFile.Open(filename, ZipArchiveMode.Read))
             {
                 foreach (var entry in zip.Entries)
@@ -371,7 +371,7 @@ namespace TabulateSmarterTestPackage
             return processors;
         }
 
-        private static IEnumerable<TestSpecificationProcessor> ProcessDirectory(string directoryName,
+        private static IEnumerable<Processor> ProcessDirectory(string directoryName,
             TestPackageTabulator tabulator)
         {
             Logger.Info($"Processing input directory: {directoryName}");

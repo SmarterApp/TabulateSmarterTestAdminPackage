@@ -82,7 +82,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         }
 
         public IEnumerable<IEnumerable<string>> ProcessResult(XPathNavigator navigator,
-            TestSpecificationProcessor testSpecificationProcessor, IDictionary<ItemFieldNames, string> testInformation)
+            Processor testSpecificationProcessor, IDictionary<ItemFieldNames, string> testInformation)
         {
             var resultList = new List<List<string>>();
 

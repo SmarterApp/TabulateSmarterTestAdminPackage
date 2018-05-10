@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ProcessSmarterTestPackage.Processors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
@@ -96,6 +97,57 @@ namespace TabulateSmarterTestPackage.Models
                         Errors.Add(GenerateTestInformationValidationError(result[ItemFieldNames.AssessmentId],
                             "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either \"ICA\" or \"IAB\"",
                             "property", "testspecification/property", GetPackageType(processor)));
+                    }
+                }
+                else
+                {
+                    result.Add(ItemFieldNames.AssessmentSubtype, "summative");
+                }
+            }
+
+            return result;
+        }
+
+        public IDictionary<ItemFieldNames, string> RetrieveTestInformation(CombinedTestProcessor processor)
+        {
+            var result = new Dictionary<ItemFieldNames, string>();
+            var testPackage = processor.ChildNodeWithName("TestPackage");
+            var identifier = processor.ChildNodeWithName("Test");
+            if (identifier == null)
+            {
+                Errors.Add(GenerateTestInformationValidationError(string.Empty, "Test node not found",
+                    "Test", "TestPackage/Test", GetPackageType(processor)));
+                result.Add(ItemFieldNames.AssessmentId, string.Empty);
+                result.Add(ItemFieldNames.AssessmentName, string.Empty);
+                result.Add(ItemFieldNames.AssessmentLabel, string.Empty);
+                result.Add(ItemFieldNames.AssessmentVersion, string.Empty);
+            }
+            else
+            {
+                result.Add(ItemFieldNames.AssessmentId, identifier.ValueForAttribute("id"));
+                result.Add(ItemFieldNames.AssessmentName, string.Empty);
+                result.Add(ItemFieldNames.AssessmentLabel, identifier.ValueForAttribute("label"));
+                result.Add(ItemFieldNames.AssessmentVersion, testPackage.ValueForAttribute("version"));
+                result.Add(ItemFieldNames.AcademicYear, testPackage.ValueForAttribute("year"));
+                result.Add(ItemFieldNames.AssessmentSubject, testPackage.ValueForAttribute("subject"));
+                result.Add(ItemFieldNames.Grade, processor.ChildNodeWithName("Grade").ValueForAttribute("value"));
+                result.Add(ItemFieldNames.AssessmentType, testPackage.ValueForAttribute("type"));
+                if (!result[ItemFieldNames.AssessmentType].Equals("summative", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (result[ItemFieldNames.AssessmentId].Contains("ICA"))
+                    {
+                        result.Add(ItemFieldNames.AssessmentSubtype, "ICA");
+                    }
+                    else if (result[ItemFieldNames.AssessmentId].Contains("IAB"))
+                    {
+                        result.Add(ItemFieldNames.AssessmentSubtype, "IAB");
+                    }
+                    else
+                    {
+                        result.Add(ItemFieldNames.AssessmentSubtype, string.Empty);
+                        Errors.Add(GenerateTestInformationValidationError(result[ItemFieldNames.AssessmentId],
+                            "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either \"ICA\" or \"IAB\"",
+                            "TestPackage", "Test", GetPackageType(processor)));
                     }
                 }
                 else
