@@ -21,7 +21,8 @@ namespace ProcessSmarterTestPackage.Processors.Combined
 
         public CombinedTestProcessor(XPathNavigator navigator, PackageType packageType)
             : base(navigator, packageType)
-        { 
+        {
+            //Processors.Add(new CombinedTestProcessor(Navigator, packageType));
         }
 
         public override List<ValidationError> AdditionalValidations()
@@ -78,7 +79,7 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                     Logger.Debug("No post-schema validation issues found:");
                 }
 
-
+                return valErrs;
 
             }
             catch (XmlException e)
@@ -86,7 +87,7 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                 Logger.Error("Schema Validation Error: {0}", e.Message);
                 throw new ArgumentException("XML Validation Failure");
             }
-            return new CombinedTestPostProcessor(PackageType, this).GenerateErrors().ToList();
+           
         }
 
         static void SchemaValidationHandler(object sender, ValidationEventArgs e)
@@ -103,6 +104,11 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                 default:
                     throw new ArgumentException("XML Validation Failure");
             }
+        }
+
+        public new string GetUniqueId()
+        {
+            return Navigator.SelectSingleNode("//Test")?.GetAttribute("id", string.Empty);
         }
     }
 }

@@ -59,7 +59,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "Stimulus",
+                        Location = "TestPackage/Test/Segments/Segment/SegmentForms/SegmentForm/ItemGroup/Stimulus",
                         GeneratedMessage = errStr,
                         ItemId = stimulus.id,
                         Key = "Stimulus",

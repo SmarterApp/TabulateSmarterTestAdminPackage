@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Resources;
@@ -56,7 +55,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "SegmentForm/ItemGroup",
+                        Location = "TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup",
                         GeneratedMessage =
                             errStr,
                         ItemId =
@@ -84,7 +83,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "Pool/ItemGroup",
+                        Location = "TestPackage/Test/Segments/Segment/Pool/ItemGroup",
                         GeneratedMessage =
                             errStr,
                         ItemId =

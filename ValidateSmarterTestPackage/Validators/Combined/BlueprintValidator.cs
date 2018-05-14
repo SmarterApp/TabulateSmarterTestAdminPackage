@@ -45,7 +45,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                 errors.Add(new ValidationError
                                 {
                                     ErrorSeverity = ErrorSeverity.Severe,
-                                    Location = "BlueprintElement",
+                                    Location = "TestPackage/Blueprint/BlueprintElement",
                                     GeneratedMessage = errStr,
                                     ItemId = childBlueprintElement.id,
                                     Key = "BlueprintElement",
@@ -78,7 +78,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                             errors.Add(new ValidationError
                             {
                                 ErrorSeverity = ErrorSeverity.Severe,
-                                Location = "BlueprintElement",
+                                Location = "TestPackage/Blueprint/BlueprintElement",
                                 GeneratedMessage = errStr,
                                 ItemId = bpEl.id,
                                 Key = "BlueprintElement",
@@ -100,7 +100,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                     errors.Add(new ValidationError
                                     {
                                         ErrorSeverity = ErrorSeverity.Severe,
-                                        Location = "BlueprintElement",
+                                        Location = "TestPackage/Blueprint/BlueprintElement",
                                         GeneratedMessage = errStr,
                                         ItemId = segBpel.id,
                                         Key = "BlueprintElement",
@@ -134,7 +134,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                             errors.Add(new ValidationError
                             {
                                 ErrorSeverity = ErrorSeverity.Severe,
-                                Location = "BlueprintElement",
+                                Location = "TestPackage/Blueprint/BlueprintElement",
                                 GeneratedMessage = errStr,
                                 ItemId = bpEl.id,
                                 Key = "BlueprintElement",
@@ -159,7 +159,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                     errors.Add(new ValidationError
                                     {
                                         ErrorSeverity = ErrorSeverity.Severe,
-                                        Location = "BlueprintElement",
+                                        Location = "TestPackage/Blueprint/BlueprintElement",
                                         GeneratedMessage = errStr,
                                         ItemId = bpEl.id,
                                         Key = "BlueprintElement",
@@ -178,7 +178,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign, //TODO begnign or Degraded????
-                            Location = "BlueprintElement",
+                            Location = "TestPackage/Blueprint/BlueprintElement",
                             GeneratedMessage = errStr,
                             ItemId = bpEl.id,
                             Key = "BlueprintElement",
@@ -194,7 +194,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign, //TODO begnign or Degraded????
-                            Location = "BlueprintElement",
+                            Location = "TestPackage/Blueprint/BlueprintElement",
                             GeneratedMessage = errStr,
                             ItemId = bpEl.id,
                             Key = "BlueprintElement",
@@ -213,7 +213,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign, //TODO begnign or Degraded????
-                            Location = "BlueprintElement",
+                            Location = "TestPackage/Blueprint/BlueprintElement",
                             GeneratedMessage = errStr,
                             ItemId = bpEl.id,
                             Key = "BlueprintElement",
@@ -239,7 +239,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "BlueprintElement",
+                        Location = "TestPackage/Blueprint/BlueprintElement",
                         GeneratedMessage = errStr,
                         ItemId = blueprintElement.id,
                         Key = "BlueprintElement",
@@ -248,7 +248,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     });
                 }
             }
-            //throw new NotImplementedException();
         }
 
         // Validate that there is either a single "package" or "test" blueprint element type at the top level
@@ -275,7 +274,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 errors.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Severe,
-                    Location = "BlueprintElement",
+                    Location = "TestPackage/Blueprint/BlueprintElement",
                     GeneratedMessage = errStr,
                     ItemId = "none",
                     Key = "BlueprintElement",
@@ -292,7 +291,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 errors.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Severe,
-                    Location = "BlueprintElement",
+                    Location = "TestPackage/Blueprint/BlueprintElement",
                     GeneratedMessage = errStr,
                     ItemId = "none",
                     Key = "BlueprintElement",

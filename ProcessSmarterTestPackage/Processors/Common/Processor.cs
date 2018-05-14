@@ -25,7 +25,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
         public IList<Processor> Processors { get; } = new List<Processor>();
         public PackageType PackageType { get; }
 
-        public AttributeValidationDictionary Attributes { get; set; } = new AttributeValidationDictionary();
+        protected AttributeValidationDictionary Attributes { get; set; } = new AttributeValidationDictionary();
 
         public IDictionary<string, ValidatedAttribute> ValidatedAttributes { get; set; } =
             new Dictionary<string, ValidatedAttribute>();
@@ -135,7 +135,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
             return ValidatedAttributes.ContainsKey(attribute) ? ValidatedAttributes[attribute].Value : string.Empty;
         }
 
-        public virtual List<ValidationError> AdditionalValidations()
+        protected virtual List<ValidationError> AdditionalValidations()
         {
             return new List<ValidationError>();
         }
@@ -187,8 +187,8 @@ namespace ProcessSmarterTestPackage.Processors.Common
         public string GetUniqueId()
         {
             if (PackageType == PackageType.Combined)
-            {
-                return ChildNodeWithName("Test").ValueForAttribute("id");
+            { 
+                return Navigator.SelectSingleNode("//Test")?.GetAttribute("id", string.Empty);
             }
             else
             {

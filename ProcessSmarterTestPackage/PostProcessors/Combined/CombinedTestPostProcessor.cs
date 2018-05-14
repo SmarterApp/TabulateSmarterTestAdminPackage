@@ -19,7 +19,6 @@ namespace ProcessSmarterTestPackage.PostProcessors.Combined
         {
             var errors = new List<ValidationError>();
             Logger.Debug("CombinedTestPostProcessor calling GenerateErrors().");
-            //throw new System.NotImplementedException();
             return errors;
         }
     }

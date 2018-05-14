@@ -34,7 +34,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "Test",
+                        Location = "TestPackage/Test",
                         GeneratedMessage = errStr,
                         ItemId = test.id,
                         Key = "Test",
@@ -80,7 +80,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,
-                            Location = "Test",
+                            Location = "TestPackage/Test",
                             GeneratedMessage = errStr,
                             ItemId = test.id,
                             Key = "Test",
@@ -112,7 +112,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,
-                            Location = "Test",
+                            Location = "TestPackage/Test",
                             GeneratedMessage = errStr,
                             ItemId = test.id,
                             Key = "Test",

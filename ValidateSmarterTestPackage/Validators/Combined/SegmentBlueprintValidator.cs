@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NLog;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Resources;
@@ -50,7 +49,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "SegmentBlueprintElement",
+                        Location = "TestPackage/Test/Segments/Segment/SegmentBlueprint/SegmentBlueprintElement",
                         GeneratedMessage = errStr,
                         ItemId = segmentId,
                         Key = "SegmentBlueprintElement",
@@ -75,7 +74,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "SegmentBlueprintElement",
+                        Location = "TestPackage/Test/Segments/Segment/SegmentBlueprint/SegmentBlueprintElement",
                         GeneratedMessage = errStr,
                         ItemId = segmentBp.idRef,
                         Key = "SegmentBlueprintElement",
@@ -100,7 +99,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "SegmentBlueprintElement",
+                        Location = "TestPackage/Test/Segments/Segment/SegmentBlueprint/SegmentBlueprintElement",
                         GeneratedMessage = errStr,
                         ItemId = segmentBp.idRef,
                         Key = "SegmentBlueprintElement",

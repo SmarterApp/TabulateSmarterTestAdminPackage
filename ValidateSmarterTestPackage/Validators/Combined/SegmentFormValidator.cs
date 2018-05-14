@@ -59,7 +59,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                 errors.Add(new ValidationError
                                 {
                                     ErrorSeverity = ErrorSeverity.Severe,
-                                    Location = "Presentation",
+                                    Location = "TestPackage/Test/Segments/Segment/SegmentForms/SegmentForm/Presentations/Presentation",
                                     GeneratedMessage = errStr,
                                     ItemId = presenation.code,
                                     Key = "Presentation",
@@ -96,7 +96,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,
-                            Location = "SegmentForm",
+                            Location = "TestPackage/Test/Segments/Segment/SegmentForms/SegmentForm",
                             GeneratedMessage = errStr,
                             ItemId = formId,
                             Key = "SegmentForm",

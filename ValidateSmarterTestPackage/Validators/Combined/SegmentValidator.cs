@@ -45,7 +45,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Degraded,
-                        Location = "Segment",
+                        Location = "TestPackage/Test/Segments/Segment",
                         GeneratedMessage = errStr,
                         ItemId = segment.id,
                         Key = "Segment",
@@ -76,7 +76,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                             errors.Add(new ValidationError
                             {
                                 ErrorSeverity = ErrorSeverity.Severe,
-                                Location = "Segment",
+                                Location = "TestPackage/Test/Segments/Segment",
                                 GeneratedMessage = errStr,
                                 ItemId = segment.id,
                                 Key = "Segment",
@@ -106,7 +106,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,
-                            Location = "Segment",
+                            Location = "TestPackage/Test/Segments/Segment",
                             GeneratedMessage = errStr,
                             ItemId = segment.id,
                             Key = "Segment",
@@ -130,7 +130,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         select new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,
-                            Location = "Segment",
+                            Location = "TestPackage/Test/Segments/Segment",
                             GeneratedMessage = errStr,
                             ItemId = segment.id,
                             Key = "Segment",
@@ -153,7 +153,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "Segment",
+                        Location = "TestPackage/Test/Segments/Segment",
                         GeneratedMessage = errStr,
                         ItemId = segment.id,
                         Key = "Segment",

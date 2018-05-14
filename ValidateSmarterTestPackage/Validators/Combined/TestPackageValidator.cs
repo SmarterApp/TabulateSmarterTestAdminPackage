@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NLog;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Resources;
@@ -251,7 +250,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign,
-                            Location = "Tool",
+                            Location = "TestPackage/Test/Tools/Tool/Options/Option *or* TestPackage/Test/Segments/Segment/Tools/Tool/Options/Option",
                             GeneratedMessage = errStr,
                             ItemId = tool.name,
                             Key = "Tool",
@@ -277,7 +276,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign,
-                            Location = "Tool",
+                            Location = "TestPackage/Test/Tools/Tool *or* TestPackage/Test/Segments/Segment/Tools/Tool",
                             GeneratedMessage = errStr,
                             ItemId = tool.name,
                             Key = "Tool",
@@ -302,7 +301,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Benign,
-                        Location = "Tool",
+                        Location = "TestPackage/Test/Tools/Tool *or* TestPackage/Test/Segments/Segment/Tools/Tool",
                         GeneratedMessage = errStr,
                         ItemId = tool.name,
                         Key = "Tool",

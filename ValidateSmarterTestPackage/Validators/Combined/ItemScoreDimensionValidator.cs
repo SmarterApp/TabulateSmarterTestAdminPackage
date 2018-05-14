@@ -55,7 +55,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
-                        Location = "ItemScoreDimension",
+                        Location = "TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup/Item/ItemScoreDimension",
                         GeneratedMessage = errStr,
                         ItemId = "none",
                         Key = "measurementModel",

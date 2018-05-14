@@ -16,7 +16,7 @@ namespace ProcessSmarterTestPackage.Processors.Scoring.ScoringRules
                 .ForEach(x => Processors.Add(new ComputationRuleProcessor(x, packageType)));
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new ScoringRulesPostProcessor(PackageType, this).GenerateErrors().ToList();
         }

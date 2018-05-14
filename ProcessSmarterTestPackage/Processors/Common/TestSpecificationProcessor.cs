@@ -61,7 +61,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
             }
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new TestSpecificationPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
