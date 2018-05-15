@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
@@ -10,6 +11,8 @@ namespace TabulateSmarterTestPackage.Models
 {
     public class TestInformation
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public IList<ValidationError> Errors { get; set; } = new List<ValidationError>();
 
         public IDictionary<ItemFieldNames, string> RetrieveTestInformation(TestSpecificationProcessor processor)
@@ -111,8 +114,8 @@ namespace TabulateSmarterTestPackage.Models
         public IDictionary<ItemFieldNames, string> RetrieveTestInformation(CombinedTestProcessor processor)
         {
             var result = new Dictionary<ItemFieldNames, string>();
-            var testPackage = processor.ChildNodeWithName("TestPackage");
-            var identifier = processor.ChildNodeWithName("Test");
+            var testPackage = processor.TestPackage;
+            var identifier = testPackage.Test[0];
             if (identifier == null)
             {
                 Errors.Add(GenerateTestInformationValidationError(string.Empty, "Test node not found",
@@ -124,14 +127,15 @@ namespace TabulateSmarterTestPackage.Models
             }
             else
             {
-                result.Add(ItemFieldNames.AssessmentId, identifier.ValueForAttribute("id"));
-                result.Add(ItemFieldNames.AssessmentName, string.Empty);
-                result.Add(ItemFieldNames.AssessmentLabel, identifier.ValueForAttribute("label"));
-                result.Add(ItemFieldNames.AssessmentVersion, testPackage.ValueForAttribute("version"));
-                result.Add(ItemFieldNames.AcademicYear, testPackage.ValueForAttribute("year"));
-                result.Add(ItemFieldNames.AssessmentSubject, testPackage.ValueForAttribute("subject"));
-                result.Add(ItemFieldNames.Grade, processor.ChildNodeWithName("Grade").ValueForAttribute("value"));
-                result.Add(ItemFieldNames.AssessmentType, testPackage.ValueForAttribute("type"));
+                result.Add(ItemFieldNames.AssessmentId, identifier.id);
+                result.Add(ItemFieldNames.AssessmentName, "HOW DO NAMES WORK IN THE NEW FORMAT?");
+                result.Add(ItemFieldNames.AssessmentLabel, identifier.label);
+                result.Add(ItemFieldNames.AssessmentVersion, testPackage.version.ToString());
+                result.Add(ItemFieldNames.AcademicYear, testPackage.academicYear);
+                result.Add(ItemFieldNames.AssessmentSubject, testPackage.subject);
+                result.Add(ItemFieldNames.AssessmentGrade, identifier.Grades[0].value.ToString());
+                Logger.Debug($"testpackage type = {testPackage.type}");
+                result.Add(ItemFieldNames.AssessmentType, testPackage.type);
                 if (!result[ItemFieldNames.AssessmentType].Equals("summative", StringComparison.OrdinalIgnoreCase))
                 {
                     if (result[ItemFieldNames.AssessmentId].Contains("ICA"))

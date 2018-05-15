@@ -19,27 +19,31 @@ namespace ProcessSmarterTestPackage.Processors.Combined
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        public TestPackage TestPackage { get; set; }
+
         public CombinedTestProcessor(XPathNavigator navigator, PackageType packageType)
             : base(navigator, packageType)
         {
             //Processors.Add(new CombinedTestProcessor(Navigator, packageType));
+            XmlDocument validateDocument = new XmlDocument();
+            validateDocument.LoadXml(Navigator.OuterXml);
+            validateDocument.Schemas.Add(null, "Resources/TestPackageSchema.xsd"); //TODO can I put this in a setting or something?
+            ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
+            validateDocument.Validate(validation);
+            Logger.Debug("New package type xml file loaded and validated against XML schema");
+
+            //deserialize into class?
+            XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
+            var testPackage = (TestPackage)serializer.Deserialize(XmlReader.Create(new StringReader(Navigator.OuterXml)));
+            TestPackage = testPackage;
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             //load and validate with XML schema
             try
             {
-                XmlDocument validateDocument = new XmlDocument();
-                validateDocument.LoadXml(Navigator.OuterXml);
-                validateDocument.Schemas.Add(null, "Resources/TestPackageSchema.xsd"); //TODO can I put this in a setting or something?
-                ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
-                validateDocument.Validate(validation);
-                Logger.Debug("New package type xml file loaded and validated against XML schema");
-
-                //deserialize into class?
-                XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
-                var testPackage = (TestPackage)serializer.Deserialize(XmlReader.Create(new StringReader(Navigator.OuterXml)));
+               
 
                 //all the validators for the new format
                 ItemGroupValidator itemGroupValidator = new ItemGroupValidator();
@@ -55,16 +59,16 @@ namespace ProcessSmarterTestPackage.Processors.Combined
 
                 List<ValidationError> valErrs = new List<ValidationError>();
 
-                itemGroupValidator.Validate(testPackage, valErrs);
-                assessmentValidator.Validate(testPackage, valErrs);
-                blueprintValidator.Validate(testPackage, valErrs);
-                itemScoreDimensionValidator.Validate(testPackage, valErrs);
-                itemValidator.Validate(testPackage, valErrs);
-                segmentBlueprintValidator.Validate(testPackage, valErrs);
-                segmentFormValidator.Validate(testPackage, valErrs);
-                segmentValidator.Validate(testPackage, valErrs);
-                testPackageRootValidator.Validate(testPackage, valErrs);
-                testPackageValidator.Validate(testPackage, valErrs);
+                itemGroupValidator.Validate(TestPackage, valErrs);
+                assessmentValidator.Validate(TestPackage, valErrs);
+                blueprintValidator.Validate(TestPackage, valErrs);
+                itemScoreDimensionValidator.Validate(TestPackage, valErrs);
+                itemValidator.Validate(TestPackage, valErrs);
+                segmentBlueprintValidator.Validate(TestPackage, valErrs);
+                segmentFormValidator.Validate(TestPackage, valErrs);
+                segmentValidator.Validate(TestPackage, valErrs);
+                testPackageRootValidator.Validate(TestPackage, valErrs);
+                testPackageValidator.Validate(TestPackage, valErrs);
 
                 if (valErrs.Count > 0)
                 {

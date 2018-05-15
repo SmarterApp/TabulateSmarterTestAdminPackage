@@ -124,36 +124,42 @@ namespace TabulateSmarterTestPackage.Tabulators
                 IDictionary<ItemFieldNames, string> testInformation;
 
                 //TODO skipping tabulation for the new format for the time being to get errors output
-                if (testSpecificationProcessor is TestSpecificationProcessor)
-                {
+                //if (testSpecificationProcessor is TestSpecificationProcessor)
+                //{
                     
                     if (testSpecificationProcessor is CombinedTestProcessor)
                     {
                         testInformation = testInfo.RetrieveTestInformation((CombinedTestProcessor)testSpecificationProcessor);
+                        var combinedItemTabulator = new CombinedItemTabulator();
+                        var combinedItems = combinedItemTabulator.ProcessResult(testSpecificationProcessor.Navigator,
+                            (CombinedTestProcessor)testSpecificationProcessor,
+                            testInformation);
+                        combinedItems.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
                     }
                     else
                     {
                         testInformation = testInfo.RetrieveTestInformation((TestSpecificationProcessor)testSpecificationProcessor);
+                        var itemTabulator = new ItemTabulator();
+                        var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
+                            testInformation);
+                        items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
+
+                        var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration") ??
+                                             testSpecificationProcessor.ChildNodeWithName("scoring");
+                        var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage").ToList();
+                        if (passages.Any())
+                        {
+                            var stimuliTabulator = new StimuliTabulator();
+                            var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(),
+                                testInformation);
+                            stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+                        }
                     }
 
                     ReportingUtility.TestName = testInformation[ItemFieldNames.AssessmentName];
 
-                    var itemTabulator = new ItemTabulator();
-                    var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
-                        testInformation);
-                    items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
-
-                    var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration") ??
-                                         testSpecificationProcessor.ChildNodeWithName("scoring");
-                    var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage").ToList();
-                    if (passages.Any())
-                    {
-                        var stimuliTabulator = new StimuliTabulator();
-                        var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(),
-                            testInformation);
-                        stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
-                    }
-                }
+                    
+                //}
                 
 
                 var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>().ToList();

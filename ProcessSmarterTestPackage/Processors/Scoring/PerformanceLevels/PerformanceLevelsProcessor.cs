@@ -17,7 +17,7 @@ namespace ProcessSmarterTestPackage.Processors.Scoring.PerformanceLevels
                 .ForEach(x => Processors.Add(new PerformanceLevelProcessor(x, packageType)));
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new PerformanceLevelsPostProcessor(PackageType, this).GenerateErrors().ToList();
         }

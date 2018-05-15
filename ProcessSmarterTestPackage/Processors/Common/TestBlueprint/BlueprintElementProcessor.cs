@@ -71,7 +71,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestBlueprint
             RemoveAttributeValidation("identifier", "label");
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new BlueprintElementPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
