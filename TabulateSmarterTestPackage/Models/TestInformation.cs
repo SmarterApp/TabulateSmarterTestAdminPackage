@@ -127,11 +127,12 @@ namespace TabulateSmarterTestPackage.Models
             }
             else
             {
-                result.Add(ItemFieldNames.AssessmentId, identifier.id);
-                result.Add(ItemFieldNames.AssessmentName, "HOW DO NAMES WORK IN THE NEW FORMAT?");
+                result.Add(ItemFieldNames.AssessmentId, "Where does this come from?");
+                result.Add(ItemFieldNames.AssessmentName, identifier.id);
                 result.Add(ItemFieldNames.AssessmentLabel, identifier.label);
                 result.Add(ItemFieldNames.AssessmentVersion, testPackage.version.ToString());
                 result.Add(ItemFieldNames.AcademicYear, testPackage.academicYear);
+                result.Add(ItemFieldNames.BankKey, testPackage.bankKey.ToString());
                 result.Add(ItemFieldNames.AssessmentSubject, testPackage.subject);
                 result.Add(ItemFieldNames.AssessmentGrade, identifier.Grades[0].value.ToString());
                 Logger.Debug($"testpackage type = {testPackage.type}");
