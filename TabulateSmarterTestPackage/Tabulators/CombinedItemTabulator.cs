@@ -1,10 +1,12 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.XPath;
 using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
+using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
@@ -65,7 +67,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             {
                                 foreach (var itemGroup in segmentForm.ItemGroup)
                                 {
-                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id);
+                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id, segment);
                                 }
                             }
                         }
@@ -75,7 +77,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             if (itemGroups != null)
                                 foreach (var itemGroup in itemGroups)
                                 {
-                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id);
+                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id, segment);
                                 }
                         }
                     }
@@ -88,7 +90,8 @@ namespace TabulateSmarterTestPackage.Tabulators
         }
 
 
-        private void GetAssesmentItemList(Test test, List<ItemGroupItem> testItems, SortedDictionary<int, string> commonTestPackageItems, IDictionary<ItemFieldNames, string> testInformation, List<List<string>> resultList, String itemGroupId)
+        private void GetAssesmentItemList(Test test, List<ItemGroupItem> testItems, SortedDictionary<int, string> commonTestPackageItems, 
+            IDictionary<ItemFieldNames, string> testInformation, List<List<string>> resultList, String itemGroupId, TestSegment segment)
         {
             var subType = "summative";
             if (!testInformation[ItemFieldNames.AssessmentType].Equals("summative", StringComparison.OrdinalIgnoreCase))
@@ -107,10 +110,15 @@ namespace TabulateSmarterTestPackage.Tabulators
                     
                 }
             }
+
+            
             
             foreach (var item in testItems)
             {
                 var ids = GetStandardIDs(item, testInformation[ItemFieldNames.AssessmentSubject]);
+                var langs = GetLanguages(item);
+                string scoringEngine = item.handScored ? "HandScored" : "??NotHandScored??";
+                var itemScoreParams = GetItemScoreParameters(item);
                 var newList = new SortedDictionary<int, string>(commonTestPackageItems)
                 {
                     { (int)ItemFieldNames.AssessmentName, test.id},
@@ -127,11 +135,146 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.Claim, ids["Claim"]},
                     { (int)ItemFieldNames.Target, ids["Target"]},
                     { (int)ItemFieldNames.PassageId, $"{testInformation[ItemFieldNames.BankKey]}-{itemGroupId}" },
-                    { (int)ItemFieldNames.ASL, String.Empty } //wut?
-                    //{ (int)ItemFieldNames.Braille,  }
+                    { (int)ItemFieldNames.ASL, String.Empty }, //wut?
+                    { (int)ItemFieldNames.Braille,  String.Empty},
+                    { (int)ItemFieldNames.LanguageBraille, langs[(int)ItemFieldNames.LanguageBraille] },
+                    { (int)ItemFieldNames.DOK, String.Empty },
+                    { (int)ItemFieldNames.Language, langs[(int)ItemFieldNames.Language] },
+                    { (int)ItemFieldNames.AllowCalculator, String.Empty },
+                    { (int)ItemFieldNames.MathematicalPractice, String.Empty },
+                    { (int)ItemFieldNames.MaxPoints, item.ItemScoreDimension.scorePoints.ToString() },
+                    { (int)ItemFieldNames.Glossary, String.Empty },
+                    { (int)ItemFieldNames.ScoringEngine, scoringEngine },
+                    { (int)ItemFieldNames.Spanish, langs[(int)ItemFieldNames.Spanish] },
+                    { (int)ItemFieldNames.IsFieldTest, item.fieldTest ? "Y" : "N" },
+                    { (int)ItemFieldNames.IsActive, item.active ? "Y" : "N"  },
+                    { (int)ItemFieldNames.ResponseRequired, item.responseRequired ? "Y" : "N"  },
+                    { (int)ItemFieldNames.AdminRequired, item.administrationRequired ? "Y" : "N"  },
+                    { (int)ItemFieldNames.ItemPosition, segment.position.ToString() },
+                    { (int)ItemFieldNames.MeasurementModel, item.ItemScoreDimension.measurementModel },
+                    { (int)ItemFieldNames.Weight, item.ItemScoreDimension.weight.ToString(CultureInfo.InvariantCulture) },
+                    { (int)ItemFieldNames.ScorePoints, item.ItemScoreDimension.scorePoints.ToString() },
+                    { (int)ItemFieldNames.a, itemScoreParams[(int)ItemFieldNames.a] },
+                    { (int)ItemFieldNames.b0_b, itemScoreParams[(int)ItemFieldNames.b0_b] },
+                    { (int)ItemFieldNames.b1_c, itemScoreParams[(int)ItemFieldNames.b1_c] },
+                    { (int)ItemFieldNames.b2, itemScoreParams[(int)ItemFieldNames.b2] },
+                    { (int)ItemFieldNames.b3, itemScoreParams[(int)ItemFieldNames.b3] },
+                    { (int)ItemFieldNames.avg_b, itemScoreParams[(int)ItemFieldNames.avg_b] },
+
                 };
+                /*
+                foreach (var lang in langs)
+                {
+                    newList.Add(lang.Key, lang.Value);
+                }
+                */
                 resultList.Add(newList.Values.ToList());
             }
+        }
+
+        private SortedDictionary<int, string> GetItemScoreParameters(ItemGroupItem item)
+        {
+            var scoreParams = new SortedDictionary<int, string>();
+            foreach (var isp in item.ItemScoreDimension.ItemScoreParameter)
+            {
+                if (isp.measurementParameter.Equals("a", StringComparison.Ordinal))
+                {
+                    scoreParams.Add((int)ItemFieldNames.a, isp.value.ToString());
+                } else if (isp.measurementParameter.Equals("b0", StringComparison.Ordinal) || isp.measurementParameter.Equals("b", StringComparison.Ordinal))
+                {
+                    scoreParams.Add((int)ItemFieldNames.b0_b, isp.value.ToString());
+                }
+                else if (isp.measurementParameter.Equals("b1", StringComparison.Ordinal) || isp.measurementParameter.Equals("c", StringComparison.Ordinal))
+                {
+                    scoreParams.Add((int)ItemFieldNames.b1_c, isp.value.ToString());
+                }
+                else if (isp.measurementParameter.Equals("b2", StringComparison.Ordinal))
+                {
+                    scoreParams.Add((int)ItemFieldNames.b2, isp.value.ToString());
+                }
+                else if (isp.measurementParameter.Equals("b3", StringComparison.Ordinal))
+                {
+                    scoreParams.Add((int)ItemFieldNames.b3, isp.value.ToString());
+                }
+            }
+
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.a))
+            {
+                scoreParams.Add((int)ItemFieldNames.a, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.b0_b))
+            {
+                scoreParams.Add((int)ItemFieldNames.b0_b, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.b1_c))
+            {
+                scoreParams.Add((int)ItemFieldNames.b1_c, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.b2))
+            {
+                scoreParams.Add((int)ItemFieldNames.b2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.b3))
+            {
+                scoreParams.Add((int)ItemFieldNames.b3, String.Empty);
+            }
+
+            var avg_b = MathHelper.CalculateAverageB(item.ItemScoreDimension.measurementModel,
+                scoreParams[(int)ItemFieldNames.a], scoreParams[(int)ItemFieldNames.b0_b],
+                scoreParams[(int)ItemFieldNames.b1_c], scoreParams[(int)ItemFieldNames.b2],
+                scoreParams[(int)ItemFieldNames.b3], scoreParams[(int)ItemFieldNames.ScorePoints]);
+            if (!avg_b.Errors.Any())
+            {
+                Logger.Debug($"AVG B is {avg_b.Value}");
+                scoreParams[(int)ItemFieldNames.avg_b] = avg_b.Value;
+            }
+            else
+            {
+                scoreParams[(int)ItemFieldNames.avg_b] = String.Empty;
+                Logger.Error("There was an error calulating the avg_b ");
+            }
+
+            return scoreParams;
+        }
+
+
+        private SortedDictionary<int, string> GetLanguages(ItemGroupItem item)
+        {
+            var langs = new SortedDictionary<int, string>();
+            foreach (var pres in item.Presentations)
+            {
+                if (pres.code.Equals("ENU-Braille", StringComparison.Ordinal))
+                {
+                    langs.Add((int)ItemFieldNames.LanguageBraille, pres.code);
+                } else if (pres.code.Equals("ESN"))
+                {
+                    langs.Add((int)ItemFieldNames.Spanish, "Y");
+                }
+                else if (pres.code.Equals("Spanish Translation"))
+                {
+                    langs.Add((int)ItemFieldNames.Spanish, pres.code);
+                }
+
+                if (!langs.ContainsKey((int) ItemFieldNames.Language))
+                {
+                    langs.Add((int)ItemFieldNames.Language, pres.code);
+                }
+            }
+
+            if (!langs.ContainsKey((int) ItemFieldNames.LanguageBraille))
+            {
+                langs.Add((int)ItemFieldNames.LanguageBraille, String.Empty);
+            }
+            if (!langs.ContainsKey((int)ItemFieldNames.Spanish))
+            {
+                langs.Add((int)ItemFieldNames.Spanish, String.Empty);
+            }
+            if (!langs.ContainsKey((int)ItemFieldNames.Language))
+            {
+                langs.Add((int)ItemFieldNames.Language, String.Empty);
+            }
+
+            return langs;
         }
 
         private Dictionary<string, string> GetStandardIDs(ItemGroupItem item, String subject)
@@ -147,7 +290,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                         ids.Add("Standard", $"SBAC-ELA-v1:{bpRef.idRef}");
                         ids.Add("Claim", parts[0] + "\t");
                         ids.Add("Target", parts[1] + "\t");
-                       //return ids;
                     }
                 } else if (subject.Equals("MATH", StringComparison.OrdinalIgnoreCase))
                 {
@@ -157,7 +299,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                         ids.Add("Standard", $"SBAC-MA-v6:{bpRef.idRef}");
                         ids.Add("Claim", parts[0] + "\t");
                         ids.Add("Target", parts[3] + "\t");
-                        //return ids;
                     }
                 }
             }
