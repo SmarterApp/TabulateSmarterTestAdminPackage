@@ -24,30 +24,17 @@ namespace TabulateSmarterTestPackage.Tabulators
 
             var commonTestPackageItems = new SortedDictionary<int,string>();
 
-            Logger.Debug($"I'm a AssessmentId {testInformation[ItemFieldNames.AssessmentId]}");
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentId, testInformation[ItemFieldNames.AssessmentId]);
 
-            Logger.Debug($"I'm a AssessmentSubject {testInformation[ItemFieldNames.AssessmentSubject]}");
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentSubject, testInformation[ItemFieldNames.AssessmentSubject]);
 
-            Logger.Debug($"I'm a AssessmentGrade {testInformation[ItemFieldNames.AssessmentGrade]}");
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentGrade, testInformation[ItemFieldNames.AssessmentGrade]);
 
-            Logger.Debug($"I'm a AssessmentType {testInformation[ItemFieldNames.AssessmentType]}");
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentType, testInformation[ItemFieldNames.AssessmentType]);
 
-            //Logger.Debug($"I'm a AssessmentVersion {testInformation[ItemFieldNames.AssessmentVersion]}");
-            //commonTestPackageItems.Add((int)ItemFieldNames.AssessmentVersion, testInformation[ItemFieldNames.AssessmentVersion]);
-
-            Logger.Debug($"I'm a AcademicYear {testInformation[ItemFieldNames.AcademicYear]}");
             commonTestPackageItems.Add((int)ItemFieldNames.AcademicYear, testInformation[ItemFieldNames.AcademicYear]);
 
-            //commonTestPackageItems.Add((int)ItemFieldNames.FullItemKey, testInformation[ItemFieldNames.BankKey] + "-something");
             commonTestPackageItems.Add((int)ItemFieldNames.BankKey, testInformation[ItemFieldNames.BankKey]);
-
-
-            
-            
 
             var testPackage = testSpecificationProcessor.TestPackage;
             var tests = testPackage.Test;

@@ -135,7 +135,6 @@ namespace TabulateSmarterTestPackage.Models
                 result.Add(ItemFieldNames.BankKey, testPackage.bankKey.ToString());
                 result.Add(ItemFieldNames.AssessmentSubject, testPackage.subject);
                 result.Add(ItemFieldNames.AssessmentGrade, identifier.Grades[0].value.ToString());
-                Logger.Debug($"testpackage type = {testPackage.type}");
                 result.Add(ItemFieldNames.AssessmentType, testPackage.type);
                 if (!result[ItemFieldNames.AssessmentType].Equals("summative", StringComparison.OrdinalIgnoreCase))
                 {
