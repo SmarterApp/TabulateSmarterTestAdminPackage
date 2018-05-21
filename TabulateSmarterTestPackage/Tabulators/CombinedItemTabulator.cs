@@ -15,6 +15,7 @@ namespace TabulateSmarterTestPackage.Tabulators
     public class CombinedItemTabulator
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private const int MaxBpRefs = 7;
 
         public IEnumerable<IEnumerable<string>> ProcessResult(XPathNavigator navigator,
             CombinedTestProcessor testSpecificationProcessor, IDictionary<ItemFieldNames, string> testInformation)
@@ -117,8 +118,10 @@ namespace TabulateSmarterTestPackage.Tabulators
             {
                 var ids = GetStandardIDs(item, testInformation[ItemFieldNames.AssessmentSubject]);
                 var langs = GetLanguages(item);
+                var bpRefs = GetBpRefs(item);
                 string scoringEngine = item.handScored ? "HandScored" : "??NotHandScored??";
                 var itemScoreParams = GetItemScoreParameters(item);
+
                 var newList = new SortedDictionary<int, string>(commonTestPackageItems)
                 {
                     { (int)ItemFieldNames.AssessmentName, test.id},
@@ -162,12 +165,12 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.avg_b, itemScoreParams[(int)ItemFieldNames.avg_b] },
 
                 };
-                /*
-                foreach (var lang in langs)
+                
+                foreach (var bpRef in bpRefs)
                 {
-                    newList.Add(lang.Key, lang.Value);
+                    newList.Add(bpRef.Key, bpRef.Value);
                 }
-                */
+                
                 resultList.Add(newList.Values.ToList());
             }
         }
@@ -222,10 +225,9 @@ namespace TabulateSmarterTestPackage.Tabulators
             var avg_b = MathHelper.CalculateAverageB(item.ItemScoreDimension.measurementModel,
                 scoreParams[(int)ItemFieldNames.a], scoreParams[(int)ItemFieldNames.b0_b],
                 scoreParams[(int)ItemFieldNames.b1_c], scoreParams[(int)ItemFieldNames.b2],
-                scoreParams[(int)ItemFieldNames.b3], scoreParams[(int)ItemFieldNames.ScorePoints]);
+                scoreParams[(int)ItemFieldNames.b3], item.ItemScoreDimension.scorePoints.ToString());
             if (!avg_b.Errors.Any())
             {
-                Logger.Debug($"AVG B is {avg_b.Value}");
                 scoreParams[(int)ItemFieldNames.avg_b] = avg_b.Value;
             }
             else
@@ -277,6 +279,22 @@ namespace TabulateSmarterTestPackage.Tabulators
             return langs;
         }
 
+        private Dictionary<int, string> GetBpRefs(ItemGroupItem item)
+        {
+            var bpRefs = new Dictionary<int, string>();
+            var i = 0;
+            foreach(var bpRef in item.BlueprintReferences)
+            {
+                if (i < MaxBpRefs)
+                {
+                    bpRefs.Add((int) ItemFieldNames.bpref1 + i + 1, "SBAC-" + bpRef.idRef);
+                }
+
+                i++;
+            }
+            return bpRefs;
+        }
+
         private Dictionary<string, string> GetStandardIDs(ItemGroupItem item, String subject)
         {
             var ids = new Dictionary<string, string>();
@@ -287,20 +305,25 @@ namespace TabulateSmarterTestPackage.Tabulators
                     if (bpRef.idRef.Contains("|"))
                     {
                         var parts = bpRef.idRef.Split('|');
-                        ids.Add("Standard", $"SBAC-ELA-v1:{bpRef.idRef}");
-                        ids.Add("Claim", parts[0] + "\t");
-                        ids.Add("Target", parts[1] + "\t");
+                        if (parts.Length <= 2)
+                        {
+                            ids["Standard"] = $"SBAC-ELA-v1:{bpRef.idRef}";
+                            ids["Claim"] = parts[0] + "\t";
+                            ids["Target"] = parts[1] + "\t";
+                        }
+                        
                     }
                 } else if (subject.Equals("MATH", StringComparison.OrdinalIgnoreCase))
                 {
                     var parts = bpRef.idRef.Split('|');
                     if (parts.Length == 4)
                     {
-                        ids.Add("Standard", $"SBAC-MA-v6:{bpRef.idRef}");
-                        ids.Add("Claim", parts[0] + "\t");
-                        ids.Add("Target", parts[3] + "\t");
+                        ids["Standard"] = $"SBAC-MA-v6:{bpRef.idRef}";
+                        ids["Claim"] = parts[0] + "\t";
+                        ids["Target"] = parts[1] + "\t";
                     }
                 }
+
             }
 
             if (ids.Count == 0)
