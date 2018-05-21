@@ -73,8 +73,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 }
             }
 
-
-            return resultList;
+            return resultList.OrderBy(x => x[11]).ToList();
         }
 
 
