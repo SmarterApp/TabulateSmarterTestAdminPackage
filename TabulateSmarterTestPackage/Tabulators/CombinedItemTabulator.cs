@@ -25,15 +25,12 @@ namespace TabulateSmarterTestPackage.Tabulators
             var commonTestPackageItems = new SortedDictionary<int,string>();
 
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentId, testInformation[ItemFieldNames.AssessmentId]);
-
+            commonTestPackageItems.Add((int)ItemFieldNames.AssessmentVersion, testInformation[ItemFieldNames.AssessmentVersion]);
+            commonTestPackageItems.Add((int)ItemFieldNames.Version, testInformation[ItemFieldNames.Version]);
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentSubject, testInformation[ItemFieldNames.AssessmentSubject]);
-
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentGrade, testInformation[ItemFieldNames.AssessmentGrade]);
-
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentType, testInformation[ItemFieldNames.AssessmentType]);
-
             commonTestPackageItems.Add((int)ItemFieldNames.AcademicYear, testInformation[ItemFieldNames.AcademicYear]);
-
             commonTestPackageItems.Add((int)ItemFieldNames.BankKey, testInformation[ItemFieldNames.BankKey]);
 
             var testPackage = testSpecificationProcessor.TestPackage;
@@ -112,11 +109,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {
                     { (int)ItemFieldNames.AssessmentName, test.id},
                     { (int)ItemFieldNames.AssessmentLabel, test.label },
-                    { (int)ItemFieldNames.AssessmentVersion, "what is this" },
                     { (int)ItemFieldNames.ItemId, item.id },
                     { (int)ItemFieldNames.FullItemKey, testInformation[ItemFieldNames.BankKey] + $"-{item.id}"},
                     { (int)ItemFieldNames.Filename,  $"item-{testInformation[ItemFieldNames.BankKey]}-{item.id}.xml"}, // item-200-21818.xml"
-                    { (int)ItemFieldNames.Version, "what is this" },
                     { (int)ItemFieldNames.ItemType, item.type },
                     { (int)ItemFieldNames.AssessmentSubtype, subType },
                     { (int)ItemFieldNames.Grade, test.Grades[0].value },
@@ -255,7 +250,7 @@ namespace TabulateSmarterTestPackage.Tabulators
             }
             if (!langs.ContainsKey((int)ItemFieldNames.Spanish))
             {
-                langs.Add((int)ItemFieldNames.Spanish, String.Empty);
+                langs.Add((int)ItemFieldNames.Spanish, "N");
             }
             if (!langs.ContainsKey((int)ItemFieldNames.Language))
             {
