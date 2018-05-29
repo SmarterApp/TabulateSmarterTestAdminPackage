@@ -23,7 +23,8 @@ namespace TabulateSmarterTestPackage.Tabulators
             var resultList = new List<List<string>>();
 
             var commonTestPackageItems = new SortedDictionary<int,string>();
-
+            
+            
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentId, testInformation[ItemFieldNames.AssessmentId]);
             commonTestPackageItems.Add((int)ItemFieldNames.AssessmentVersion, testInformation[ItemFieldNames.AssessmentVersion]);
             commonTestPackageItems.Add((int)ItemFieldNames.Version, testInformation[ItemFieldNames.Version]);
@@ -33,9 +34,23 @@ namespace TabulateSmarterTestPackage.Tabulators
             commonTestPackageItems.Add((int)ItemFieldNames.AcademicYear, testInformation[ItemFieldNames.AcademicYear]);
             commonTestPackageItems.Add((int)ItemFieldNames.BankKey, testInformation[ItemFieldNames.BankKey]);
 
+            commonTestPackageItems[(int)ItemFieldNames.CutPoint1] = testInformation[ItemFieldNames.CutPoint1];
+            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh1] = testInformation[ItemFieldNames.ScaledHigh1];
+            commonTestPackageItems[(int)ItemFieldNames.ScaledLow1] = testInformation[ItemFieldNames.ScaledLow1];
+            commonTestPackageItems[(int)ItemFieldNames.CutPoint2] = testInformation[ItemFieldNames.CutPoint2];
+            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh2] = testInformation[ItemFieldNames.ScaledHigh2];
+            commonTestPackageItems[(int)ItemFieldNames.ScaledLow2] = testInformation[ItemFieldNames.ScaledLow2];
+            commonTestPackageItems[(int)ItemFieldNames.CutPoint3] = testInformation[ItemFieldNames.CutPoint3];
+            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh3] = testInformation[ItemFieldNames.ScaledHigh3];
+            commonTestPackageItems[(int)ItemFieldNames.ScaledLow3] = testInformation[ItemFieldNames.ScaledLow3];
+            commonTestPackageItems[(int)ItemFieldNames.CutPoint4] = testInformation[ItemFieldNames.CutPoint4];
+            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh4] = testInformation[ItemFieldNames.ScaledHigh4];
+            commonTestPackageItems[(int)ItemFieldNames.ScaledLow4] = testInformation[ItemFieldNames.ScaledLow4];
+
+
             var testPackage = testSpecificationProcessor.TestPackage;
             var tests = testPackage.Test;
-            List<ItemGroupItem> testItems = new List<ItemGroupItem>();
+            //List<ItemGroupItem> testItems = new List<ItemGroupItem>();
 
             foreach (var test in tests)
             {
@@ -70,7 +85,23 @@ namespace TabulateSmarterTestPackage.Tabulators
                 }
             }
 
-            return resultList.OrderBy(x => x[(int)ItemFieldNames.ItemId]).ToList();
+            /*
+           var keys = Enum.GetValues(typeof(ItemFieldNames));
+
+           foreach (var listItem in resultList)
+           {
+               foreach (var key in keys)
+               {
+
+                   var intKey = (int) key;
+
+                   Logger.Debug($"type is {key.GetType()} intKey is {intKey} otherthing is");
+
+               }
+           }
+           */
+            var ordered = resultList.OrderBy(x => x[(int)ItemFieldNames.ItemId]).ToList();
+            return ordered;
         }
 
 
@@ -130,10 +161,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.Glossary, String.Empty },
                     { (int)ItemFieldNames.ScoringEngine, scoringEngine },
                     { (int)ItemFieldNames.Spanish, langs[(int)ItemFieldNames.Spanish] },
-                    { (int)ItemFieldNames.IsFieldTest, item.fieldTest ? "Y" : "N" },
-                    { (int)ItemFieldNames.IsActive, item.active ? "Y" : "N"  },
-                    { (int)ItemFieldNames.ResponseRequired, item.responseRequired ? "Y" : "N"  },
-                    { (int)ItemFieldNames.AdminRequired, item.administrationRequired ? "Y" : "N"  },
+                    { (int)ItemFieldNames.IsFieldTest, item.fieldTest ? "TRUE" : "FALSE" },
+                    { (int)ItemFieldNames.IsActive, item.active ? "TRUE" : "FALSE"  },
+                    { (int)ItemFieldNames.ResponseRequired, item.responseRequired ? "TRUE" : "FALSE"  },
+                    { (int)ItemFieldNames.AdminRequired, item.administrationRequired ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.ItemPosition, segment.position.ToString() },
                     { (int)ItemFieldNames.MeasurementModel, item.ItemScoreDimension.measurementModel },
                     { (int)ItemFieldNames.Weight, item.ItemScoreDimension.weight.ToString(CultureInfo.InvariantCulture) },
@@ -144,6 +175,12 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.b2, itemScoreParams[(int)ItemFieldNames.b2] },
                     { (int)ItemFieldNames.b3, itemScoreParams[(int)ItemFieldNames.b3] },
                     { (int)ItemFieldNames.avg_b, itemScoreParams[(int)ItemFieldNames.avg_b] },
+                    { (int)ItemFieldNames.CommonCore, String.Empty },
+                    { (int)ItemFieldNames.ClaimContentTarget, String.Empty },
+                    { (int)ItemFieldNames.SecondaryCommonCore, String.Empty },
+                    { (int)ItemFieldNames.SecondaryClaimContentTarget, String.Empty },
+                    { (int)ItemFieldNames.AnswerKey, String.Empty },
+                    { (int)ItemFieldNames.NumberOfAnswerOptions, String.Empty },
 
                 };
                 
@@ -264,14 +301,26 @@ namespace TabulateSmarterTestPackage.Tabulators
         {
             var bpRefs = new Dictionary<int, string>();
             var i = 0;
+            var bps = new List<ItemFieldNames>{ItemFieldNames.bpref1, ItemFieldNames.bpref2, ItemFieldNames.bpref3, ItemFieldNames.bpref4, ItemFieldNames.bpref5, ItemFieldNames.bpref6, ItemFieldNames.bpref7};
+
+
+            
             foreach(var bpRef in item.BlueprintReferences)
             {
                 if (i < MaxBpRefs)
                 {
-                    bpRefs.Add((int) ItemFieldNames.bpref1 + i + 1, "SBAC-" + bpRef.idRef);
+                    bpRefs.Add((int) ItemFieldNames.bpref1 + i, "SBAC-" + bpRef.idRef);
                 }
 
                 i++;
+            }
+            
+            foreach (var bp in bps)
+            {
+                if (!bpRefs.ContainsKey((int)bp))
+                {
+                    bpRefs[(int)bp] = String.Empty;
+                }
             }
             return bpRefs;
         }

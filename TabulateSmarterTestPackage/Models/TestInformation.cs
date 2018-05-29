@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
@@ -139,7 +140,7 @@ namespace TabulateSmarterTestPackage.Models
                 result.Add(ItemFieldNames.AssessmentType, testPackage.type);
                 if (!result[ItemFieldNames.AssessmentType].Equals("summative", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (result[ItemFieldNames.AssessmentId].Contains("ICA"))
+                    if ($"({testPackage.publisher}){identifier.id}-{testPackage.academicYear}".Contains("ICA"))
                     {
                         result.Add(ItemFieldNames.AssessmentSubtype, "ICA");
                     }
@@ -158,6 +159,40 @@ namespace TabulateSmarterTestPackage.Models
                 else
                 {
                     result.Add(ItemFieldNames.AssessmentSubtype, "summative");
+                }
+
+                foreach (var blueprint in testPackage.Blueprint)
+                {
+                    if (blueprint.Scoring != null && blueprint.Scoring.PerformanceLevels != null)
+                    {
+                        foreach (var performaceLevel in blueprint.Scoring.PerformanceLevels)
+                        {
+                            switch (performaceLevel.pLevel)
+                            {
+                                case 1:
+                                    result[ItemFieldNames.CutPoint1] = performaceLevel.pLevel.ToString();
+                                    result[ItemFieldNames.ScaledHigh1] = performaceLevel.scaledHi.ToString(CultureInfo.InvariantCulture);
+                                    result[ItemFieldNames.ScaledLow1] = performaceLevel.scaledLo.ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case 2:
+                                    result[ItemFieldNames.CutPoint2] = performaceLevel.pLevel.ToString();
+                                    result[ItemFieldNames.ScaledHigh2] = performaceLevel.scaledHi.ToString(CultureInfo.InvariantCulture);
+                                    result[ItemFieldNames.ScaledLow2] = performaceLevel.scaledLo.ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case 3:
+                                    result[ItemFieldNames.CutPoint3] = performaceLevel.pLevel.ToString();
+                                    result[ItemFieldNames.ScaledHigh3] = performaceLevel.scaledHi.ToString(CultureInfo.InvariantCulture);
+                                    result[ItemFieldNames.ScaledLow3] = performaceLevel.scaledLo.ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case 4:
+                                    result[ItemFieldNames.CutPoint4] = performaceLevel.pLevel.ToString();
+                                    result[ItemFieldNames.ScaledHigh4] = performaceLevel.scaledHi.ToString(CultureInfo.InvariantCulture);
+                                    result[ItemFieldNames.ScaledLow4] = performaceLevel.scaledLo.ToString(CultureInfo.InvariantCulture);
+                                    break;
+
+                            }
+                        }
+                    }
                 }
             }
 
