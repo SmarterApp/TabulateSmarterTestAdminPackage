@@ -181,6 +181,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.SecondaryClaimContentTarget, String.Empty },
                     { (int)ItemFieldNames.AnswerKey, String.Empty },
                     { (int)ItemFieldNames.NumberOfAnswerOptions, String.Empty },
+                    { (int)ItemFieldNames.HandScored, item.handScored ? "TRUE" : "FALSE"  },
+                    { (int)ItemFieldNames.DoNotScore, item.doNotScore ? "TRUE" : "FALSE"  },
 
                 };
                 

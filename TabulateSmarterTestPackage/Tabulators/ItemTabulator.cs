@@ -481,6 +481,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                     }
                 }
 
+                // New format data that doesn't exist in the old format
+                itemFields[(int)ItemFieldNames.HandScored] = String.Empty;
+                itemFields[(int) ItemFieldNames.DoNotScore] = String.Empty;
+
                 // Write one line to the CSV
                 var items = itemFields.ToList();
                 for (var i = 0; i < items.Count; i++)

@@ -71,6 +71,8 @@
         ScaledHigh3,
         CutPoint4,
         ScaledLow4,
-        ScaledHigh4
+        ScaledHigh4,
+        HandScored,
+        DoNotScore
     }
 }
