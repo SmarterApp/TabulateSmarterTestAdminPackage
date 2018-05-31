@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml.XPath;
 using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
+using SmarterTestPackage.Common.Data;
 using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
@@ -85,23 +86,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 }
             }
 
-            /*
-           var keys = Enum.GetValues(typeof(ItemFieldNames));
-
-           foreach (var listItem in resultList)
-           {
-               foreach (var key in keys)
-               {
-
-                   var intKey = (int) key;
-
-                   Logger.Debug($"type is {key.GetType()} intKey is {intKey} otherthing is");
-
-               }
-           }
-           */
-            var ordered = resultList.OrderBy(x => x[(int)ItemFieldNames.ItemId]).ToList();
-            return ordered;
+            return resultList.OrderBy(x => x[(int)ItemFieldNames.ItemId]).ToList();
         }
 
 
@@ -134,7 +119,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var langs = GetLanguages(item);
                 var bpRefs = GetBpRefs(item);
                 string scoringEngine = item.handScored ? "HandScored" : "??NotHandScored??";
-                var itemScoreParams = GetItemScoreParameters(item);
+                var itemScoreParams = GetItemScoreParameters(item, testInformation);
 
                 var newList = new SortedDictionary<int, string>(commonTestPackageItems)
                 {
@@ -195,7 +180,7 @@ namespace TabulateSmarterTestPackage.Tabulators
             }
         }
 
-        private SortedDictionary<int, string> GetItemScoreParameters(ItemGroupItem item)
+        private SortedDictionary<int, string> GetItemScoreParameters(ItemGroupItem item, IDictionary<ItemFieldNames, string> testInformation)
         {
             var scoreParams = new SortedDictionary<int, string>();
             foreach (var isp in item.ItemScoreDimension.ItemScoreParameter)
@@ -253,7 +238,13 @@ namespace TabulateSmarterTestPackage.Tabulators
             else
             {
                 scoreParams[(int)ItemFieldNames.avg_b] = String.Empty;
-                Logger.Error("There was an error calulating the avg_b ");
+                avg_b.Errors.ToList().ForEach(x =>
+                    ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                        PackageType.Combined,
+                        $"TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup/Item/ItemScoreDimension",
+                        ErrorSeverity.Degraded, item.id, String.Empty, x)
+                );
+                Logger.Error($"There was an error calulating the avg_b for Item id {item.id}");
             }
 
             return scoreParams;

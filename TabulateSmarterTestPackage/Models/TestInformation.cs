@@ -99,7 +99,7 @@ namespace TabulateSmarterTestPackage.Models
                     {
                         result.Add(ItemFieldNames.AssessmentSubtype, string.Empty);
                         Errors.Add(GenerateTestInformationValidationError(result[ItemFieldNames.AssessmentId],
-                            "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either \"ICA\" or \"IAB\"",
+                            "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either 'ICA' or 'IAB'",
                             "property", "testspecification/property", GetPackageType(processor)));
                     }
                 }
@@ -152,7 +152,7 @@ namespace TabulateSmarterTestPackage.Models
                     {
                         result.Add(ItemFieldNames.AssessmentSubtype, string.Empty);
                         Errors.Add(GenerateTestInformationValidationError(result[ItemFieldNames.AssessmentId],
-                            "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either \"ICA\" or \"IAB\"",
+                            "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either 'ICA' or 'IAB",
                             "TestPackage", "Test", GetPackageType(processor)));
                     }
                 }
