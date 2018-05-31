@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using SmarterTestPackage.Common.Data;
-using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ValidateSmarterTestPackage.Validators.Combined

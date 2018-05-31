@@ -9,7 +9,6 @@ using System.Xml.XPath;
 using ProcessSmarterTestPackage.PostProcessors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
-using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.Validators.Combined;
 using NLog;
 

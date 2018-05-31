@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ValidateSmarterTestPackage.RestrictedValues.Enums
+﻿namespace ValidateSmarterTestPackage.RestrictedValues.Enums
 {
     public static class Algorithm
     {

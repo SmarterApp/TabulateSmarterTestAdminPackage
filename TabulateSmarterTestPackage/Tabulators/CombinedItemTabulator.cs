@@ -8,7 +8,6 @@ using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
 using SmarterTestPackage.Common.Data;
 using TabulateSmarterTestPackage.Utilities;
-using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace TabulateSmarterTestPackage.Tabulators
@@ -142,7 +141,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.Language, langs[(int)ItemFieldNames.Language] },
                     { (int)ItemFieldNames.AllowCalculator, String.Empty },
                     { (int)ItemFieldNames.MathematicalPractice, String.Empty },
-                    { (int)ItemFieldNames.MaxPoints, item.ItemScoreDimension.scorePoints.ToString() },
+                    { (int)ItemFieldNames.MaxPoints, item.ItemScoreDimensions[0].scorePoints.ToString() },      //ItemScoreDimension.scorePoints.ToString() },
+                    //{ (int)ItemFieldNames.MaxPoints, item.ItemScoreDimension.scorePoints.ToString() },
                     { (int)ItemFieldNames.Glossary, String.Empty },
                     { (int)ItemFieldNames.ScoringEngine, scoringEngine },
                     { (int)ItemFieldNames.Spanish, langs[(int)ItemFieldNames.Spanish] },
@@ -151,9 +151,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.ResponseRequired, item.responseRequired ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.AdminRequired, item.administrationRequired ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.ItemPosition, segment.position.ToString() },
-                    { (int)ItemFieldNames.MeasurementModel, item.ItemScoreDimension.measurementModel },
-                    { (int)ItemFieldNames.Weight, item.ItemScoreDimension.weight.ToString(CultureInfo.InvariantCulture) },
-                    { (int)ItemFieldNames.ScorePoints, item.ItemScoreDimension.scorePoints.ToString() },
+                    { (int)ItemFieldNames.MeasurementModel, item.ItemScoreDimensions[0].measurementModel },
+                    { (int)ItemFieldNames.Weight, item.ItemScoreDimensions[0].weight.ToString(CultureInfo.InvariantCulture) },
+                    { (int)ItemFieldNames.ScorePoints, item.ItemScoreDimensions[0].scorePoints.ToString() },
                     { (int)ItemFieldNames.a, itemScoreParams[(int)ItemFieldNames.a] },
                     { (int)ItemFieldNames.b0_b, itemScoreParams[(int)ItemFieldNames.b0_b] },
                     { (int)ItemFieldNames.b1_c, itemScoreParams[(int)ItemFieldNames.b1_c] },
@@ -183,7 +183,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         private SortedDictionary<int, string> GetItemScoreParameters(ItemGroupItem item, IDictionary<ItemFieldNames, string> testInformation)
         {
             var scoreParams = new SortedDictionary<int, string>();
-            foreach (var isp in item.ItemScoreDimension.ItemScoreParameter)
+            foreach (var isp in item.ItemScoreDimensions[0].ItemScoreParameter)
             {
                 if (isp.measurementParameter.Equals("a", StringComparison.Ordinal))
                 {
@@ -227,10 +227,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                 scoreParams.Add((int)ItemFieldNames.b3, String.Empty);
             }
 
-            var avg_b = MathHelper.CalculateAverageB(item.ItemScoreDimension.measurementModel,
+            var avg_b = MathHelper.CalculateAverageB(item.ItemScoreDimensions[0].measurementModel,
                 scoreParams[(int)ItemFieldNames.a], scoreParams[(int)ItemFieldNames.b0_b],
                 scoreParams[(int)ItemFieldNames.b1_c], scoreParams[(int)ItemFieldNames.b2],
-                scoreParams[(int)ItemFieldNames.b3], item.ItemScoreDimension.scorePoints.ToString());
+                scoreParams[(int)ItemFieldNames.b3], item.ItemScoreDimensions[0].scorePoints.ToString());
             if (!avg_b.Errors.Any())
             {
                 scoreParams[(int)ItemFieldNames.avg_b] = avg_b.Value;

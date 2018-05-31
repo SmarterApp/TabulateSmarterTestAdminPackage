@@ -14,7 +14,6 @@ using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using TabulateSmarterTestPackage.Models;
 using TabulateSmarterTestPackage.Utilities;
-using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using ProcessSmarterTestPackage.Processors.Combined;
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using SmarterTestPackage.Common.Data;
-using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using NLog;
 

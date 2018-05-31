@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using NLog;
 using SmarterTestPackage.Common.Data;
-using ValidateSmarterTestPackage.Resources;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ValidateSmarterTestPackage.Validators.Combined
@@ -38,7 +37,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                 {
                                     foreach (var item in itemGroup.Item)
                                     {
-                                        itemScoreDimensions.Add(item.ItemScoreDimension);
+                                        itemScoreDimensions.Add(item.ItemScoreDimensions[0]);
                                     }
                                 }
                             }
