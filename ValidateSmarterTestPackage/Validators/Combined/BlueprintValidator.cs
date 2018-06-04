@@ -34,25 +34,27 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         
                     case CombinedBlueprintElementTypes.PACKAGE:
                     // Validate that a "package" blueprint has only child test blueprint elements
-                        foreach (var childBlueprintElement in bpEl.BlueprintElement1)
-                        {
-                            if (!childBlueprintElement.type.Equals(CombinedBlueprintElementTypes.TEST,
-                                StringComparison.CurrentCultureIgnoreCase))
+                        if (bpEl.BlueprintElement1 != null)
+                            foreach (var childBlueprintElement in bpEl.BlueprintElement1)
                             {
-                                errStr = "Child elements of a 'package' blueprint element should be of a 'test' blueprint element type";
-                                Logger.Debug(errStr);
-                                errors.Add(new ValidationError
+                                if (!childBlueprintElement.type.Equals(CombinedBlueprintElementTypes.TEST,
+                                    StringComparison.CurrentCultureIgnoreCase))
                                 {
-                                    ErrorSeverity = ErrorSeverity.Severe,
-                                    Location = "TestPackage/Blueprint/BlueprintElement",
-                                    GeneratedMessage = errStr,
-                                    ItemId = childBlueprintElement.id,
-                                    Key = "BlueprintElement",
-                                    PackageType = PackageType.Combined,
-                                    Value = childBlueprintElement.type
-                                });
+                                    errStr =
+                                        "Child elements of a 'package' blueprint element should be of a 'test' blueprint element type";
+                                    Logger.Debug(errStr);
+                                    errors.Add(new ValidationError
+                                    {
+                                        ErrorSeverity = ErrorSeverity.Severe,
+                                        Location = "TestPackage/Blueprint/BlueprintElement",
+                                        GeneratedMessage = errStr,
+                                        ItemId = childBlueprintElement.id,
+                                        Key = "BlueprintElement",
+                                        PackageType = PackageType.Combined,
+                                        Value = childBlueprintElement.type
+                                    });
+                                }
                             }
-                        }
 
                         break;
 
