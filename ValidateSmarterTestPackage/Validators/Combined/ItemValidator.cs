@@ -92,7 +92,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
         {
             foreach (var item in items)
             {
-                Logger.Debug($"Item id is {item.id}");
                 try
                 {
                     if (!Int64.TryParse(item.id, out var l))
