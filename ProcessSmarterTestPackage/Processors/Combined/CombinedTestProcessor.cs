@@ -11,6 +11,7 @@ using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Validators.Combined;
 using NLog;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.Processors.Combined
 {
@@ -26,7 +27,7 @@ namespace ProcessSmarterTestPackage.Processors.Combined
             //Processors.Add(new CombinedTestProcessor(Navigator, packageType));
             XmlDocument validateDocument = new XmlDocument();
             validateDocument.LoadXml(Navigator.OuterXml);
-            validateDocument.Schemas.Add(null, "Resources/TestPackageSchema.xsd"); //TODO can I put this in a setting or something?
+            validateDocument.Schemas.Add(null, "Resources/TestPackageSchema.xsd");
             ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
             validateDocument.Validate(validation);
             Logger.Debug("New package type xml file loaded and validated against XML schema");
@@ -42,8 +43,6 @@ namespace ProcessSmarterTestPackage.Processors.Combined
             //load and validate with XML schema
             try
             {
-               
-
                 //all the validators for the new format
                 ItemGroupValidator itemGroupValidator = new ItemGroupValidator();
                 AssessmentValidator assessmentValidator = new AssessmentValidator();
@@ -95,7 +94,6 @@ namespace ProcessSmarterTestPackage.Processors.Combined
 
         static void SchemaValidationHandler(object sender, ValidationEventArgs e)
         {
-            Logger.Debug("VALIDATION ERROR!!");
             switch (e.Severity)
             {
                 case XmlSeverityType.Error:
@@ -105,6 +103,7 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                     Logger.Error("Schema Validation Warning: {0}", e.Message);
                     throw new ArgumentException("XML Validation Warning");
                 default:
+                    Logger.Error("Schema Validation Error: {0}", e.Message);
                     throw new ArgumentException("XML Validation Failure");
             }
         }

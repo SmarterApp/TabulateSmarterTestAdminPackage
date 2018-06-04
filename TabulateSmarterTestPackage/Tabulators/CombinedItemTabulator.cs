@@ -50,7 +50,6 @@ namespace TabulateSmarterTestPackage.Tabulators
 
             var testPackage = testSpecificationProcessor.TestPackage;
             var tests = testPackage.Test;
-            //List<ItemGroupItem> testItems = new List<ItemGroupItem>();
 
             foreach (var test in tests)
             {
