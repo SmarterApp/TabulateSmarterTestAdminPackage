@@ -17,7 +17,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
         }
 
         // Validates that <Test id=?> ? does not exceed 250 chars and is not null
-        private void ValidateAssessmentsHaveAssociatedBlueprintElement(TestPackage testPackage, List<ValidationError> errors)
+        private void ValidateAssessmentIdLength(TestPackage testPackage, List<ValidationError> errors)
         {
             var maxLengthValidator = new MaxLengthValidator(ErrorSeverity.Severe, 250);
             foreach (var test in testPackage.Test)
@@ -41,7 +41,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
             }
         }
 
-        private void ValidateAssessmentIdLength(TestPackage testPackage, List<ValidationError> errors)
+        private void ValidateAssessmentsHaveAssociatedBlueprintElement(TestPackage testPackage, List<ValidationError> errors)
         {
             
             bool isMultiTestPackage = testPackage.Test.Length > 1;
@@ -71,7 +71,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     if (!maybeTestBpel)
                     {
                         var errStr =
-                            $"A 'test' BlueprintElement was not found in the test blueprint for the test with id {test.id}";
+                            $"A 'test' BlueprintElement was not found in the test blueprint for the test with id {test.id}.";
                         Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {

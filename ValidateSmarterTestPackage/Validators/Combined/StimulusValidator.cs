@@ -34,10 +34,12 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         }
                         else //Assume adaptive
                         {
-                            foreach (var itemGroup in (segment.Item as TestSegmentPool).ItemGroup)
-                            {
-                                stimuli.Add(itemGroup.Stimulus);
-                            }
+                            var itemGroups = (segment.Item as TestSegmentPool)?.ItemGroup;
+                            if (itemGroups != null)
+                                foreach (var itemGroup in itemGroups)
+                                {
+                                    stimuli.Add(itemGroup.Stimulus);
+                                }
                         }
                     }
                 }
@@ -47,7 +49,23 @@ namespace ValidateSmarterTestPackage.Validators.Combined
             {
                 try
                 {
-                    Int64.TryParse(stimulus.id, out var l);
+                    if (!Int64.TryParse(stimulus.id, out var l))
+                    {
+                        var errStr =
+                            $"The stimulus with id \"{stimulus.id}\" has an id that is not a LONG value. " +
+                            "Currently, TDS only supports stimuli  ids that are of a 'LONG' data type";
+                        Logger.Debug(errStr);
+                        errors.Add(new ValidationError
+                        {
+                            ErrorSeverity = ErrorSeverity.Severe,
+                            Location = "TestPackage/Test/Segments/Segment/SegmentForms/SegmentForm/ItemGroup/Stimulus",
+                            GeneratedMessage = errStr,
+                            ItemId = stimulus.id,
+                            Key = "Stimulus",
+                            PackageType = PackageType.Combined,
+                            Value = stimulus.id
+                        });
+                    }
                 }
                 catch (Exception)
                 {

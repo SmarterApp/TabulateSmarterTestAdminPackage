@@ -92,9 +92,26 @@ namespace ValidateSmarterTestPackage.Validators.Combined
         {
             foreach (var item in items)
             {
+                Logger.Debug($"Item id is {item.id}");
                 try
                 {
-                    Int64.TryParse(item.id, out var l);
+                    if (!Int64.TryParse(item.id, out var l))
+                    {
+                        var errStr =
+                            $"The item with id \"{item.id}\" has an id that is not a LONG value. " +
+                            "Currently, TDS only supports item ids that are of a 'LONG' data type";
+                        Logger.Debug(errStr);
+                        errors.Add(new ValidationError
+                        {
+                            ErrorSeverity = ErrorSeverity.Severe,
+                            Location = "TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup/Item",
+                            GeneratedMessage = errStr,
+                            ItemId = item.id,
+                            Key = "Item",
+                            PackageType = PackageType.Combined,
+                            Value = item.id
+                        });
+                    }
                 }
                 catch (Exception)
                 {
