@@ -43,7 +43,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
-                        ErrorSeverity = ErrorSeverity.Degraded,
+                        ErrorSeverity = ErrorSeverity.Benign,
                         Location = "TestPackage/Test/Segments/Segment",
                         GeneratedMessage = errStr,
                         ItemId = segment.id,
