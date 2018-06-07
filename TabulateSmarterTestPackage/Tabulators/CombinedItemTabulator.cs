@@ -48,6 +48,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         public IEnumerable<IEnumerable<string>> ProcessResult(XPathNavigator navigator,
             CombinedTestProcessor testSpecificationProcessor, IDictionary<ItemFieldNames, string> testInformation)
         {
+            Logger.Info($"Tabulating {testSpecificationProcessor.GetUniqueId()}");
             var resultList = new List<List<string>>();
 
             var commonTestPackageItems = new SortedDictionary<int, string>
