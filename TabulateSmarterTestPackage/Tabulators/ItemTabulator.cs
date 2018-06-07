@@ -434,9 +434,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var j = 0;
                 foreach (var p in performanceLevels)
                 {
-                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.PerfLevel;
-                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.ScaledLow;
-                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++] = p.ScaledHigh;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++ -2] = p.PerfLevel;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++ -2] = p.ScaledLow;
+                    itemFields[ItemFieldNamesCount - 3 * performanceLevels.Count + j++ -2] = p.ScaledHigh;
                 }
 
                 var item =

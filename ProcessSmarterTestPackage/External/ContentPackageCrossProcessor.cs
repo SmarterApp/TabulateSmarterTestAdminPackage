@@ -13,7 +13,7 @@ namespace ProcessSmarterTestPackage.External
 {
     public class ContentPackageCrossProcessor
     {
-        public IList<CrossPackageValidationError> CrossValidateContent(TestSpecificationProcessor primary,
+        public IList<CrossPackageValidationError> CrossValidateContent(Processor primary,
             IList<ContentPackageItemRow> itemContent, IList<ContentPackageStimRow> stimuliContent)
         {
             var itemPool =

@@ -25,10 +25,10 @@ namespace ProcessSmarterTestPackage.External
 
         public TestPackageCrossProcessor TestPackageCrossProcessor { get; set; } = new TestPackageCrossProcessor();
 
-        public Dictionary<string, List<TestSpecificationProcessor>> TestPackages { get; set; } =
-            new Dictionary<string, List<TestSpecificationProcessor>>();
+        public Dictionary<string, List<Processor>> TestPackages { get; set; } =
+            new Dictionary<string, List<Processor>>();
 
-        public void AddProcessedTestPackage(TestSpecificationProcessor processor)
+        public void AddProcessedTestPackage(Processor processor)
         {
             var uniqueId = processor.GetUniqueId();
             if (TestPackages.ContainsKey(uniqueId))
@@ -37,14 +37,14 @@ namespace ProcessSmarterTestPackage.External
             }
             else
             {
-                TestPackages.Add(uniqueId, new List<TestSpecificationProcessor>
+                TestPackages.Add(uniqueId, new List<Processor>
                 {
                     processor
                 });
             }
         }
 
-        public void AddCrossProcessingErrors(TestSpecificationProcessor processor,
+        public void AddCrossProcessingErrors(Processor processor,
             IEnumerable<CrossPackageValidationError> errors)
         {
             var uniqueId = processor.GetUniqueId();

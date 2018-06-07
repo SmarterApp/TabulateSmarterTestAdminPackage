@@ -1094,6 +1094,8 @@ public partial class ItemGroupItem {
     
     private PresentationsPresentation[] presentationsField;
     
+    private ItemGroupItemPoolProperty[] poolPropertiesField;
+    
     private ItemGroupItemItemScoreDimension[] itemScoreDimensionsField;
     
     private ItemGroupItemTeacherHandScoring teacherHandScoringField;
@@ -1142,6 +1144,17 @@ public partial class ItemGroupItem {
         }
         set {
             this.presentationsField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("PoolProperty", IsNullable=false)]
+    public ItemGroupItemPoolProperty[] PoolProperties {
+        get {
+            return this.poolPropertiesField;
+        }
+        set {
+            this.poolPropertiesField = value;
         }
     }
     
@@ -1314,6 +1327,41 @@ public partial class PresentationsPresentation {
         }
         set {
             this.labelField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+public partial class ItemGroupItemPoolProperty {
+    
+    private string nameField;
+    
+    private string valueField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute(DataType="token")]
+    public string name {
+        get {
+            return this.nameField;
+        }
+        set {
+            this.nameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute(DataType="token")]
+    public string value {
+        get {
+            return this.valueField;
+        }
+        set {
+            this.valueField = value;
         }
     }
 }

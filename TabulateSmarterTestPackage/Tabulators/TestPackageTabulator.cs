@@ -66,13 +66,13 @@ namespace TabulateSmarterTestPackage.Tabulators
                 if (nav.IsNode && nav.SelectSingleNode("//TestPackage") != null)
                 {
 
-                    Logger.Debug("****************************New Type");
+                    Logger.Info("Processing new package format.");
                     nodeSelector = "//TestPackage";
                     ExpectedPackageType = PackageType.Combined;
                 }
                 else if (nav.IsNode && nav.SelectSingleNode("/testspecification") != null)
                 {
-                    Logger.Debug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^OLD Type");
+                    Logger.Info("Processing old package format.");
                     nodeSelector = "/testspecification";
                     var packageType = nav.SelectSingleNode(nodeSelector)
                         .Eval(XPathExpression.Compile("@purpose"));

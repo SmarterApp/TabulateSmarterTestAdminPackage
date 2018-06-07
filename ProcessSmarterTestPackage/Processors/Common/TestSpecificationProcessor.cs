@@ -55,7 +55,6 @@ namespace ProcessSmarterTestPackage.Processors.Common
                         .ForEach(x => Processors.Add(new ScoringProcessor(x, packageType)));
                     break;
                 case PackageType.Combined:
-                    Logger.Debug("ADDING CombinedTestProcessor to Processors");
                     Processors.Add(new CombinedTestProcessor(Navigator, packageType));
                     break;
             }

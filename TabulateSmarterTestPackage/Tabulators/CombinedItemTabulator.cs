@@ -16,23 +16,51 @@ namespace TabulateSmarterTestPackage.Tabulators
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private const int MaxBpRefs = 7;
+        private readonly Dictionary<string, int> sPoolPropertyMapping;
+
+        public CombinedItemTabulator()
+        {
+            sPoolPropertyMapping = new Dictionary<string, int>
+            {
+                {"ASL", (int) ItemFieldNames.ASL},
+                {"Braille", (int) ItemFieldNames.Braille},
+                {"Depth of Knowledge", (int) ItemFieldNames.DOK},
+                {"Grade", (int) ItemFieldNames.Grade},
+                //{"Language", (int) ItemFieldNames.Language},
+                {"Language", 0},
+                {"Scoring Engine", (int) ItemFieldNames.ScoringEngine},
+                {"Spanish Translation", (int) ItemFieldNames.Spanish},
+                {"Calculator", (int) ItemFieldNames.AllowCalculator},
+                {"Glossary", (int) ItemFieldNames.Glossary},
+                // Ignore these pool properties
+                // Value of zero means suppress
+                {"--ITEMTYPE--", 0},
+                {"Difficulty Category", 0},
+                {"Test Pool", 0},
+                {"Rubric Source", 0},
+                {"Smarter Balanced Item Response Types", 0},
+                {"Answer Key", 0},
+                {"Claim2_Category", 0},
+                {"Revision Sub-category", 0}
+            };
+        }
 
         public IEnumerable<IEnumerable<string>> ProcessResult(XPathNavigator navigator,
             CombinedTestProcessor testSpecificationProcessor, IDictionary<ItemFieldNames, string> testInformation)
         {
             var resultList = new List<List<string>>();
 
-            var commonTestPackageItems = new SortedDictionary<int,string>();
-            
-            
-            commonTestPackageItems.Add((int)ItemFieldNames.AssessmentId, testInformation[ItemFieldNames.AssessmentId]);
-            commonTestPackageItems.Add((int)ItemFieldNames.AssessmentVersion, testInformation[ItemFieldNames.AssessmentVersion]);
-            commonTestPackageItems.Add((int)ItemFieldNames.Version, testInformation[ItemFieldNames.Version]);
-            commonTestPackageItems.Add((int)ItemFieldNames.AssessmentSubject, testInformation[ItemFieldNames.AssessmentSubject]);
-            commonTestPackageItems.Add((int)ItemFieldNames.AssessmentGrade, testInformation[ItemFieldNames.AssessmentGrade]);
-            commonTestPackageItems.Add((int)ItemFieldNames.AssessmentType, testInformation[ItemFieldNames.AssessmentType]);
-            commonTestPackageItems.Add((int)ItemFieldNames.AcademicYear, testInformation[ItemFieldNames.AcademicYear]);
-            commonTestPackageItems.Add((int)ItemFieldNames.BankKey, testInformation[ItemFieldNames.BankKey]);
+            var commonTestPackageItems = new SortedDictionary<int, string>
+            {
+                { (int)ItemFieldNames.AssessmentId, testInformation[ItemFieldNames.AssessmentId] },
+                { (int)ItemFieldNames.AssessmentVersion, testInformation[ItemFieldNames.AssessmentVersion] },
+                { (int)ItemFieldNames.Version, testInformation[ItemFieldNames.Version] },
+                { (int)ItemFieldNames.AssessmentSubject, testInformation[ItemFieldNames.AssessmentSubject] },
+                { (int)ItemFieldNames.AssessmentGrade, testInformation[ItemFieldNames.AssessmentGrade] },
+                { (int)ItemFieldNames.AssessmentType, testInformation[ItemFieldNames.AssessmentType] },
+                { (int)ItemFieldNames.AcademicYear, testInformation[ItemFieldNames.AcademicYear] },
+                { (int)ItemFieldNames.BankKey, testInformation[ItemFieldNames.BankKey] }
+            };
 
             commonTestPackageItems[(int)ItemFieldNames.CutPoint1] = testInformation[ItemFieldNames.CutPoint1];
             commonTestPackageItems[(int)ItemFieldNames.ScaledHigh1] = testInformation[ItemFieldNames.ScaledHigh1];
@@ -66,7 +94,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             {
                                 foreach (var itemGroup in segmentForm.ItemGroup)
                                 {
-                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id, segment);
+                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id, segment, testPackage.publisher, testPackage.academicYear);
                                 }
                             }
                         }
@@ -76,7 +104,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             if (itemGroups != null)
                                 foreach (var itemGroup in itemGroups)
                                 {
-                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id, segment);
+                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id, segment, testPackage.publisher, testPackage.academicYear);
                                 }
                         }
                     }
@@ -87,9 +115,68 @@ namespace TabulateSmarterTestPackage.Tabulators
             return resultList.OrderBy(x => x[(int)ItemFieldNames.ItemId]).ToList();
         }
 
+        private SortedDictionary<int, string> GetPoolProperties(ItemGroupItem item, IDictionary<ItemFieldNames, string> testInformation)
+        {
+            var poolProperties = new SortedDictionary<int, string>();
+            var glossary = new List<string>();
+            if (item.PoolProperties != null && item.PoolProperties.Length > 0)
+            {
+                foreach (var poolProperty in item.PoolProperties)
+                {
+                    var ppProperty = poolProperty.name;
+                    var ppValue = poolProperty.value;
+                    if (string.IsNullOrEmpty(ppProperty) || string.IsNullOrEmpty(ppValue))
+                    {
+                        continue;
+                    }
+                    // Special case for Braille language
+                    int fieldIndex;
+                    if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
+                        ppValue.Equals("ENU-Braille", StringComparison.Ordinal))
+                    {
+                        poolProperties[(int)ItemFieldNames.LanguageBraille] = ppValue;
+                    }
+                    // Special case for Spanish language
+                    else if (ppProperty.Equals("Language", StringComparison.Ordinal) &&
+                             ppValue.Equals("ESN", StringComparison.Ordinal))
+                    {
+                        poolProperties[(int)ItemFieldNames.Spanish] = "Y";
+                    }
+                    // Special case for Spanish language
+                    else if (ppProperty.Equals("Spanish Translation", StringComparison.Ordinal))
+                    {
+                        poolProperties[(int)ItemFieldNames.Spanish] = ppValue;
+                    }
+                    // Special case for Glossary
+                    else if (ppProperty.Equals("Glossary", StringComparison.Ordinal))
+                    {
+                        glossary.Add(ppValue);
+                    }
+                    else if (ppProperty.Equals("Allow Calculator", StringComparison.OrdinalIgnoreCase))
+                    {
+                        poolProperties[(int)ItemFieldNames.AllowCalculator] = ppValue;
+                    }
+                    else if (sPoolPropertyMapping.TryGetValue(ppProperty, out fieldIndex) && fieldIndex != 0)
+                    {
+                        if (poolProperties.ContainsKey(fieldIndex))
+                        {
+                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                                PackageType.Combined,
+                                "TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup/Item/PoolProperties/PoolProperty",
+                                ErrorSeverity.Degraded, item.id, ppValue,
+                                "'{0}={1}' Multiple values for pool property", ppProperty, ppValue);
+                        }
+                        poolProperties[fieldIndex] = ppValue;
+                    }
+                }
+            }
+            glossary.Sort();
+            poolProperties[(int)ItemFieldNames.Glossary] = string.Join(";", glossary);
+            return poolProperties;
+        }
 
         private void GetAssesmentItemList(Test test, List<ItemGroupItem> testItems, SortedDictionary<int, string> commonTestPackageItems, 
-            IDictionary<ItemFieldNames, string> testInformation, List<List<string>> resultList, String itemGroupId, TestSegment segment)
+            IDictionary<ItemFieldNames, string> testInformation, List<List<string>> resultList, String itemGroupId, TestSegment segment, String publisher, String academicYear)
         {
             var subType = "summative";
             if (!testInformation[ItemFieldNames.AssessmentType].Equals("summative", StringComparison.OrdinalIgnoreCase))
@@ -115,7 +202,8 @@ namespace TabulateSmarterTestPackage.Tabulators
             {
                 var ids = GetStandardIDs(item, testInformation[ItemFieldNames.AssessmentSubject]);
                 var langs = GetLanguages(item);
-                var bpRefs = GetBpRefs(item);
+                var poolProperties = GetPoolProperties(item, testInformation);
+                var bpRefs = GetBpRefs(item, publisher, academicYear);
                 string scoringEngine = item.handScored ? "HandScored" : "??NotHandScored??";
                 var itemScoreParams = GetItemScoreParameters(item, testInformation);
 
@@ -128,23 +216,27 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.Filename,  $"item-{testInformation[ItemFieldNames.BankKey]}-{item.id}.xml"}, // item-200-21818.xml"
                     { (int)ItemFieldNames.ItemType, item.type },
                     { (int)ItemFieldNames.AssessmentSubtype, subType },
-                    { (int)ItemFieldNames.Grade, test.Grades[0].value },
                     { (int)ItemFieldNames.Standard, ids["Standard"]},
                     { (int)ItemFieldNames.Claim, ids["Claim"]},
                     { (int)ItemFieldNames.Target, ids["Target"]},
                     { (int)ItemFieldNames.PassageId, $"{testInformation[ItemFieldNames.BankKey]}-{itemGroupId}" },
-                    { (int)ItemFieldNames.ASL, String.Empty }, //wut?
-                    { (int)ItemFieldNames.Braille,  String.Empty},
-                    { (int)ItemFieldNames.LanguageBraille, langs[(int)ItemFieldNames.LanguageBraille] },
-                    { (int)ItemFieldNames.DOK, String.Empty },
+                    { (int)ItemFieldNames.ASL, poolProperties.ContainsKey((int)ItemFieldNames.ASL) ? poolProperties[(int)ItemFieldNames.ASL] : String.Empty },
+                    { (int)ItemFieldNames.Braille, poolProperties.ContainsKey((int)ItemFieldNames.Braille) ? poolProperties[(int)ItemFieldNames.Braille] : String.Empty },
+                    { (int)ItemFieldNames.LanguageBraille, langs[(int)ItemFieldNames.LanguageBraille] }, //TODO does this come from poolproperties or elsewhere?
+                    { (int)ItemFieldNames.DOK, poolProperties.ContainsKey((int)ItemFieldNames.DOK) ? poolProperties[(int)ItemFieldNames.DOK] : String.Empty },
+
                     { (int)ItemFieldNames.Language, langs[(int)ItemFieldNames.Language] },
-                    { (int)ItemFieldNames.AllowCalculator, String.Empty },
+                    //{ (int)ItemFieldNames.Language, poolProperties.ContainsKey((int)ItemFieldNames.Language) ? poolProperties[(int)ItemFieldNames.Language] : String.Empty },
+
+                    { (int)ItemFieldNames.AllowCalculator, poolProperties.ContainsKey((int)ItemFieldNames.AllowCalculator) ? poolProperties[(int)ItemFieldNames.AllowCalculator] : String.Empty },
                     { (int)ItemFieldNames.MathematicalPractice, String.Empty },
+
+                    { (int)ItemFieldNames.Grade, poolProperties.ContainsKey((int)ItemFieldNames.Grade) ? poolProperties[(int)ItemFieldNames.Grade] : String.Empty },
+
                     { (int)ItemFieldNames.MaxPoints, item.ItemScoreDimensions[0].scorePoints.ToString() },      //ItemScoreDimension.scorePoints.ToString() },
-                    //{ (int)ItemFieldNames.MaxPoints, item.ItemScoreDimension.scorePoints.ToString() },
-                    { (int)ItemFieldNames.Glossary, String.Empty },
-                    { (int)ItemFieldNames.ScoringEngine, scoringEngine },
-                    { (int)ItemFieldNames.Spanish, langs[(int)ItemFieldNames.Spanish] },
+                    { (int)ItemFieldNames.Glossary, poolProperties.ContainsKey((int)ItemFieldNames.Glossary) ? poolProperties[(int)ItemFieldNames.Glossary] : String.Empty },
+                    { (int)ItemFieldNames.ScoringEngine, poolProperties.ContainsKey((int)ItemFieldNames.ScoringEngine) ? poolProperties[(int)ItemFieldNames.ScoringEngine] : String.Empty },
+                    { (int)ItemFieldNames.Spanish, poolProperties.ContainsKey((int)ItemFieldNames.Spanish) ? poolProperties[(int)ItemFieldNames.Spanish] : String.Empty },
                     { (int)ItemFieldNames.IsFieldTest, item.fieldTest ? "TRUE" : "FALSE" },
                     { (int)ItemFieldNames.IsActive, item.active ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.ResponseRequired, item.responseRequired ? "TRUE" : "FALSE"  },
@@ -163,10 +255,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.ClaimContentTarget, String.Empty },
                     { (int)ItemFieldNames.SecondaryCommonCore, String.Empty },
                     { (int)ItemFieldNames.SecondaryClaimContentTarget, String.Empty },
-                    { (int)ItemFieldNames.AnswerKey, String.Empty },
+                    { (int)ItemFieldNames.AnswerKey, poolProperties.ContainsKey((int)ItemFieldNames.AnswerKey) ? poolProperties[(int)ItemFieldNames.AnswerKey] : String.Empty },
                     { (int)ItemFieldNames.NumberOfAnswerOptions, String.Empty },
                     { (int)ItemFieldNames.HandScored, item.handScored ? "TRUE" : "FALSE"  },
-                    { (int)ItemFieldNames.DoNotScore, item.doNotScore ? "TRUE" : "FALSE"  },
+                    { (int)ItemFieldNames.DoNotScore, item.doNotScore ? "TRUE" : "FALSE"  }
 
                 };
                 
@@ -240,7 +332,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 avg_b.Errors.ToList().ForEach(x =>
                     ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
                         PackageType.Combined,
-                        $"TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup/Item/ItemScoreDimension",
+                        "TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup/Item/ItemScoreDimension",
                         ErrorSeverity.Degraded, item.id, String.Empty, x)
                 );
                 Logger.Error($"There was an error calulating the avg_b for Item id {item.id}");
@@ -267,7 +359,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     langs.Add((int)ItemFieldNames.Spanish, pres.code);
                 }
 
-                if (!langs.ContainsKey((int) ItemFieldNames.Language))
+                else if (!langs.ContainsKey((int) ItemFieldNames.Language))
                 {
                     langs.Add((int)ItemFieldNames.Language, pres.code);
                 }
@@ -289,7 +381,7 @@ namespace TabulateSmarterTestPackage.Tabulators
             return langs;
         }
 
-        private Dictionary<int, string> GetBpRefs(ItemGroupItem item)
+        private Dictionary<int, string> GetBpRefs(ItemGroupItem item, String publisher, String academicYear)
         {
             var bpRefs = new Dictionary<int, string>();
             var i = 0;
@@ -299,9 +391,13 @@ namespace TabulateSmarterTestPackage.Tabulators
             
             foreach(var bpRef in item.BlueprintReferences)
             {
-                if (i < MaxBpRefs)
+                if (i == 0)
                 {
-                    bpRefs.Add((int) ItemFieldNames.bpref1 + i, "SBAC-" + bpRef.idRef);
+                    bpRefs.Add((int)ItemFieldNames.bpref1 + i, $"({publisher}){bpRef.idRef}-{academicYear}");
+                }
+                else if (i < MaxBpRefs)
+                {
+                    bpRefs.Add((int) ItemFieldNames.bpref1 + i, $"{publisher}-{bpRef.idRef}");
                 }
 
                 i++;
@@ -330,7 +426,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                         if (parts.Length <= 2)
                         {
                             ids["Standard"] = $"SBAC-ELA-v1:{bpRef.idRef}";
-                            ids["Claim"] = parts[0] + "\t";
+                            ids["Claim"] = parts[0];
                             ids["Target"] = parts[1] + "\t";
                         }
                         
@@ -341,8 +437,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     if (parts.Length == 4)
                     {
                         ids["Standard"] = $"SBAC-MA-v6:{bpRef.idRef}";
-                        ids["Claim"] = parts[0] + "\t";
-                        ids["Target"] = parts[1] + "\t";
+                        ids["Claim"] = parts[0];
+                        ids["Target"] = parts[parts.Length-1] + "\t";
                     }
                 }
 

@@ -334,9 +334,10 @@ namespace TabulateSmarterTestPackage
 
             if (ReportingUtility.CrossProcessor != null)
             {
-                Logger.Debug($"Processor is {processor.GetType()}");
-                ReportingUtility.CrossProcessor.AddProcessedTestPackage((TestSpecificationProcessor)processor);
-                ReportingUtility.CrossProcessor.AddCrossProcessingErrors((TestSpecificationProcessor)processor,
+                //ReportingUtility.CrossProcessor.AddProcessedTestPackage((TestSpecificationProcessor)processor);
+                //ReportingUtility.CrossProcessor.AddCrossProcessingErrors((TestSpecificationProcessor)processor,
+                ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
+                ReportingUtility.CrossProcessor.AddCrossProcessingErrors(processor,
                     ReportingUtility.CrossProcessor.ExecuteValidation());
             }
             return processor;

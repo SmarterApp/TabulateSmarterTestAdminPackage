@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified"
-           vc:minVersion="1.1">
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified"
+    vc:minVersion="1.1">
   <xs:element name="TestPackage">
     <xs:annotation>
       <xs:documentation>
@@ -145,7 +145,7 @@ The root element of the test package. The <TestPackage> element contains an opti
                       <xs:complexType>
                         <xs:sequence>
                           <xs:element maxOccurs="unbounded"
-                                      name="SegmentBlueprintElement">
+                          name="SegmentBlueprintElement">
                             <xs:annotation>
                               <xs:documentation>
                                 BlueprintElement
@@ -162,16 +162,13 @@ The root element of the test package. The <TestPackage> element contains an opti
                                 <xs:element minOccurs="0" name="ItemSelection">
                                   <xs:complexType>
                                     <xs:sequence>
-                                      <xs:element maxOccurs="unbounded"
-                                                  minOccurs="1"
-                                                  name="Property">
+                                      <xs:element maxOccurs="unbounded" minOccurs="1"
+                                      name="Property">
                                         <xs:complexType>
-                                          <xs:attribute name="name"
-                                                        type="xs:token"
-                                                        use="required"/>
-                                          <xs:attribute name="value"
-                                                        type="xs:token"
-                                                        use="required"/>
+                                          <xs:attribute name="name" type="xs:token"
+                                          use="required"/>
+                                          <xs:attribute name="value" type="xs:token"
+                                          use="required"/>
                                         </xs:complexType>
                                       </xs:element>
                                     </xs:sequence>
@@ -179,15 +176,15 @@ The root element of the test package. The <TestPackage> element contains an opti
                                 </xs:element>
                               </xs:sequence>
                               <xs:attribute name="idRef" type="xs:token"
-                                            use="required"/>
+                              use="required"/>
                               <xs:attribute name="minExamItems" type="xs:int"
-                                            use="required"/>
+                              use="required"/>
                               <xs:attribute name="maxExamItems" type="xs:int"
-                                            use="required"/>
+                              use="required"/>
                               <xs:attribute default="0" name="minFieldTestItems"
-                                            type="xs:int"/>
+                              type="xs:int"/>
                               <xs:attribute default="0" name="maxFieldTestItems"
-                                            type="xs:int"/>
+                              type="xs:int"/>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
@@ -209,7 +206,7 @@ The root element of the test package. The <TestPackage> element contains an opti
                         <xs:complexType>
                           <xs:sequence>
                             <xs:element maxOccurs="unbounded" ref="ItemGroup"
-                                                        />
+                                                  />
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>
@@ -224,7 +221,7 @@ The root element of the test package. The <TestPackage> element contains an opti
                         <xs:complexType>
                           <xs:sequence>
                             <xs:element maxOccurs="unbounded"
-                                        name="SegmentForm">
+                            name="SegmentForm">
                               <xs:annotation>
                                 <xs:documentation>
                                   Segment-level form definition. (Only
@@ -280,12 +277,12 @@ The root element of the test package. The <TestPackage> element contains an opti
                                 <xs:sequence>
                                   <xs:element ref="Presentations"/>
                                   <xs:element maxOccurs="unbounded" ref="ItemGroup"
-                                                                    />
+                                                  />
                                 </xs:sequence>
                                 <xs:attribute name="id" type="xs:token"
-                                              use="required"/>
+                                use="required"/>
                                 <xs:attribute default="Default" name="cohort"
-                                              type="xs:token" use="optional"/>
+                                type="xs:token" use="optional"/>
                               </xs:complexType>
                               <xs:unique name="UniqueItemGroupPositionInFormKey">
                                 <xs:selector xpath="./ItemGroup"/>
@@ -300,16 +297,16 @@ The root element of the test package. The <TestPackage> element contains an opti
                   </xs:sequence>
                   <xs:attribute name="id" type="xs:token" use="required"/>
                   <xs:attribute name="algorithmType" type="xs:token"
-                                use="required"/>
+                      use="required"/>
                   <xs:attribute name="algorithmImplementation" type="xs:token"
-                                use="required"/>
+                      use="required"/>
                   <xs:attribute name="position" type="xs:short" use="optional"
-                                default="1"/>
+                      default="1"/>
                   <xs:attribute name="label" type="xs:token"/>
                   <xs:attribute default="false" name="entryApproval"
-                                type="xs:boolean"/>
+                      type="xs:boolean"/>
                   <xs:attribute default="false" name="exitApproval"
-                                type="xs:boolean"/>
+                      type="xs:boolean"/>
                 </xs:complexType>
                 <xs:unique name="SegmentPositionUniqueKey">
                   <xs:selector xpath=".//Segment"/>
@@ -405,7 +402,7 @@ The root element of the test package. The <TestPackage> element contains an opti
                             <xs:complexType>
                               <xs:sequence>
                                 <xs:element maxOccurs="unbounded"
-                                            name="Dependency">
+                                name="Dependency">
                                   <xs:annotation>
                                     <xs:documentation/>
                                     <xs:documentation>
@@ -426,11 +423,11 @@ The Dependency can be read as:
                                   </xs:annotation>
                                   <xs:complexType>
                                     <xs:attribute name="ifToolType" type="xs:token"
-                                                  use="required"/>
+                                    use="required"/>
                                     <xs:attribute name="ifToolCode" type="xs:token"
-                                                  use="required"/>
+                                    use="required"/>
                                     <xs:attribute default="false" name="default"
-                                                  type="xs:boolean"/>
+                                    type="xs:boolean"/>
                                   </xs:complexType>
                                 </xs:element>
                               </xs:sequence>
@@ -438,11 +435,11 @@ The Dependency can be read as:
                           </xs:element>
                         </xs:sequence>
                         <xs:attribute name="code" type="xs:token"
-                                      use="required"/>
+                          use="required"/>
                         <xs:attribute name="sortOrder" type="xs:int"
-                                      use="required"/>
+                          use="required"/>
                         <xs:attribute default="false" name="default"
-                                      type="xs:boolean"/>
+                          type="xs:boolean"/>
                         <xs:attribute name="label" type="xs:token"/>
                       </xs:complexType>
                     </xs:element>
@@ -541,13 +538,27 @@ The Dependency can be read as:
                       </xs:annotation>
                       <xs:complexType>
                         <xs:attribute name="idRef" type="xs:token"
-                                      use="required"/>
+                          use="required"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
               <xs:element ref="Presentations"/>
+              <xs:element minOccurs="0" name="PoolProperties">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="PoolProperty" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="name" type="xs:token"
+                          use="required"/>
+                        <xs:attribute name="value" type="xs:token"
+                          use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
               <xs:element name="ItemScoreDimensions">
                 <xs:complexType>
                   <xs:sequence>
@@ -571,7 +582,7 @@ The Dependency can be read as:
                       <xs:complexType>
                         <xs:sequence>
                           <xs:element maxOccurs="unbounded"
-                                      name="ItemScoreParameter" minOccurs="0">
+                          name="ItemScoreParameter" minOccurs="0">
                             <xs:annotation>
                               <xs:documentation>
                                 A parameter within a dimension. e.g. for
@@ -580,18 +591,18 @@ The Dependency can be read as:
                             </xs:annotation>
                             <xs:complexType>
                               <xs:attribute name="measurementParameter"
-                                            type="xs:token" use="required"/>
+                              type="xs:token" use="required"/>
                               <xs:attribute name="value" type="xs:float"
-                                            use="required"/>
+                              use="required"/>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
                         <xs:attribute name="measurementModel"
-                                      type="xs:token" use="required"/>
+                          type="xs:token" use="required"/>
                         <xs:attribute name="scorePoints" type="xs:int"
-                                      use="required"/>
+                          use="required"/>
                         <xs:attribute name="weight" type="xs:float"
-                                      use="required"/>
+                          use="required"/>
                         <xs:attribute name="dimension" type="xs:token"/>
                       </xs:complexType>
                     </xs:element>
@@ -691,11 +702,11 @@ The Dependency can be read as:
                       </xs:annotation>
                       <xs:complexType>
                         <xs:attribute name="pLevel" type="xs:int"
-                                      use="required"/>
+                          use="required"/>
                         <xs:attribute name="scaledLo" type="xs:float"
-                                      use="required"/>
+                          use="required"/>
                         <xs:attribute name="scaledHi" type="xs:float"
-                                      use="required"/>
+                          use="required"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
@@ -723,7 +734,7 @@ The Dependency can be read as:
                       <xs:complexType>
                         <xs:sequence>
                           <xs:element maxOccurs="unbounded" name="Parameter"
-                                      minOccurs="0">
+                          minOccurs="0">
                             <xs:annotation>
                               <xs:documentation>
                                 A parameter for a computation rule
@@ -732,35 +743,35 @@ The Dependency can be read as:
                             <xs:complexType>
                               <xs:sequence>
                                 <xs:element maxOccurs="unbounded" name="Property"
-                                            minOccurs="0">
+                                minOccurs="0">
                                   <xs:complexType>
                                     <xs:attribute name="name" type="xs:token"
-                                                  use="required"/>
+                                    use="required"/>
                                     <xs:attribute name="value" type="xs:token"
-                                                  use="required"/>
+                                    use="required"/>
                                   </xs:complexType>
                                 </xs:element>
                                 <xs:element maxOccurs="unbounded" name="Value">
                                   <xs:complexType>
                                     <xs:attribute name="index" type="xs:token"/>
                                     <xs:attribute name="value" type="xs:token"
-                                                  use="required"/>
+                                    use="required"/>
                                   </xs:complexType>
                                 </xs:element>
                               </xs:sequence>
                               <xs:attribute name="id" type="xs:token"
-                                            use="required"/>
+                              use="required"/>
                               <xs:attribute name="type" type="xs:token"
-                                            use="required"/>
+                              use="required"/>
                               <xs:attribute name="position" type="xs:int"
-                                            use="required"/>
+                              use="required"/>
                               <xs:attribute name="name" type="xs:token"/>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
                         <xs:attribute name="computationOrder" type="xs:int"/>
                         <xs:attribute name="name" type="xs:token"
-                                      use="required"/>
+                          use="required"/>
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>

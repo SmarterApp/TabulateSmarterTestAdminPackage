@@ -63,7 +63,7 @@
     <Compile Include="Validators\Combined\SegmentValidator.cs" />
     <Compile Include="Validators\Combined\StimulusValidator.cs" />
     <Compile Include="Validators\Combined\TestPackageRootValidator.cs" />
-    <Compile Include="Validators\Combined\TestPackageValidator.cs" />
+    <Compile Include="Validators\Combined\ToolsValidator.cs" />
     <Compile Include="Validators\Convenience\BooleanValidator.cs" />
     <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
     <Compile Include="Validators\Convenience\DecimalValidator.cs" />

@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml.XPath;
-using ProcessSmarterTestPackage.PostProcessors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Validators.Combined;
 using NLog;
-using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
 namespace ProcessSmarterTestPackage.Processors.Combined
 {
@@ -24,15 +21,14 @@ namespace ProcessSmarterTestPackage.Processors.Combined
         public CombinedTestProcessor(XPathNavigator navigator, PackageType packageType)
             : base(navigator, packageType)
         {
-            //Processors.Add(new CombinedTestProcessor(Navigator, packageType));
             XmlDocument validateDocument = new XmlDocument();
             validateDocument.LoadXml(Navigator.OuterXml);
             validateDocument.Schemas.Add(null, "Resources/TestPackageSchema.xsd");
-            ValidationEventHandler validation = new ValidationEventHandler(SchemaValidationHandler);
+            ValidationEventHandler validation = SchemaValidationHandler;
             validateDocument.Validate(validation);
-            Logger.Debug("New package type xml file loaded and validated against XML schema");
+            Logger.Info("New format xml file loaded and validated against XML schema");
 
-            //deserialize into class?
+            //deserialize into class
             XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
             var testPackage = (TestPackage)serializer.Deserialize(XmlReader.Create(new StringReader(Navigator.OuterXml)));
             TestPackage = testPackage;
@@ -53,7 +49,7 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                 SegmentFormValidator segmentFormValidator = new SegmentFormValidator();
                 SegmentValidator segmentValidator = new SegmentValidator();
                 TestPackageRootValidator testPackageRootValidator = new TestPackageRootValidator();
-                TestPackageValidator testPackageValidator = new TestPackageValidator();
+                ToolsValidator toolsValidator = new ToolsValidator();
 
                 List<ValidationError> valErrs = new List<ValidationError>();
 
@@ -66,19 +62,19 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                 segmentFormValidator.Validate(TestPackage, valErrs);
                 segmentValidator.Validate(TestPackage, valErrs);
                 testPackageRootValidator.Validate(TestPackage, valErrs);
-                testPackageValidator.Validate(TestPackage, valErrs);
+                toolsValidator.Validate(TestPackage, valErrs);
 
                 if (valErrs.Count > 0)
                 {
-                    Logger.Debug("Post-schema validation issues found:");
+                    Logger.Error("Post-schema validation issues found:");
                     foreach (var error in valErrs)
                     {
-                        Logger.Debug(error.GeneratedMessage);
+                        Logger.Error(error.GeneratedMessage);
                     }
                 }
                 else
                 {
-                    Logger.Debug("No post-schema validation issues found:");
+                    Logger.Info("No post-schema validation issues found:");
                 }
 
                 return valErrs;
