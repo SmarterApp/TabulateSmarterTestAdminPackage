@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.XPath;
 using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
@@ -95,7 +96,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             {
                                 foreach (var itemGroup in segmentForm.ItemGroup)
                                 {
-                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id, segment, testPackage.publisher, testPackage.academicYear);
+                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup, segment, testPackage.publisher, testPackage.academicYear);
                                 }
                             }
                         }
@@ -105,7 +106,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             if (itemGroups != null)
                                 foreach (var itemGroup in itemGroups)
                                 {
-                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup.id, segment, testPackage.publisher, testPackage.academicYear);
+                                    GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup, segment, testPackage.publisher, testPackage.academicYear);
                                 }
                         }
                     }
@@ -176,8 +177,65 @@ namespace TabulateSmarterTestPackage.Tabulators
             return poolProperties;
         }
 
+        private int GetItemPosition(TestSegment segment, ItemGroup itemGroup, string itemId)
+        {
+            var segmentForms =
+                segment.Item is TestSegmentSegmentForms forms ? forms.SegmentForm : null;
+            if (segmentForms != null)
+            {
+                var position = 0;
+                foreach (var segForm in segmentForms)
+                {
+                   
+                    foreach (var ig in segForm.ItemGroup)
+                    {
+                        int index = -1;
+                        int i = 0;
+                        foreach (var item in ig.Item)
+                        {
+                            if (item.id.Equals(itemId))
+                            {
+                                index = i;
+                                break;
+                            }
+
+                            i++;
+                        }
+
+                        if (index != -1)
+                        {
+                            position += index + 1;
+                            break;
+                        }
+                        else
+                        {
+                            position += ig.Item.Length;
+                        }
+
+                    }
+                   
+                }
+
+                return position;
+            }
+            else
+            {
+                var i = 1;
+                foreach (var item in itemGroup.Item)
+                {
+                    if (item.id.Equals(itemId))
+                    {
+                        return i;
+                    }
+                    i++;
+                }
+
+                return i;
+            }
+        }
+
         private void GetAssesmentItemList(Test test, List<ItemGroupItem> testItems, SortedDictionary<int, string> commonTestPackageItems, 
-            IDictionary<ItemFieldNames, string> testInformation, List<List<string>> resultList, String itemGroupId, TestSegment segment, String publisher, String academicYear)
+            IDictionary<ItemFieldNames, string> testInformation, List<List<string>> resultList, ItemGroup itemGroup, TestSegment segment, String publisher, String academicYear)
         {
             var subType = "summative";
             if (!testInformation[ItemFieldNames.AssessmentType].Equals("summative", StringComparison.OrdinalIgnoreCase))
@@ -197,7 +255,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 }
             }
 
-            
+
             
             foreach (var item in testItems)
             {
@@ -205,8 +263,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var langs = GetLanguages(item);
                 var poolProperties = GetPoolProperties(item, testInformation);
                 var bpRefs = GetBpRefs(item, publisher, academicYear);
-                string scoringEngine = item.handScored ? "HandScored" : "??NotHandScored??";
                 var itemScoreParams = GetItemScoreParameters(item, testInformation);
+                var itemPosition = GetItemPosition(segment, itemGroup, item.id);
 
                 var newList = new SortedDictionary<int, string>(commonTestPackageItems)
                 {
@@ -220,20 +278,15 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.Standard, ids["Standard"]},
                     { (int)ItemFieldNames.Claim, ids["Claim"]},
                     { (int)ItemFieldNames.Target, ids["Target"]},
-                    { (int)ItemFieldNames.PassageId, $"{testInformation[ItemFieldNames.BankKey]}-{itemGroupId}" },
+                    { (int)ItemFieldNames.PassageId, $"{testInformation[ItemFieldNames.BankKey]}-{itemGroup.id}" },
                     { (int)ItemFieldNames.ASL, poolProperties.ContainsKey((int)ItemFieldNames.ASL) ? poolProperties[(int)ItemFieldNames.ASL] : String.Empty },
                     { (int)ItemFieldNames.Braille, poolProperties.ContainsKey((int)ItemFieldNames.Braille) ? poolProperties[(int)ItemFieldNames.Braille] : String.Empty },
                     { (int)ItemFieldNames.LanguageBraille, langs[(int)ItemFieldNames.LanguageBraille] }, //TODO does this come from poolproperties or elsewhere?
                     { (int)ItemFieldNames.DOK, poolProperties.ContainsKey((int)ItemFieldNames.DOK) ? poolProperties[(int)ItemFieldNames.DOK] : String.Empty },
-
                     { (int)ItemFieldNames.Language, langs[(int)ItemFieldNames.Language] },
-                    //{ (int)ItemFieldNames.Language, poolProperties.ContainsKey((int)ItemFieldNames.Language) ? poolProperties[(int)ItemFieldNames.Language] : String.Empty },
-
                     { (int)ItemFieldNames.AllowCalculator, poolProperties.ContainsKey((int)ItemFieldNames.AllowCalculator) ? poolProperties[(int)ItemFieldNames.AllowCalculator] : String.Empty },
                     { (int)ItemFieldNames.MathematicalPractice, String.Empty },
-
                     { (int)ItemFieldNames.Grade, poolProperties.ContainsKey((int)ItemFieldNames.Grade) ? poolProperties[(int)ItemFieldNames.Grade] : String.Empty },
-
                     { (int)ItemFieldNames.MaxPoints, item.ItemScoreDimensions[0].scorePoints.ToString() },      //ItemScoreDimension.scorePoints.ToString() },
                     { (int)ItemFieldNames.Glossary, poolProperties.ContainsKey((int)ItemFieldNames.Glossary) ? poolProperties[(int)ItemFieldNames.Glossary] : String.Empty },
                     { (int)ItemFieldNames.ScoringEngine, poolProperties.ContainsKey((int)ItemFieldNames.ScoringEngine) ? poolProperties[(int)ItemFieldNames.ScoringEngine] : String.Empty },
@@ -242,7 +295,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.IsActive, item.active ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.ResponseRequired, item.responseRequired ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.AdminRequired, item.administrationRequired ? "TRUE" : "FALSE"  },
-                    { (int)ItemFieldNames.ItemPosition, segment.position.ToString() },
+                    { (int)ItemFieldNames.ItemPosition, itemPosition.ToString() },
                     { (int)ItemFieldNames.MeasurementModel, item.ItemScoreDimensions[0].measurementModel },
                     { (int)ItemFieldNames.Weight, item.ItemScoreDimensions[0].weight.ToString(CultureInfo.InvariantCulture) },
                     { (int)ItemFieldNames.ScorePoints, item.ItemScoreDimensions[0].scorePoints.ToString() },
@@ -270,6 +323,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                 
                 resultList.Add(newList.Values.ToList());
             }
+
+           
         }
 
         private SortedDictionary<int, string> GetItemScoreParameters(ItemGroupItem item, IDictionary<ItemFieldNames, string> testInformation)
