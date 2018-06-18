@@ -330,26 +330,30 @@ namespace TabulateSmarterTestPackage.Tabulators
         private SortedDictionary<int, string> GetItemScoreParameters(ItemGroupItem item, IDictionary<ItemFieldNames, string> testInformation)
         {
             var scoreParams = new SortedDictionary<int, string>();
-            foreach (var isp in item.ItemScoreDimensions[0].ItemScoreParameter)
+            if (!item.ItemScoreDimensions[0].measurementModel.Equals("RAWSCORE"))
             {
-                if (isp.measurementParameter.Equals("a", StringComparison.Ordinal))
+                foreach (var isp in item.ItemScoreDimensions[0].ItemScoreParameter)
                 {
-                    scoreParams.Add((int)ItemFieldNames.a, isp.value.ToString());
-                } else if (isp.measurementParameter.Equals("b0", StringComparison.Ordinal) || isp.measurementParameter.Equals("b", StringComparison.Ordinal))
-                {
-                    scoreParams.Add((int)ItemFieldNames.b0_b, isp.value.ToString());
-                }
-                else if (isp.measurementParameter.Equals("b1", StringComparison.Ordinal) || isp.measurementParameter.Equals("c", StringComparison.Ordinal))
-                {
-                    scoreParams.Add((int)ItemFieldNames.b1_c, isp.value.ToString());
-                }
-                else if (isp.measurementParameter.Equals("b2", StringComparison.Ordinal))
-                {
-                    scoreParams.Add((int)ItemFieldNames.b2, isp.value.ToString());
-                }
-                else if (isp.measurementParameter.Equals("b3", StringComparison.Ordinal))
-                {
-                    scoreParams.Add((int)ItemFieldNames.b3, isp.value.ToString());
+                    if (isp.measurementParameter.Equals("a", StringComparison.Ordinal))
+                    {
+                        scoreParams.Add((int)ItemFieldNames.a, isp.value.ToString());
+                    }
+                    else if (isp.measurementParameter.Equals("b0", StringComparison.Ordinal) || isp.measurementParameter.Equals("b", StringComparison.Ordinal))
+                    {
+                        scoreParams.Add((int)ItemFieldNames.b0_b, isp.value.ToString());
+                    }
+                    else if (isp.measurementParameter.Equals("b1", StringComparison.Ordinal) || isp.measurementParameter.Equals("c", StringComparison.Ordinal))
+                    {
+                        scoreParams.Add((int)ItemFieldNames.b1_c, isp.value.ToString());
+                    }
+                    else if (isp.measurementParameter.Equals("b2", StringComparison.Ordinal))
+                    {
+                        scoreParams.Add((int)ItemFieldNames.b2, isp.value.ToString());
+                    }
+                    else if (isp.measurementParameter.Equals("b3", StringComparison.Ordinal))
+                    {
+                        scoreParams.Add((int)ItemFieldNames.b3, isp.value.ToString());
+                    }
                 }
             }
 
