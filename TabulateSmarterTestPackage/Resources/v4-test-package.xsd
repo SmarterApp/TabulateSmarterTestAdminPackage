@@ -548,7 +548,7 @@ The Dependency can be read as:
               <xs:element minOccurs="0" name="PoolProperties">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="PoolProperty" maxOccurs="unbounded">
+                    <xs:element maxOccurs="unbounded" name="PoolProperty">
                       <xs:complexType>
                         <xs:attribute name="name" type="xs:token"
                           use="required"/>
@@ -718,6 +718,7 @@ The Dependency can be read as:
                     Configurations for scoring the test, consisting of
                     - rules for computation
                     - score cut points for determining performance levels
+                    If the measure attribute does not exist, the rule name is used as the measure label.
                   </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -770,6 +771,7 @@ The Dependency can be read as:
                           </xs:element>
                         </xs:sequence>
                         <xs:attribute name="computationOrder" type="xs:int"/>
+                        <xs:attribute name="measure" type="xs:token"/>
                         <xs:attribute name="name" type="xs:token"
                           use="required"/>
                       </xs:complexType>

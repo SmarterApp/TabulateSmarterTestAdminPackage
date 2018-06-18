@@ -365,6 +365,8 @@ public partial class BlueprintElementScoringRule {
     
     private bool computationOrderFieldSpecified;
     
+    private string measureField;
+    
     private string nameField;
     
     /// <remarks/>
@@ -397,6 +399,17 @@ public partial class BlueprintElementScoringRule {
         }
         set {
             this.computationOrderFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute(DataType="token")]
+    public string measure {
+        get {
+            return this.measureField;
+        }
+        set {
+            this.measureField = value;
         }
     }
     
