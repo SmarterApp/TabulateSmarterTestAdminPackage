@@ -330,7 +330,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         private SortedDictionary<int, string> GetItemScoreParameters(ItemGroupItem item, IDictionary<ItemFieldNames, string> testInformation)
         {
             var scoreParams = new SortedDictionary<int, string>();
-            if (!item.ItemScoreDimensions[0].measurementModel.Equals("RAWSCORE"))
+            if (item.ItemScoreDimensions != null && !item.ItemScoreDimensions[0].measurementModel.Equals("RAWSCORE"))
             {
                 foreach (var isp in item.ItemScoreDimensions[0].ItemScoreParameter)
                 {
@@ -378,25 +378,33 @@ namespace TabulateSmarterTestPackage.Tabulators
                 scoreParams.Add((int)ItemFieldNames.b3, String.Empty);
             }
 
-            var avg_b = MathHelper.CalculateAverageB(item.ItemScoreDimensions[0].measurementModel,
-                scoreParams[(int)ItemFieldNames.a], scoreParams[(int)ItemFieldNames.b0_b],
-                scoreParams[(int)ItemFieldNames.b1_c], scoreParams[(int)ItemFieldNames.b2],
-                scoreParams[(int)ItemFieldNames.b3], item.ItemScoreDimensions[0].scorePoints.ToString());
-            if (!avg_b.Errors.Any())
+            if (item.ItemScoreDimensions != null && !item.ItemScoreDimensions[0].measurementModel.Equals("RAWSCORE"))
             {
-                scoreParams[(int)ItemFieldNames.avg_b] = avg_b.Value;
+                var avg_b = MathHelper.CalculateAverageB(item.ItemScoreDimensions[0].measurementModel,
+                    scoreParams[(int)ItemFieldNames.a], scoreParams[(int)ItemFieldNames.b0_b],
+                    scoreParams[(int)ItemFieldNames.b1_c], scoreParams[(int)ItemFieldNames.b2],
+                    scoreParams[(int)ItemFieldNames.b3], item.ItemScoreDimensions[0].scorePoints.ToString());
+                if (!avg_b.Errors.Any())
+                {
+                    scoreParams[(int)ItemFieldNames.avg_b] = avg_b.Value;
+                }
+                else
+                {
+                    scoreParams[(int)ItemFieldNames.avg_b] = String.Empty;
+                    avg_b.Errors.ToList().ForEach(x =>
+                        ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
+                            PackageType.Combined,
+                            "TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup/Item/ItemScoreDimension",
+                            ErrorSeverity.Degraded, item.id, String.Empty, x)
+                    );
+                    Logger.Error($"There was an error calulating the avg_b for Item id {item.id}");
+                }
             }
             else
             {
                 scoreParams[(int)ItemFieldNames.avg_b] = String.Empty;
-                avg_b.Errors.ToList().ForEach(x =>
-                    ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                        PackageType.Combined,
-                        "TestPackage/Test/Segments/SegmentForms/SegmentForm/ItemGroup/Item/ItemScoreDimension",
-                        ErrorSeverity.Degraded, item.id, String.Empty, x)
-                );
-                Logger.Error($"There was an error calulating the avg_b for Item id {item.id}");
             }
+            
 
             return scoreParams;
         }
