@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.XPath;
@@ -218,8 +219,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                         .ChildNodesWithName("performancelevel").Select(x => new PerformanceLevel
                         {
                             PerfLevel = x.ValueForAttribute("plevel"),
-                            ScaledLow = x.ValueForAttribute("scaledlo"),
-                            ScaledHigh = x.ValueForAttribute("scaledhi")
+                            ScaledLow = Double.Parse(x.ValueForAttribute("scaledlo"), NumberStyles.Float, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture),
+                            ScaledHigh = Double.Parse(x.ValueForAttribute("scaledhi"), NumberStyles.Float, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture)
                         }).ToList();
             }
 
