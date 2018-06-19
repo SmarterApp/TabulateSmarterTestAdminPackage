@@ -265,6 +265,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var bpRefs = GetBpRefs(item, publisher, academicYear);
                 var itemScoreParams = GetItemScoreParameters(item, testInformation);
                 var itemPosition = GetItemPosition(segment, itemGroup, item.id);
+                var crossTabs = GetCrossTabulationItems(item);
 
                 var newList = new SortedDictionary<int, string>(commonTestPackageItems)
                 {
@@ -305,12 +306,13 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.b2, itemScoreParams[(int)ItemFieldNames.b2] },
                     { (int)ItemFieldNames.b3, itemScoreParams[(int)ItemFieldNames.b3] },
                     { (int)ItemFieldNames.avg_b, itemScoreParams[(int)ItemFieldNames.avg_b] },
-                    { (int)ItemFieldNames.CommonCore, String.Empty },
-                    { (int)ItemFieldNames.ClaimContentTarget, String.Empty },
-                    { (int)ItemFieldNames.SecondaryCommonCore, String.Empty },
-                    { (int)ItemFieldNames.SecondaryClaimContentTarget, String.Empty },
-                    { (int)ItemFieldNames.AnswerKey, poolProperties.ContainsKey((int)ItemFieldNames.AnswerKey) ? poolProperties[(int)ItemFieldNames.AnswerKey] : String.Empty },
-                    { (int)ItemFieldNames.NumberOfAnswerOptions, String.Empty },
+                    { (int)ItemFieldNames.CommonCore, crossTabs.ContainsKey((int)ItemFieldNames.CommonCore) ? crossTabs[(int)ItemFieldNames.CommonCore] : String.Empty },
+                    { (int)ItemFieldNames.ClaimContentTarget, crossTabs.ContainsKey((int)ItemFieldNames.ClaimContentTarget) ? crossTabs[(int)ItemFieldNames.ClaimContentTarget] : String.Empty },
+                    { (int)ItemFieldNames.SecondaryCommonCore, crossTabs.ContainsKey((int)ItemFieldNames.SecondaryCommonCore) ? crossTabs[(int)ItemFieldNames.SecondaryCommonCore] : String.Empty },
+                    { (int)ItemFieldNames.SecondaryClaimContentTarget, crossTabs.ContainsKey((int)ItemFieldNames.SecondaryClaimContentTarget) ? crossTabs[(int)ItemFieldNames.SecondaryClaimContentTarget] : String.Empty },
+                    { (int)ItemFieldNames.AnswerKey, crossTabs.ContainsKey((int)ItemFieldNames.AnswerKey) ? crossTabs[(int)ItemFieldNames.AnswerKey] : String.Empty },
+                    //{ (int)ItemFieldNames.AnswerKey, poolProperties.ContainsKey((int)ItemFieldNames.AnswerKey) ? poolProperties[(int)ItemFieldNames.AnswerKey] : String.Empty }, //poolproperty or crossTabulation takes precedence?
+                    { (int)ItemFieldNames.NumberOfAnswerOptions, crossTabs.ContainsKey((int)ItemFieldNames.NumberOfAnswerOptions) ? crossTabs[(int)ItemFieldNames.NumberOfAnswerOptions] : String.Empty },
                     { (int)ItemFieldNames.HandScored, item.handScored ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.DoNotScore, item.doNotScore ? "TRUE" : "FALSE"  }
 
@@ -325,6 +327,30 @@ namespace TabulateSmarterTestPackage.Tabulators
             }
 
            
+        }
+
+        private SortedDictionary<int, string> GetCrossTabulationItems(ItemGroupItem item)
+        {
+            var itemFields = new SortedDictionary<int, string>();
+            if (ReportingUtility.CrossProcessor != null &&
+                ReportingUtility.CrossProcessor.ItemContentPackage != null)
+            {
+                var contentItem = ReportingUtility.CrossProcessor.ItemContentPackage.FirstOrDefault(
+                    x => x.ItemId.Equals(item.id, StringComparison.OrdinalIgnoreCase));
+
+                itemFields[(int)ItemFieldNames.CommonCore] = contentItem?.CommonCore ?? string.Empty;
+                itemFields[(int)ItemFieldNames.ClaimContentTarget] = contentItem?.ClaimContentTarget ??
+                                                                     string.Empty;
+                itemFields[(int)ItemFieldNames.SecondaryCommonCore] = contentItem?.SecondaryCommonCore ??
+                                                                      string.Empty;
+                itemFields[(int)ItemFieldNames.SecondaryClaimContentTarget] =
+                    contentItem?.SecondaryClaimContentTarget ?? string.Empty;
+
+                itemFields[(int)ItemFieldNames.AnswerKey] = contentItem?.AnswerKey ?? string.Empty;
+
+                itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.NumberOfAnswerOptions ?? string.Empty;
+            }
+            return itemFields;
         }
 
         private SortedDictionary<int, string> GetItemScoreParameters(ItemGroupItem item, IDictionary<ItemFieldNames, string> testInformation)

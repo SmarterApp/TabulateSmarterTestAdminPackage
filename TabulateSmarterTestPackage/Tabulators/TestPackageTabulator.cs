@@ -130,6 +130,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                         (CombinedTestProcessor)testSpecificationProcessor,
                         testInformation);
                     combinedItems.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
+
                 }
                 else
                 {

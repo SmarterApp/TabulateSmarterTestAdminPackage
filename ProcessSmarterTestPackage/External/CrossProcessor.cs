@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NLog;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 
@@ -7,6 +8,8 @@ namespace ProcessSmarterTestPackage.External
 {
     public class CrossProcessor
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public CrossProcessor(IList<ContentPackageItemRow> itemContentPackage,
             IList<ContentPackageStimRow> stimuliContentPackage)
         {
@@ -57,6 +60,7 @@ namespace ProcessSmarterTestPackage.External
 
         public List<CrossPackageValidationError> ExecuteValidation()
         {
+            Logger.Debug("ExecuteValidation---");
             var result = new List<CrossPackageValidationError>();
             foreach (var key in TestPackages.Keys)
             {
@@ -66,21 +70,27 @@ namespace ProcessSmarterTestPackage.External
                 }
                 var adminPackage = TestPackages[key].FirstOrDefault(x => x.PackageType == PackageType.Administration);
                 var scoringPackage = TestPackages[key].FirstOrDefault(x => x.PackageType == PackageType.Scoring);
+                var combinedPackage = TestPackages[key].FirstOrDefault(x => x.PackageType == PackageType.Combined);
 
-                if (adminPackage == null && scoringPackage == null)
+                if (adminPackage == null && scoringPackage == null && combinedPackage == null)
                 {
                     continue;
                 }
 
-                if (adminPackage == null)
+                if (adminPackage == null && combinedPackage == null)
                 {
                     result.AddRange(ContentPackageCrossProcessor.CrossValidateContent(scoringPackage, ItemContentPackage,
                         StimuliContentPackage));
                 }
-                else if (scoringPackage == null)
+                else if (scoringPackage == null && combinedPackage == null)
                 {
                     result.AddRange(ContentPackageCrossProcessor.CrossValidateContent(adminPackage, ItemContentPackage,
                         StimuliContentPackage));
+                } else if (combinedPackage != null)
+                {
+                    Logger.Debug("Cross processing validation for new type...");
+                    //result.AddRange(ContentPackageCrossProcessor.CrossValidateContent(combinedPackage, ItemContentPackage,
+                    //    StimuliContentPackage));
                 }
                 else
                 {

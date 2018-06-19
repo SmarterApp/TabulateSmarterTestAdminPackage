@@ -336,9 +336,10 @@ namespace TabulateSmarterTestPackage
             {
                 //ReportingUtility.CrossProcessor.AddProcessedTestPackage((TestSpecificationProcessor)processor);
                 //ReportingUtility.CrossProcessor.AddCrossProcessingErrors((TestSpecificationProcessor)processor,
+
                 ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
                 ReportingUtility.CrossProcessor.AddCrossProcessingErrors(processor,
-                    ReportingUtility.CrossProcessor.ExecuteValidation());
+                ReportingUtility.CrossProcessor.ExecuteValidation());
             }
             return processor;
         }
