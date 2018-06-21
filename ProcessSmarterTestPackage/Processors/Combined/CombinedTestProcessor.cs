@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -8,6 +9,7 @@ using System.Xml.XPath;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Validators.Combined;
+using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using NLog;
 
 namespace ProcessSmarterTestPackage.Processors.Combined
@@ -32,6 +34,45 @@ namespace ProcessSmarterTestPackage.Processors.Combined
             XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
             var testPackage = (TestPackage)serializer.Deserialize(XmlReader.Create(new StringReader(Navigator.OuterXml)));
             TestPackage = testPackage;
+        }
+
+        public List<ItemGroupItem> GetItems()
+        {
+            var tests = TestPackage.Test;
+            List<ItemGroupItem> items = new List<ItemGroupItem>();
+            foreach (var test in tests)
+            {
+                foreach (var segment in test.Segments)
+                {
+                    var segmentForms =
+                        segment.Item is TestSegmentSegmentForms forms ? forms.SegmentForm : null;
+                    if (segmentForms != null)
+                    {
+                        if (segment.algorithmType.Equals(Algorithm.FIXEDFORM,
+                            StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            foreach (var segmentForm in segmentForms)
+                            {
+                                foreach (var itemGroup in segmentForm.ItemGroup)
+                                {
+                                    items.AddRange(itemGroup.Item.ToList());
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var itemGroups = (segment.Item as TestSegmentPool)?.ItemGroup;
+                            if (itemGroups != null)
+                                foreach (var itemGroup in itemGroups)
+                                {
+                                    items.AddRange(itemGroup.Item.ToList());
+                                }
+                        }
+                    }
+                }
+            }
+
+            return items;
         }
 
         protected override List<ValidationError> AdditionalValidations()

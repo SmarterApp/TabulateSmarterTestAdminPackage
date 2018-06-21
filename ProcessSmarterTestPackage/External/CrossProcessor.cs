@@ -88,9 +88,9 @@ namespace ProcessSmarterTestPackage.External
                         StimuliContentPackage));
                 } else if (combinedPackage != null)
                 {
-                    Logger.Debug("Skipping cross processing validation for new type because it isn't implemented yet.");
-                    //result.AddRange(ContentPackageCrossProcessor.CrossValidateContent(combinedPackage, ItemContentPackage,
-                    //    StimuliContentPackage));
+                    //Logger.Debug("Skipping cross processing validation for new type because it isn't implemented yet.");
+                    result.AddRange(ContentPackageCrossProcessor.CrossValidateCombinedContent(combinedPackage, ItemContentPackage,
+                        StimuliContentPackage));
                 }
                 else
                 {

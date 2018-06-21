@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NLog;
+using ProcessSmarterTestPackage.Processors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem;
@@ -13,6 +15,8 @@ namespace ProcessSmarterTestPackage.External
 {
     public class ContentPackageCrossProcessor
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public IList<CrossPackageValidationError> CrossValidateContent(Processor primary,
             IList<ContentPackageItemRow> itemContent, IList<ContentPackageStimRow> stimuliContent)
         {
@@ -32,6 +36,66 @@ namespace ProcessSmarterTestPackage.External
             result.AddRange(stimuliErrors);
             result.AddRange(itemErrors);
             return result;
+        }
+
+        public IList<CrossPackageValidationError> CrossValidateCombinedContent(Processor primary,
+            IList<ContentPackageItemRow> itemContent, IList<ContentPackageStimRow> stimuliContent)
+        {
+            var result = new List<CrossPackageValidationError>();
+            //var itemPool = primary.ChildNodeWithName();
+            var combinedTestProcessor = (CombinedTestProcessor) primary;
+            var testPackage = combinedTestProcessor.TestPackage;
+            var items = combinedTestProcessor.GetItems();
+
+            var itemErrors = CrossValidateCombinedContentItems(primary.ValueForAttribute("uniqueid"),
+                items, itemContent);
+            result.AddRange(itemErrors);
+            return result;
+        }
+
+        private static IEnumerable<CrossPackageValidationError> CrossValidateCombinedContentItems(string key,
+            IList<ItemGroupItem> items, IList<ContentPackageItemRow> itemContent)
+        {
+            var errors = new List<CrossPackageValidationError>();
+            foreach (var testItem in items)
+            {
+                // verify that each item id in the testpackage has a corresponding item in the cross content
+                var itemId = testItem.id;
+                var contentItem = itemContent.FirstOrDefault(x => x.ItemId.Equals(itemId));
+                if (contentItem == null)
+                {
+                    errors.Add(GenerateCombinedItemError($"[Item {itemId} doesn't exist in content package]", itemId,
+                        key, "ItemId"));
+                    continue;
+                }
+
+                //verify the Item type matches what's in the cross content
+                if (!testItem.type.Equals(contentItem.ItemType, StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add(
+                        GenerateCombinedItemError(
+                            $"[ContentPackageItemType:{contentItem.ItemType}!=TestPackageItemType:{testItem.type}]",
+                            itemId, key, "ItemType"));
+                }
+
+                var poolProperties = testItem.PoolProperties;
+
+                //verify Item/PoolProperties/PoolProperty @name="Depth of Knowledge" == contentItem.DOK
+                var dok = poolProperties.FirstOrDefault(
+                    x =>
+                        x.name
+                            .Trim()
+                            .Equals("Depth of Knowledge", StringComparison.OrdinalIgnoreCase));
+                if (dok != null && dok.value.Equals(contentItem.DOK, StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add(
+                        GenerateCombinedItemError(
+                            $"[ContentPackageItemDOK:{contentItem.DOK}!=TestPackage PoolProperty{dok.value}]",
+                            itemId, key, "ItemType"));
+                }
+            }
+
+            return errors;
         }
 
         private static IEnumerable<CrossPackageValidationError> CrossValidateContentItems(string key,
@@ -202,6 +266,24 @@ namespace ProcessSmarterTestPackage.External
                 SecondarySource = "Item Content Package",
                 AssessmentId = assessmentId,
                 PackageType = processor.PackageType
+            };
+        }
+
+        private static CrossPackageValidationError GenerateCombinedItemError(string message, string id,
+            string assessmentId, string key)
+        {
+            return new CrossPackageValidationError
+            {
+                ErrorSeverity = ErrorSeverity.Severe,
+                GeneratedMessage = message,
+                ItemId = id,
+                Key = key,
+                Location = $"TestPackage/Test/Segments/Segment/SegmentForms/Segment/ItemGroup/Item or TestPackage/Test/Segments/Segment/Pool/ItemGroup/Item",
+                Value = id,
+                PrimarySource = $"{assessmentId} - {PackageType.Combined}",
+                SecondarySource = "Item Content Package",
+                AssessmentId = assessmentId,
+                PackageType = PackageType.Combined
             };
         }
     }
