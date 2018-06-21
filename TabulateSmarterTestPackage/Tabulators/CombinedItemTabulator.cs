@@ -64,18 +64,18 @@ namespace TabulateSmarterTestPackage.Tabulators
                 { (int)ItemFieldNames.BankKey, testInformation[ItemFieldNames.BankKey] }
             };
 
-            commonTestPackageItems[(int)ItemFieldNames.CutPoint1] = testInformation[ItemFieldNames.CutPoint1];
-            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh1] = testInformation[ItemFieldNames.ScaledHigh1];
-            commonTestPackageItems[(int)ItemFieldNames.ScaledLow1] = testInformation[ItemFieldNames.ScaledLow1];
-            commonTestPackageItems[(int)ItemFieldNames.CutPoint2] = testInformation[ItemFieldNames.CutPoint2];
-            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh2] = testInformation[ItemFieldNames.ScaledHigh2];
-            commonTestPackageItems[(int)ItemFieldNames.ScaledLow2] = testInformation[ItemFieldNames.ScaledLow2];
-            commonTestPackageItems[(int)ItemFieldNames.CutPoint3] = testInformation[ItemFieldNames.CutPoint3];
-            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh3] = testInformation[ItemFieldNames.ScaledHigh3];
-            commonTestPackageItems[(int)ItemFieldNames.ScaledLow3] = testInformation[ItemFieldNames.ScaledLow3];
-            commonTestPackageItems[(int)ItemFieldNames.CutPoint4] = testInformation[ItemFieldNames.CutPoint4];
-            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh4] = testInformation[ItemFieldNames.ScaledHigh4];
-            commonTestPackageItems[(int)ItemFieldNames.ScaledLow4] = testInformation[ItemFieldNames.ScaledLow4];
+            commonTestPackageItems[(int)ItemFieldNames.CutPoint1] = testInformation.ContainsKey(ItemFieldNames.CutPoint1) ?  testInformation[ItemFieldNames.CutPoint1] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh1] = testInformation.ContainsKey(ItemFieldNames.ScaledHigh1) ? testInformation[ItemFieldNames.ScaledHigh1] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.ScaledLow1] = testInformation.ContainsKey(ItemFieldNames.ScaledHigh1) ? testInformation[ItemFieldNames.ScaledHigh1] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.CutPoint2] = testInformation.ContainsKey(ItemFieldNames.CutPoint2) ? testInformation[ItemFieldNames.CutPoint2] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh2] = testInformation.ContainsKey(ItemFieldNames.ScaledHigh2) ? testInformation[ItemFieldNames.ScaledHigh2] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.ScaledLow2] = testInformation.ContainsKey(ItemFieldNames.ScaledLow2) ? testInformation[ItemFieldNames.ScaledLow2] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.CutPoint3] = testInformation.ContainsKey(ItemFieldNames.CutPoint3) ? testInformation[ItemFieldNames.CutPoint3] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh3] = testInformation.ContainsKey(ItemFieldNames.ScaledHigh3) ? testInformation[ItemFieldNames.ScaledHigh3] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.ScaledLow3] = testInformation.ContainsKey(ItemFieldNames.ScaledLow3) ? testInformation[ItemFieldNames.ScaledLow3] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.CutPoint4] = testInformation.ContainsKey(ItemFieldNames.CutPoint4) ? testInformation[ItemFieldNames.CutPoint4] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.ScaledHigh4] = testInformation.ContainsKey(ItemFieldNames.ScaledHigh4) ? testInformation[ItemFieldNames.ScaledHigh4] : String.Empty;
+            commonTestPackageItems[(int)ItemFieldNames.ScaledLow4] = testInformation.ContainsKey(ItemFieldNames.ScaledLow4) ? testInformation[ItemFieldNames.ScaledLow4] : String.Empty;
 
 
             var testPackage = testSpecificationProcessor.TestPackage;
@@ -286,7 +286,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.DOK, poolProperties.ContainsKey((int)ItemFieldNames.DOK) ? poolProperties[(int)ItemFieldNames.DOK] : String.Empty },
                     { (int)ItemFieldNames.Language, langs[(int)ItemFieldNames.Language] },
                     { (int)ItemFieldNames.AllowCalculator, poolProperties.ContainsKey((int)ItemFieldNames.AllowCalculator) ? poolProperties[(int)ItemFieldNames.AllowCalculator] : String.Empty },
-                    { (int)ItemFieldNames.MathematicalPractice, String.Empty },
+                    { (int)ItemFieldNames.MathematicalPractice,  poolProperties.ContainsKey((int)ItemFieldNames.MathematicalPractice) ? poolProperties[(int)ItemFieldNames.MathematicalPractice] : String.Empty },
                     { (int)ItemFieldNames.Grade, poolProperties.ContainsKey((int)ItemFieldNames.Grade) ? poolProperties[(int)ItemFieldNames.Grade] : String.Empty },
                     { (int)ItemFieldNames.MaxPoints, item.ItemScoreDimensions[0].scorePoints.ToString() },      //ItemScoreDimension.scorePoints.ToString() },
                     { (int)ItemFieldNames.Glossary, poolProperties.ContainsKey((int)ItemFieldNames.Glossary) ? poolProperties[(int)ItemFieldNames.Glossary] : String.Empty },
