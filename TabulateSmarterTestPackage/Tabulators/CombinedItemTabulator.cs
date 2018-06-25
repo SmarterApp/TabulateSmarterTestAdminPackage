@@ -311,7 +311,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.SecondaryCommonCore, crossTabs.ContainsKey((int)ItemFieldNames.SecondaryCommonCore) ? crossTabs[(int)ItemFieldNames.SecondaryCommonCore] : String.Empty },
                     { (int)ItemFieldNames.SecondaryClaimContentTarget, crossTabs.ContainsKey((int)ItemFieldNames.SecondaryClaimContentTarget) ? crossTabs[(int)ItemFieldNames.SecondaryClaimContentTarget] : String.Empty },
                     { (int)ItemFieldNames.AnswerKey, crossTabs.ContainsKey((int)ItemFieldNames.AnswerKey) ? crossTabs[(int)ItemFieldNames.AnswerKey] : String.Empty },
-                    //{ (int)ItemFieldNames.AnswerKey, poolProperties.ContainsKey((int)ItemFieldNames.AnswerKey) ? poolProperties[(int)ItemFieldNames.AnswerKey] : String.Empty }, //poolproperty or crossTabulation takes precedence?
                     { (int)ItemFieldNames.NumberOfAnswerOptions, crossTabs.ContainsKey((int)ItemFieldNames.NumberOfAnswerOptions) ? crossTabs[(int)ItemFieldNames.NumberOfAnswerOptions] : String.Empty },
                     { (int)ItemFieldNames.HandScored, item.handScored ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.DoNotScore, item.doNotScore ? "TRUE" : "FALSE"  }
@@ -324,9 +323,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 }
                 
                 resultList.Add(newList.Values.ToList());
-            }
-
-           
+            }           
         }
 
         private SortedDictionary<int, string> GetCrossTabulationItems(ItemGroupItem item)
