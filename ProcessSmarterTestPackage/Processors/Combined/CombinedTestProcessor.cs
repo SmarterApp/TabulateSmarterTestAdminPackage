@@ -11,6 +11,8 @@ using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Validators.Combined;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using NLog;
+using ProcessSmarterTestPackage.Processors.Administration.AdminSegment;
+using ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem;
 
 namespace ProcessSmarterTestPackage.Processors.Combined
 {
@@ -73,6 +75,19 @@ namespace ProcessSmarterTestPackage.Processors.Combined
             }
 
             return items;
+        }
+
+        public List<Processor> GetItemsAsProcessors()
+        {
+            var items = this.GetItems();
+            var processors = new List<Processor>();
+            foreach (var item in items)
+            {
+                var node = Navigator.SelectSingleNode($"//Item[@id='{item.id}']");
+                processors.Add(new TestItemProcessor(node, PackageType.Combined));
+            }
+
+            return processors;
         }
 
         protected override List<ValidationError> AdditionalValidations()

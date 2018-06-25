@@ -60,7 +60,6 @@ namespace ProcessSmarterTestPackage.External
 
         public List<CrossPackageValidationError> ExecuteValidation()
         {
-            Logger.Debug("ExecuteValidation---");
             var result = new List<CrossPackageValidationError>();
             foreach (var key in TestPackages.Keys)
             {
@@ -88,7 +87,6 @@ namespace ProcessSmarterTestPackage.External
                         StimuliContentPackage));
                 } else if (combinedPackage != null)
                 {
-                    //Logger.Debug("Skipping cross processing validation for new type because it isn't implemented yet.");
                     result.AddRange(ContentPackageCrossProcessor.CrossValidateCombinedContent(combinedPackage, ItemContentPackage,
                         StimuliContentPackage));
                 }

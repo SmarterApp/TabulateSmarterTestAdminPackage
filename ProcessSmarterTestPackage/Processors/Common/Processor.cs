@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
-using NLog;
 using SmarterTestPackage.Common.Data;
 using SmarterTestPackage.Common.Extensions;
 using ValidateSmarterTestPackage;
@@ -12,8 +11,6 @@ namespace ProcessSmarterTestPackage.Processors.Common
 {
     public abstract class Processor : IDisposable
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         public readonly XPathNavigator Navigator;
 
         protected Processor(XPathNavigator navigator, PackageType packageType)
@@ -188,6 +185,10 @@ namespace ProcessSmarterTestPackage.Processors.Common
         {
             if (PackageType == PackageType.Combined)
             { 
+                if (Navigator.LocalName.Equals("Item"))
+                {
+                    return Navigator.GetAttribute("id", "");
+                }
                 return Navigator.SelectSingleNode("//Test")?.GetAttribute("id", string.Empty);
             }
             else

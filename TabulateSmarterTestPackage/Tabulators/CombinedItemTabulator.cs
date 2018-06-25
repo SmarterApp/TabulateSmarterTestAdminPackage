@@ -286,7 +286,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.DOK, poolProperties.ContainsKey((int)ItemFieldNames.DOK) ? poolProperties[(int)ItemFieldNames.DOK] : String.Empty },
                     { (int)ItemFieldNames.Language, langs[(int)ItemFieldNames.Language] },
                     { (int)ItemFieldNames.AllowCalculator, poolProperties.ContainsKey((int)ItemFieldNames.AllowCalculator) ? poolProperties[(int)ItemFieldNames.AllowCalculator] : String.Empty },
-                    { (int)ItemFieldNames.MathematicalPractice,  poolProperties.ContainsKey((int)ItemFieldNames.MathematicalPractice) ? poolProperties[(int)ItemFieldNames.MathematicalPractice] : String.Empty },
+                    { (int)ItemFieldNames.MathematicalPractice, crossTabs.ContainsKey((int)ItemFieldNames.MathematicalPractice) ? crossTabs[(int)ItemFieldNames.MathematicalPractice] : String.Empty },
                     { (int)ItemFieldNames.Grade, poolProperties.ContainsKey((int)ItemFieldNames.Grade) ? poolProperties[(int)ItemFieldNames.Grade] : String.Empty },
                     { (int)ItemFieldNames.MaxPoints, item.ItemScoreDimensions[0].scorePoints.ToString() },      //ItemScoreDimension.scorePoints.ToString() },
                     { (int)ItemFieldNames.Glossary, poolProperties.ContainsKey((int)ItemFieldNames.Glossary) ? poolProperties[(int)ItemFieldNames.Glossary] : String.Empty },
@@ -349,7 +349,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                 itemFields[(int)ItemFieldNames.AnswerKey] = contentItem?.AnswerKey ?? string.Empty;
 
                 itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.NumberOfAnswerOptions ?? string.Empty;
+                itemFields[(int)ItemFieldNames.MathematicalPractice] = contentItem?.MathematicalPractice ?? string.Empty;
             }
+            
             return itemFields;
         }
 
