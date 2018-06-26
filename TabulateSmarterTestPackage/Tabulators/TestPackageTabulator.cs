@@ -131,6 +131,15 @@ namespace TabulateSmarterTestPackage.Tabulators
                         testInformation);
                     combinedItems.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
 
+                    var stimuliNodes = testSpecificationProcessor.Navigator.Select("//Stimulus");
+                    if (stimuliNodes.Count > 0)
+                    {
+                        var stimuliTabulator = new StimuliTabulator();
+                        var stimuli = stimuliTabulator.ProcessResult(stimuliNodes, testInformation);
+                        stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+                    }
+                    
+
                 }
                 else
                 {
