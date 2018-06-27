@@ -218,7 +218,6 @@ namespace TabulateSmarterTestPackage
             TestPackageTabulator tabulator)
         {
             Logger.Info($"Processing input file: {filenamePattern}");
-            var count = 0;
 
             if (Directory.Exists(filenamePattern))
             {
@@ -236,6 +235,11 @@ namespace TabulateSmarterTestPackage
 
             foreach (var filename in Directory.GetFiles(directory, pattern))
             {
+                if (Path.GetFileName(filename).StartsWith("."))
+                {
+                    Logger.Warn($"Input file: {filenamePattern} begins with '.'. Skipping...");
+                    continue;
+                }
                 if (!Path.HasExtension(pattern))
                 {
                     Logger.Warn($"Input file: {filenamePattern} does not have an extension. Skipping...");
@@ -261,12 +265,6 @@ namespace TabulateSmarterTestPackage
                         throw new ArgumentException(
                             $"Input file '{filename}' is of unsupported type. Only directories, .xml, and .zip are supported.");
                 }
-                ++count;
-            }
-            if (count == 0)
-            {
-                Logger.Error($"Input file '{filenamePattern}' not found!");
-                throw new ArgumentException($"Input file '{filenamePattern}' not found!");
             }
             return processors;
         }
