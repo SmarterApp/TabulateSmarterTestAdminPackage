@@ -237,7 +237,7 @@ namespace TabulateSmarterTestPackage
             {
                 if (Path.GetFileName(filename).StartsWith("."))
                 {
-                    Logger.Warn($"Input file: {filenamePattern} begins with '.'. Skipping...");
+                    Logger.Warn($"Skipping hidden input file: {filenamePattern}.");
                     continue;
                 }
                 if (!Path.HasExtension(pattern))
@@ -332,9 +332,6 @@ namespace TabulateSmarterTestPackage
 
             if (ReportingUtility.CrossProcessor != null)
             {
-                //ReportingUtility.CrossProcessor.AddProcessedTestPackage((TestSpecificationProcessor)processor);
-                //ReportingUtility.CrossProcessor.AddCrossProcessingErrors((TestSpecificationProcessor)processor,
-
                 ReportingUtility.CrossProcessor.AddProcessedTestPackage(processor);
                 ReportingUtility.CrossProcessor.AddCrossProcessingErrors(processor,
                 ReportingUtility.CrossProcessor.ExecuteValidation());
