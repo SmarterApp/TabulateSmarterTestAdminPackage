@@ -266,6 +266,12 @@ namespace TabulateSmarterTestPackage.Tabulators
                 var itemScoreParams = GetItemScoreParameters(item, testInformation);
                 var itemPosition = GetItemPosition(segment, itemGroup, item.id);
                 var crossTabs = GetCrossTabulationItems(item);
+                var passageId = string.Empty;
+
+                if (itemGroup.Stimulus != null)
+                {
+                    passageId = $"{testInformation[ItemFieldNames.BankKey]}-{itemGroup.Stimulus.id}";
+                }
 
                 var newList = new SortedDictionary<int, string>(commonTestPackageItems)
                 {
@@ -279,7 +285,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.Standard, ids["Standard"]},
                     { (int)ItemFieldNames.Claim, ids["Claim"]},
                     { (int)ItemFieldNames.Target, ids["Target"]},
-                    { (int)ItemFieldNames.PassageId, $"{testInformation[ItemFieldNames.BankKey]}-{itemGroup.id}" },
+                    { (int)ItemFieldNames.PassageId,passageId },
                     { (int)ItemFieldNames.ASL, poolProperties.ContainsKey((int)ItemFieldNames.ASL) ? poolProperties[(int)ItemFieldNames.ASL] : String.Empty },
                     { (int)ItemFieldNames.Braille, poolProperties.ContainsKey((int)ItemFieldNames.Braille) ? poolProperties[(int)ItemFieldNames.Braille] : String.Empty },
                     { (int)ItemFieldNames.LanguageBraille, langs[(int)ItemFieldNames.LanguageBraille] },
