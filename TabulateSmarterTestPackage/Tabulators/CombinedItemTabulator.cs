@@ -282,7 +282,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.PassageId, $"{testInformation[ItemFieldNames.BankKey]}-{itemGroup.id}" },
                     { (int)ItemFieldNames.ASL, poolProperties.ContainsKey((int)ItemFieldNames.ASL) ? poolProperties[(int)ItemFieldNames.ASL] : String.Empty },
                     { (int)ItemFieldNames.Braille, poolProperties.ContainsKey((int)ItemFieldNames.Braille) ? poolProperties[(int)ItemFieldNames.Braille] : String.Empty },
-                    { (int)ItemFieldNames.LanguageBraille, langs[(int)ItemFieldNames.LanguageBraille] }, //TODO does this come from poolproperties or elsewhere?
+                    { (int)ItemFieldNames.LanguageBraille, langs[(int)ItemFieldNames.LanguageBraille] },
                     { (int)ItemFieldNames.DOK, poolProperties.ContainsKey((int)ItemFieldNames.DOK) ? poolProperties[(int)ItemFieldNames.DOK] : String.Empty },
                     { (int)ItemFieldNames.Language, langs[(int)ItemFieldNames.Language] },
                     { (int)ItemFieldNames.AllowCalculator, poolProperties.ContainsKey((int)ItemFieldNames.AllowCalculator) ? poolProperties[(int)ItemFieldNames.AllowCalculator] : String.Empty },

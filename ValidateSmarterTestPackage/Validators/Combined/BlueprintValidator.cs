@@ -213,7 +213,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
-                            ErrorSeverity = ErrorSeverity.Benign, //TODO begnign or Degraded????
+                            ErrorSeverity = ErrorSeverity.Benign, 
                             Location = "TestPackage/Blueprint/BlueprintElement",
                             GeneratedMessage = errStr,
                             ItemId = bpEl.id,
