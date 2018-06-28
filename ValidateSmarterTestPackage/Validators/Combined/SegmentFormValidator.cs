@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NLog;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
@@ -9,7 +8,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 {
     public class SegmentFormValidator : ITestPackageValidator
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public void Validate(TestPackage testPackage, List<ValidationError> errors)
         {
@@ -54,7 +52,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                             {
                                 var errStr = $"An item contained a presentation code \"{presenation.code}\" that was not declared at the segment form level. " +
                                              "A segment form presentation list must contain the set of all presentation codes within its contained items";
-                                Logger.Debug(errStr);
                                 errors.Add(new ValidationError
                                 {
                                     ErrorSeverity = ErrorSeverity.Severe,
@@ -91,7 +88,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     if (!enumerable.Contains(formId))
                     {
                         var errStr = $"Multiple segment forms with the same id were detected. Each segment form must contain a unique id.";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,

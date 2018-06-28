@@ -40,7 +40,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 if (!_knownAlgorithmTypes.Contains(segment.algorithmType))
                 {
                     var errStr = $"Unrecognized algorithm type {segment.algorithmType} found for segment {segment.id}.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Benign,
@@ -71,7 +70,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         {
                             var errStr = $"The segment{segment.id} has an algorithm type of \"adaptive\" " +
                                          "but did not contain any item pool defined";
-                            Logger.Debug(errStr);
                             errors.Add(new ValidationError
                             {
                                 ErrorSeverity = ErrorSeverity.Severe,
@@ -101,7 +99,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     {
                         var errStr = $"The segment {segment.id} has an algorithm type of \"fixed form\" " +
                                      "but did not contain any forms";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,

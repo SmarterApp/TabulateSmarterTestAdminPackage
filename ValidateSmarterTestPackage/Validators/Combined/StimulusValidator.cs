@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NLog;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 
@@ -8,7 +7,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 {
     public class StimulusValidator : ITestPackageValidator
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public void Validate(TestPackage testPackage, List<ValidationError> errors)
         {
@@ -55,7 +53,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 
             foreach (var stimulus in stimuli)
             {
-                Logger.Debug($"stimulus is {stimulus}");
                 try
                 {
                     if (!Int64.TryParse(stimulus.id, out var l))
@@ -63,7 +60,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         var errStr =
                             $"The stimulus with id \"{stimulus.id}\" has an id that is not a LONG value. " +
                             "Currently, TDS only supports stimuli  ids that are of a 'LONG' data type";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,
@@ -81,7 +77,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     var errStr =
                         $"The stimulus with id \"{stimulus.id}\" has an id that is not a LONG value. " +
                         "Currently, TDS only supports stimuli  ids that are of a 'LONG' data type";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,

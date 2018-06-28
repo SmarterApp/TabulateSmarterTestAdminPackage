@@ -50,7 +50,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 {
                     var errStr =
                         $"An unrecognized measurement model {itemItemScoreDimension.measurementModel} was detected in the test package.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,

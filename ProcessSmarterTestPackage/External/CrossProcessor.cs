@@ -87,8 +87,7 @@ namespace ProcessSmarterTestPackage.External
                         StimuliContentPackage));
                 } else if (combinedPackage != null)
                 {
-                    result.AddRange(ContentPackageCrossProcessor.CrossValidateCombinedContent(combinedPackage, ItemContentPackage,
-                        StimuliContentPackage));
+                    result.AddRange(ContentPackageCrossProcessor.CrossValidateCombinedContent(combinedPackage, ItemContentPackage));
                 }
                 else
                 {

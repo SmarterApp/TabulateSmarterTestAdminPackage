@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
@@ -15,7 +14,6 @@ namespace ProcessSmarterTestPackage.External
 {
     public class ContentPackageCrossProcessor
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public IList<CrossPackageValidationError> CrossValidateContent(Processor primary,
             IList<ContentPackageItemRow> itemContent, IList<ContentPackageStimRow> stimuliContent)
@@ -39,7 +37,7 @@ namespace ProcessSmarterTestPackage.External
         }
 
         public IList<CrossPackageValidationError> CrossValidateCombinedContent(Processor primary,
-            IList<ContentPackageItemRow> itemContent, IList<ContentPackageStimRow> stimuliContent)
+            IList<ContentPackageItemRow> itemContent)
         {
             var result = new List<CrossPackageValidationError>();
             var combinedTestProcessor = (CombinedTestProcessor) primary;
@@ -51,13 +49,13 @@ namespace ProcessSmarterTestPackage.External
             }
             
             var itemErrors = CrossValidateCombinedContentItems(primary.ValueForAttribute("uniqueid"),
-                items, itemContent, primary, processors);
+                items, itemContent, processors);
             result.AddRange(itemErrors);
             return result;
         }
 
         private static IEnumerable<CrossPackageValidationError> CrossValidateCombinedContentItems(string key,
-            IList<ItemGroupItem> items, IList<ContentPackageItemRow> itemContent, Processor processor, List<Processor> processors)
+            IList<ItemGroupItem> items, IList<ContentPackageItemRow> itemContent, List<Processor> processors)
         {
             var errors = new List<CrossPackageValidationError>();
             foreach (var testItem in items)
@@ -71,7 +69,6 @@ namespace ProcessSmarterTestPackage.External
                 var contentItem = itemContent.FirstOrDefault(x => x.ItemId.Equals(itemId));
                 if (contentItem == null)
                 {
-                    Logger.Debug($"Found cross-tab error with Item id {itemId}. Item {itemId} doesn't exist in content package.");
                     errors.Add(GenerateCombinedItemError($"[Item {itemId} doesn't exist in content package]", itemId,
                         key, "ItemId"));
                     continue;
@@ -80,7 +77,6 @@ namespace ProcessSmarterTestPackage.External
                 //verify the Item type matches what's in the cross content
                 if (!testItem.type.Equals(contentItem.ItemType, StringComparison.OrdinalIgnoreCase))
                 {
-                    Logger.Debug($"Found cross-tab error with Item {testItem.id} type {testItem.type} does not match content item type {contentItem.ItemType}");
                     errors.Add(
                         GenerateCombinedItemError(
                             $"[ContentPackageItemType:{contentItem.ItemType}!=TestPackageItemType:{testItem.type}]",
@@ -97,7 +93,6 @@ namespace ProcessSmarterTestPackage.External
                             .Equals("Depth of Knowledge", StringComparison.OrdinalIgnoreCase));
                 if (dok != null && !dok.value.Equals(contentItem.DOK, StringComparison.OrdinalIgnoreCase))
                 {
-                    Logger.Debug($"Found cross-tab error with Item {testItem.id} PoolProperty DOK {dok.value}");
                     errors.Add(
                         GenerateCombinedItemError(
                             $"[ContentPackageItemDOK:{contentItem.DOK}!=TestPackage PoolProperty{dok.value}]",
@@ -108,7 +103,6 @@ namespace ProcessSmarterTestPackage.External
                 var grade = poolProperties.FirstOrDefault(x => x.name.Trim().Equals("Grade", StringComparison.OrdinalIgnoreCase));
                 if (grade != null && !grade.value.Equals(contentItem.Grade, StringComparison.OrdinalIgnoreCase))
                 {
-                    Logger.Debug($"Found cross-tab error with Item {testItem.id} PoolProperty Grade {grade.value}");
                     errors.Add(
                         GenerateCombinedItemError(
                             $"[ContentPackageItemGrade:{contentItem.Grade}!=TestPackage PoolProperty Grade{grade.value}]",
@@ -135,7 +129,6 @@ namespace ProcessSmarterTestPackage.External
                 if (allowCalc != null && !allowCalc.value.Equals(contentItem.AllowCalculator) &&
                     !processors.First(x => x.Equals(myProcessor)).ValidatedAttributes.ContainsKey("AllowCalculator"))
                 {
-                    Logger.Debug($"Found cross-tab error with Item {testItem.id} PoolProperty AllowCalculator {allowCalc.value}");
                     myProcessor.ValidatedAttributes.Add("AllowCalculator",
                         GenerateFromValidationCollection("AllowCalculator", contentItem.AllowCalculator,
                             StringValidator.IsValidNonEmptyWithLength(1)

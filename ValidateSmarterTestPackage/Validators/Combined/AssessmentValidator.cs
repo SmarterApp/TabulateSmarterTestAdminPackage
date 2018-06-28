@@ -26,7 +26,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 {
                     var errStr =
                         $"Cannot have a test id ({test.id}) that exceeds 250 characters.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
@@ -72,7 +71,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     {
                         var errStr =
                             $"A 'test' BlueprintElement was not found in the test blueprint for the test with id {test.id}.";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,
@@ -104,7 +102,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     {
                         var errStr =
                             $"A 'test' BlueprintElement was not found in the test blueprint for the test with id {test.id}";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,

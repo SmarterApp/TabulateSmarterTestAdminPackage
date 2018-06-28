@@ -4,10 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 using NLog;
-using ProcessSmarterTestPackage.PostProcessors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using SmarterTestPackage.Common.Data;
@@ -47,7 +44,7 @@ namespace TabulateSmarterTestPackage.Tabulators
 #endif
         }
 
-        public PackageType ExpectedPackageType { get; set; }
+        private PackageType ExpectedPackageType { get; set; }
 
 
         public void Dispose()

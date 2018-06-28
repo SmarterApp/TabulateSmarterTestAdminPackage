@@ -44,7 +44,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 if (!segmentBlueprintIds.Contains(segmentId))
                 {
                     var errStr = $"No segment blueprint element was found with the id for the segment {segmentId}";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
@@ -69,7 +68,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     var errStr =
                         "Cannot have a minFieldTestItems value that " +
                         $"is greater than the maxFieldTestItems value for segment blueprint element with idRef {segmentBp.idRef}.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
@@ -94,7 +92,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     var errStr =
                         "Cannot have a minExamItem value that " +
                         $"is greater than the maxExamItem value for segment blueprint element with idRef {segmentBp.idRef}.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,

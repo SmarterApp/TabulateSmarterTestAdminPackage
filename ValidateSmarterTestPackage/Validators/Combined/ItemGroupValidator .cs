@@ -50,7 +50,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 {
                     var errStr =
                         "The item group with id " + itemGroup.id + " contains a \"maxItems\" value that is neither 'ALL' nor numeric.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
@@ -78,7 +77,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 {
                     var errStr =
                         "The item group with id " + itemGroup.id + " contains a \"maxResponses\" value that is neither 'ALL' nor numeric.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,

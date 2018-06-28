@@ -21,7 +21,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
             ValidateTopLevelBlueprintElements(testPackage, errors);
             ValidateOnlyOneTopLevelTestOrPackageBlueprintElement(testPackage, errors);
             validateEachBlueprintElement(testPackage, errors, testPackage.Blueprint);
-            //throw new System.NotImplementedException();
         }
 
         private void validateEachBlueprintElement(TestPackage testPackage, List<ValidationError> errors, BlueprintElement[] blueprint)
@@ -42,7 +41,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                 {
                                     errStr =
                                         "Child elements of a 'package' blueprint element should be of a 'test' blueprint element type";
-                                    Logger.Debug(errStr);
                                     errors.Add(new ValidationError
                                     {
                                         ErrorSeverity = ErrorSeverity.Severe,
@@ -75,7 +73,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                             errStr =
                                 $"A 'test' type blueprint element with the id {bpEl.id} was identified, but no corresponding " +
                                 "<Test> element was identified with a matching id.";
-                            Logger.Debug(errStr);
                             errors.Add(new ValidationError
                             {
                                 ErrorSeverity = ErrorSeverity.Severe,
@@ -97,7 +94,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                 {
                                     errStr =
                                         "Child elements of a 'test' blueprint element should be of a 'segment' blueprint element type.";
-                                    Logger.Debug(errStr);
                                     errors.Add(new ValidationError
                                     {
                                         ErrorSeverity = ErrorSeverity.Severe,
@@ -131,7 +127,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         {
                             errStr = $"A 'segment' type blueprint element with the id '{bpEl.id}' was identified, but no corresponding " +
                                      "<Segment> element was identified with a matching id";
-                            Logger.Debug(errStr);
                             errors.Add(new ValidationError
                             {
                                 ErrorSeverity = ErrorSeverity.Severe,
@@ -156,7 +151,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                 {
                                     errStr =
                                         "Child elements of a 'claim' or 'target' blueprint element should be of a 'target' blueprint element type.";
-                                    Logger.Debug(errStr);
                                     errors.Add(new ValidationError
                                     {
                                         ErrorSeverity = ErrorSeverity.Severe,
@@ -175,7 +169,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     case CombinedBlueprintElementTypes.STRAND:
                         errStr = $"A blueprint type of 'strand' was detected for the blueprint element '{bpEl.id}'. It is recommended that the blueprint " +
                                   "element type is renamed to 'claim'";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign,
@@ -191,7 +184,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     case CombinedBlueprintElementTypes.CONTENT_LEVEL:
                         errStr = $"A blueprint type of 'contentlevel' was detected for the blueprint element '{bpEl.id}'. It is recommended that the blueprint " +
                                  "element type is renamed to 'target'";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign,
@@ -210,7 +202,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         break;
                     default:
                         errStr = $"Unknown blueprint element type '{bpEl.type}' detected for id {bpEl.id}.";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign, 
@@ -236,7 +227,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     var errStr =
                         $"A top-level blueprint element type of {blueprintElement.type} was detected for blueprint element with id of '{blueprintElement.id}'." + 
                             $" Recognized top-level blueprint element types include: '{String.Join(", ", ROOT_BLUEPRINT_ELEMENT_TYPES)}'.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,
@@ -271,7 +261,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     "The test package did not contain a 'package' or 'test' top-level blueprint element. For " +
                     "combined multi-test packages, a 'package' blueprint element containing the 'test' blueprint elements is needed. " +
                     "For single-test packages, a top level 'test' blueprint element is required.";
-                Logger.Debug(errStr);
                 errors.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Severe,
@@ -288,7 +277,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     "The test package contained more than one top-level 'test' or 'package' blueprint element. " +
                     "For combined multi-test packages, a 'package' blueprint element containing the 'test' blueprint elements is needed. " +
                     "For single-test packages, a top level 'test' blueprint element is required.";
-                Logger.Debug(errStr);
                 errors.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Severe,

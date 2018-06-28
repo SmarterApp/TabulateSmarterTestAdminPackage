@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using NLog;
 using SmarterTestPackage.Common.Data;
 
 namespace ValidateSmarterTestPackage.Validators.Combined
 {
     public class TestPackageRootValidator : ITestPackageValidator
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public void Validate(TestPackage testPackage, List<ValidationError> errors)
         {
@@ -31,7 +29,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
             {
                 var errStr =
                     $"The test package version must be a long or integer value.";
-                Logger.Debug(errStr);
                 errors.Add(new ValidationError
                 {
                     ErrorSeverity = ErrorSeverity.Severe,

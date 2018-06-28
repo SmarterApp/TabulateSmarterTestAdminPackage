@@ -73,7 +73,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 {
                     var errStr =
                         $"The item \"{item.id}\" contained an item type \"{item.type}\" that is not a recognized TDS item type. Known item types include {String.Join(", ", RECOGNIZED_ITEM_TYPES)}";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Benign,
@@ -99,7 +98,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                         var errStr =
                             $"The item with id \"{item.id}\" has an id that is not a LONG value. " +
                             "Currently, TDS only supports item ids that are of a 'LONG' data type";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Severe,
@@ -117,7 +115,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     var errStr =
                         $"The item with id \"{item.id}\" has an id that is not a LONG value. " +
                         "Currently, TDS only supports item ids that are of a 'LONG' data type";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Severe,

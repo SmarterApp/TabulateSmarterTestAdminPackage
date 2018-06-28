@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NLog;
 using SmarterTestPackage.Common.Data;
 
 namespace ValidateSmarterTestPackage.Validators.Combined
@@ -7,8 +6,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 
     public class ToolsValidator : ITestPackageValidator
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         private readonly HashSet<string> _recognizedToolOptions = new HashSet<string>
         {
             "TDS_BrailleTrans0",
@@ -245,7 +242,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     {
                         var errStr =
                             $"A tool with an unrecognized ISAAP code was detected: {option.code}";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign,
@@ -271,7 +267,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                     {
                         var errStr =
                             $"The tool {tool.name} contained an unrecognized ART field name {tool.studentPackageFieldName}.";
-                        Logger.Debug(errStr);
                         errors.Add(new ValidationError
                         {
                             ErrorSeverity = ErrorSeverity.Benign,
@@ -296,7 +291,6 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                 {
                     var errStr =
                         $"An unrecognized test tool type with the tool name \"{tool.name}\" was detected.";
-                    Logger.Debug(errStr);
                     errors.Add(new ValidationError
                     {
                         ErrorSeverity = ErrorSeverity.Benign,

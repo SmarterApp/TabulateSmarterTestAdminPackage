@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
@@ -12,8 +11,6 @@ namespace TabulateSmarterTestPackage.Models
 {
     public class TestInformation
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         public IList<ValidationError> Errors { get; set; } = new List<ValidationError>();
 
         public IDictionary<ItemFieldNames, string> RetrieveTestInformation(TestSpecificationProcessor processor)

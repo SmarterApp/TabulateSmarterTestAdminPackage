@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.XPath;
 using NLog;
 using ProcessSmarterTestPackage.Processors.Combined;
@@ -27,7 +26,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                 {"Braille", (int) ItemFieldNames.Braille},
                 {"Depth of Knowledge", (int) ItemFieldNames.DOK},
                 {"Grade", (int) ItemFieldNames.Grade},
-                //{"Language", (int) ItemFieldNames.Language},
                 {"Language", 0},
                 {"Scoring Engine", (int) ItemFieldNames.ScoringEngine},
                 {"Spanish Translation", (int) ItemFieldNames.Spanish},
@@ -255,8 +253,6 @@ namespace TabulateSmarterTestPackage.Tabulators
                 }
             }
 
-
-            
             foreach (var item in testItems)
             {
                 var ids = GetStandardIDs(item, testInformation[ItemFieldNames.AssessmentSubject]);
