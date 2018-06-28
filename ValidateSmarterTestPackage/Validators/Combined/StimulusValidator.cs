@@ -28,7 +28,11 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                             {
                                 foreach (var itemgroup in segmentForm.ItemGroup)
                                 {
-                                    stimuli.Add(itemgroup.Stimulus);
+                                    if (itemgroup.Stimulus != null)
+                                    {
+                                        stimuli.Add(itemgroup.Stimulus);
+                                    }
+                                    
                                 }
                             }
                         }
@@ -38,7 +42,11 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                             if (itemGroups != null)
                                 foreach (var itemGroup in itemGroups)
                                 {
-                                    stimuli.Add(itemGroup.Stimulus);
+
+                                    if (itemGroup.Stimulus != null)
+                                    {
+                                        stimuli.Add(itemGroup.Stimulus);
+                                    }
                                 }
                         }
                     }
@@ -47,6 +55,7 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 
             foreach (var stimulus in stimuli)
             {
+                Logger.Debug($"stimulus is {stimulus}");
                 try
                 {
                     if (!Int64.TryParse(stimulus.id, out var l))

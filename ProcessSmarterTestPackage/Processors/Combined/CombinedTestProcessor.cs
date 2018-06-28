@@ -11,7 +11,6 @@ using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.Validators.Combined;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
 using NLog;
-using ProcessSmarterTestPackage.Processors.Administration.AdminSegment;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem;
 
 namespace ProcessSmarterTestPackage.Processors.Combined
@@ -104,6 +103,7 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                 SegmentBlueprintValidator segmentBlueprintValidator = new SegmentBlueprintValidator();
                 SegmentFormValidator segmentFormValidator = new SegmentFormValidator();
                 SegmentValidator segmentValidator = new SegmentValidator();
+                StimulusValidator stimulusValidator = new StimulusValidator();
                 TestPackageRootValidator testPackageRootValidator = new TestPackageRootValidator();
                 ToolsValidator toolsValidator = new ToolsValidator();
 
@@ -117,6 +117,7 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                 segmentBlueprintValidator.Validate(TestPackage, valErrs);
                 segmentFormValidator.Validate(TestPackage, valErrs);
                 segmentValidator.Validate(TestPackage, valErrs);
+                stimulusValidator.Validate(TestPackage, valErrs);
                 testPackageRootValidator.Validate(TestPackage, valErrs);
                 toolsValidator.Validate(TestPackage, valErrs);
 
