@@ -401,17 +401,17 @@ namespace TabulateSmarterTestPackage.Tabulators
                         x => x.ItemId.Equals(itemFields[(int)ItemFieldNames.ItemId],
                             StringComparison.OrdinalIgnoreCase));
 
-                    itemFields[(int)ItemFieldNames.CommonCore] = contentItem?.CommonCore ?? string.Empty;
+                    itemFields[(int)ItemFieldNames.CommonCore] = contentItem?.CCSS ?? string.Empty;
                     itemFields[(int)ItemFieldNames.ClaimContentTarget] = contentItem?.ClaimContentTarget ??
                                                                           string.Empty;
-                    itemFields[(int)ItemFieldNames.SecondaryCommonCore] = contentItem?.SecondaryCommonCore ??
+                    itemFields[(int)ItemFieldNames.SecondaryCommonCore] = contentItem?.SecondaryCCSS ??
                                                                            string.Empty;
                     itemFields[(int)ItemFieldNames.SecondaryClaimContentTarget] =
                         contentItem?.SecondaryClaimContentTarget ?? string.Empty;
 
                     itemFields[(int)ItemFieldNames.AnswerKey] = contentItem?.AnswerKey ?? string.Empty;
 
-                    itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.NumberOfAnswerOptions ?? string.Empty;
+                    itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.AnswerOptions ?? string.Empty;
                 }
 
                 GroupItemInfo gii;

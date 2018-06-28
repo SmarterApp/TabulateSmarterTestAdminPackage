@@ -20,10 +20,12 @@
         public string AllowCalculator { get; set; } = string.Empty;
         public string MathematicalPractice { get; set; } = string.Empty;
         public string MaxPoints { get; set; } = string.Empty;
-        public string CommonCore { get; set; } = string.Empty;
+        //public string CommonCore { get; set; } = string.Empty;
+        public string CCSS { get; set; } = string.Empty;
         public string ClaimContentTarget { get; set; } = string.Empty;
-        public string SecondaryCommonCore { get; set; } = string.Empty;
+        //public string SecondaryCommonCore { get; set; } = string.Empty;
+        public string SecondaryCCSS { get; set; } = string.Empty;
         public string SecondaryClaimContentTarget { get; set; } = string.Empty;
-        public string NumberOfAnswerOptions { get; set; } = string.Empty;
+        public string AnswerOptions { get; set; } = string.Empty;
     }
 }
