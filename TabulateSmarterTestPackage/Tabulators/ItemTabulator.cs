@@ -148,7 +148,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                                         ResponseRequired = y.GetAttribute("responserequired", string.Empty),
                                         AdminRequired = y.GetAttribute("adminrequired", string.Empty),
                                         FormPosition = y.GetAttribute("formposition", string.Empty)
-                                    })).ToList();
+                                    })).ToList().GroupBy(o => o.ItemId).Select(gi => gi.First());
                     // Zip the group items against an autonumbering enumerable to get the absolute form position (required for RDW)
                     indexGroupItemInfo =
                         groupItems.Zip(Enumerable.Range(1, groupItems.Count()),
