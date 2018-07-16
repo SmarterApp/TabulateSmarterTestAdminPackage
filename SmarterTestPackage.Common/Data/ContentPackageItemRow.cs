@@ -25,5 +25,7 @@
         public string SecondaryCommonCore { get; set; } = string.Empty;
         public string SecondaryClaimContentTarget { get; set; } = string.Empty;
         public string NumberOfAnswerOptions { get; set; } = string.Empty;
+        public string PerformanceTask { get; set; } = string.Empty;
+        public string PtWritingType { get; set; } = string.Empty;
     }
 }
