@@ -43,6 +43,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 }
             }
 
+            /*
             if (Processor.ValidatedAttributes["ftitemcount"].IsValid &&
                 (Processor.ValidatedAttributes["elementtype"].Value.Equals("test", StringComparison.OrdinalIgnoreCase) ||
                  Processor.ValidatedAttributes["elementtype"].Value.Equals("segment", StringComparison.OrdinalIgnoreCase)))
@@ -68,6 +69,7 @@ namespace ProcessSmarterTestPackage.PostProcessors
                     result.AddRange(EqualityErrors("minftitems", minftitems, "ftitemcount", ftitemcount, "<="));
                 }
             }
+            */
 
             return result;
         }
