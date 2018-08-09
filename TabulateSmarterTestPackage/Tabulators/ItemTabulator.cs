@@ -316,7 +316,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 
                 if (itemScoreDimension != null)
                 {
-                    if (itemFields[(int)ItemFieldNames.ItemType].Equals("WER"))
+                    /*if (itemFields[(int)ItemFieldNames.ItemType].Equals("WER"))
                     {
                         // find the multiples of the itemscoredimension
                         var itemScoreDimensions = testItem.ChildNodesWithName("itemscoredimension");
@@ -329,7 +329,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                                 itemFields[(int)ItemFieldNames.Weight_1] = FormatHelper.FormatDouble(currentScoreDimension.ValidatedAttributes["weight"].Value.ToString());
                                 itemFields[(int)ItemFieldNames.ScorePoints_1] = currentScoreDimension.ValidatedAttributes["scorepoints"].Value.ToString();
                                 itemFields[(int)ItemFieldNames.dimension_1] = "C";
-
+                                
                                 var itemScoreParameters = currentScoreDimension.ChildNodesWithName("itemscoreparameter");
                                 foreach(var currentItemScoreParameter in itemScoreParameters)
                                 {
@@ -396,20 +396,20 @@ namespace TabulateSmarterTestPackage.Tabulators
                         
                     }
                     else
-                    {
-                        itemFields[(int)ItemFieldNames.MeasurementModel_1] = itemScoreDimension.ValueForAttribute("measurementmodel");
-                        itemFields[(int)ItemFieldNames.Weight_1] = FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
-                        itemFields[(int)ItemFieldNames.ScorePoints_1] = itemScoreDimension.ValueForAttribute("scorepoints");
+                    {*/
+                        itemFields[(int)ItemFieldNames.MeasurementModel] = itemScoreDimension.ValueForAttribute("measurementmodel");
+                        itemFields[(int)ItemFieldNames.Weight] = FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
+                        itemFields[(int)ItemFieldNames.ScorePoints] = itemScoreDimension.ValueForAttribute("scorepoints");
                         itemFields[(int)ItemFieldNames.a] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter1)); // measureparameter = "a"
                         itemFields[(int)ItemFieldNames.b0_b] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter2)); // measureparameter = "b0"
                         itemFields[(int)ItemFieldNames.b1_c] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3)); // measureparameter = "b1"
                         itemFields[(int)ItemFieldNames.b2] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4)); // measureparameter = "b2"
                         itemFields[(int)ItemFieldNames.b3] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5)); // measureparameter = "b3"
 
-                        var avg_b = MathHelper.CalculateAverageB(itemFields[(int)ItemFieldNames.MeasurementModel_1],
+                        var avg_b = MathHelper.CalculateAverageB(itemFields[(int)ItemFieldNames.MeasurementModel],
                             itemFields[(int)ItemFieldNames.a], itemFields[(int)ItemFieldNames.b0_b],
                             itemFields[(int)ItemFieldNames.b1_c], itemFields[(int)ItemFieldNames.b2],
-                            itemFields[(int)ItemFieldNames.b3], itemFields[(int)ItemFieldNames.ScorePoints_1]);
+                            itemFields[(int)ItemFieldNames.b3], itemFields[(int)ItemFieldNames.ScorePoints]);
 
                         if (!avg_b.Errors.Any())
                         {
@@ -428,7 +428,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                                     x)
                             );
                         }
-                    }
+                    //}
                 }
 
                 // bprefs
