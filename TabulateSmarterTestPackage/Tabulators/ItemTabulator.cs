@@ -91,7 +91,9 @@ namespace TabulateSmarterTestPackage.Tabulators
 
             var adminSegments = navigator.Select("//adminsegment");
             // If there are no admin segments, this must be a fixed form assessment
-            if (adminSegments == null || !adminSegments.OfType<XPathNavigator>().Any())
+            // 2018-08-08: fixed form assessments do have admin segments. Not sure why the original comment was placed here, nor the check for an adminSegment element
+            //if (adminSegments == null || !adminSegments.OfType<XPathNavigator>().Any())
+            if (adminSegments != null || adminSegments.OfType<XPathNavigator>().Any())
             {
                 var testFormPartitions = new List<XPathNavigator>();
                 // Convoluted way of checking whether the test form identifier ends with Default-ENU
@@ -245,17 +247,14 @@ namespace TabulateSmarterTestPackage.Tabulators
                         ? testInformation[ItemFieldNames.AcademicYear].Split('-').LastOrDefault()
                         : string.Empty;
 
-                var itemId =
-                    testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
+                var itemId = testItem.ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
                 itemFields[(int) ItemFieldNames.FullItemKey] = itemId;
                 itemFields[(int) ItemFieldNames.ItemId] = itemId.Split('-').Last();
                 itemFields[(int) ItemFieldNames.BankKey] = itemId.Split('-').First();
                 itemFields[(int) ItemFieldNames.Filename] = testItem.ValueForAttribute("filename");
-                itemFields[(int) ItemFieldNames.Version] =
-                    testItem.ChildNodeWithName("identifier").ValueForAttribute("version");
+                itemFields[(int) ItemFieldNames.Version] = testItem.ChildNodeWithName("identifier").ValueForAttribute("version");
                 itemFields[(int) ItemFieldNames.ItemType] = testItem.ValueForAttribute("itemtype");
-                itemFields[(int) ItemFieldNames.PassageId] =
-                    testItem.ChildNodeWithName("passageref")?.ValueForAttribute("passageref") ?? string.Empty;
+                itemFields[(int) ItemFieldNames.PassageId] = testItem.ChildNodeWithName("passageref")?.ValueForAttribute("passageref") ?? string.Empty;
 
                 // Process PoolProperties
                 var glossary = new List<string>();
@@ -307,43 +306,128 @@ namespace TabulateSmarterTestPackage.Tabulators
                         itemFields[fieldIndex] = ppValue;
                     }
                 }
+
                 glossary.Sort();
                 itemFields[(int) ItemFieldNames.Glossary] = string.Join(";", glossary);
 
                 var itemScoreDimension = testItem.ChildNodeWithName("itemscoredimension");
+
+                // For WER items there are two itemscoredimension elements where dimension="C" and dimension="D". If a WER item, handle the two itemscoredimension elements
+                
                 if (itemScoreDimension != null)
                 {
-                    itemFields[(int) ItemFieldNames.MeasurementModel] =
-                        itemScoreDimension.ValueForAttribute("measurementmodel");
-                    itemFields[(int) ItemFieldNames.Weight] =
-                        FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
-                    itemFields[(int) ItemFieldNames.ScorePoints] = itemScoreDimension.ValueForAttribute("scorepoints");
-                    itemFields[(int) ItemFieldNames.a] =
-                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter1));
-                    itemFields[(int) ItemFieldNames.b0_b] =
-                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter2));
-                    itemFields[(int) ItemFieldNames.b1_c] =
-                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3));
-                    itemFields[(int) ItemFieldNames.b2] =
-                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4));
-                    itemFields[(int) ItemFieldNames.b3] =
-                        FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5));
-                    var avg_b = MathHelper.CalculateAverageB(itemFields[(int) ItemFieldNames.MeasurementModel],
-                        itemFields[(int) ItemFieldNames.a], itemFields[(int) ItemFieldNames.b0_b],
-                        itemFields[(int) ItemFieldNames.b1_c], itemFields[(int) ItemFieldNames.b2],
-                        itemFields[(int) ItemFieldNames.b3], itemFields[(int) ItemFieldNames.ScorePoints]);
-                    if (!avg_b.Errors.Any())
+                    if (itemFields[(int)ItemFieldNames.ItemType].Equals("WER"))
                     {
-                        itemFields[(int) ItemFieldNames.avg_b] = avg_b.Value;
+                        // find the multiples of the itemscoredimension
+                        var itemScoreDimensions = testItem.ChildNodesWithName("itemscoredimension");
+
+                        foreach(var currentScoreDimension in itemScoreDimensions)
+                        {
+                            if (currentScoreDimension.ValidatedAttributes["dimension"].Value.Equals("C"))
+                            {
+                                itemFields[(int)ItemFieldNames.MeasurementModel_1] = currentScoreDimension.ValidatedAttributes["measurementmodel"].Value.ToString();
+                                itemFields[(int)ItemFieldNames.Weight_1] = FormatHelper.FormatDouble(currentScoreDimension.ValidatedAttributes["weight"].Value.ToString());
+                                itemFields[(int)ItemFieldNames.ScorePoints_1] = currentScoreDimension.ValidatedAttributes["scorepoints"].Value.ToString();
+                                itemFields[(int)ItemFieldNames.dimension_1] = "C";
+
+                                var itemScoreParameters = currentScoreDimension.ChildNodesWithName("itemscoreparameter");
+                                foreach(var currentItemScoreParameter in itemScoreParameters)
+                                {
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("a"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.a] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString()); // measureparameter = "a"
+                                    }
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b") ||
+                                        currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b0"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.b0_b] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString());
+                                    }
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b1") ||
+                                        currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("c"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.b1_c] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString());
+                                    }
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b2"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.b2] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString());
+                                    }
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b3"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.b3] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString());
+                                    }                                    
+                                }
+                                
+                            }
+                            if (currentScoreDimension.ValidatedAttributes["dimension"].Value.Equals("D"))
+                            {
+                                itemFields[(int)ItemFieldNames.MeasurementModel_2] = currentScoreDimension.ValidatedAttributes["measurementmodel"].Value.ToString();
+                                itemFields[(int)ItemFieldNames.Weight_2] = FormatHelper.FormatDouble(currentScoreDimension.ValidatedAttributes["weight"].Value.ToString());
+                                itemFields[(int)ItemFieldNames.ScorePoints_2] = currentScoreDimension.ValidatedAttributes["scorepoints"].Value.ToString();
+                                itemFields[(int)ItemFieldNames.dimension_2] = "D";
+
+                                var itemScoreParameters = currentScoreDimension.ChildNodesWithName("itemscoreparameter");
+                                foreach (var currentItemScoreParameter in itemScoreParameters)
+                                {
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("a"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.a_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString()); // measureparameter = "a"
+                                    }
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b") ||
+                                        currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b0"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.b0_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString());
+                                    }
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b1") ||
+                                        currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("c"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.b1_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString());
+                                    }
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b2"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.b2_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString());
+                                    }
+                                    if (currentItemScoreParameter.ValidatedAttributes["measurementparameter"].Value.Equals("b3"))
+                                    {
+                                        itemFields[(int)ItemFieldNames.b3_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.ValidatedAttributes["value"].Value.ToString());
+                                    }
+                                }
+                            }                            
+                        }
+                        
                     }
                     else
                     {
-                        avg_b.Errors.ToList().ForEach(x =>
-                            ReportingUtility.ReportError(testInformation[ItemFieldNames.AssessmentId],
-                                testSpecificationProcessor.PackageType,
-                                $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/itempool/testitem/itemscoredimension",
-                                ErrorSeverity.Degraded, itemId, itemScoreDimension.Navigator.OuterXml, x)
-                        );
+                        itemFields[(int)ItemFieldNames.MeasurementModel_1] = itemScoreDimension.ValueForAttribute("measurementmodel");
+                        itemFields[(int)ItemFieldNames.Weight_1] = FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
+                        itemFields[(int)ItemFieldNames.ScorePoints_1] = itemScoreDimension.ValueForAttribute("scorepoints");
+                        itemFields[(int)ItemFieldNames.a] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter1)); // measureparameter = "a"
+                        itemFields[(int)ItemFieldNames.b0_b] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter2)); // measureparameter = "b0"
+                        itemFields[(int)ItemFieldNames.b1_c] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3)); // measureparameter = "b1"
+                        itemFields[(int)ItemFieldNames.b2] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4)); // measureparameter = "b2"
+                        itemFields[(int)ItemFieldNames.b3] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5)); // measureparameter = "b3"
+
+                        var avg_b = MathHelper.CalculateAverageB(itemFields[(int)ItemFieldNames.MeasurementModel_1],
+                            itemFields[(int)ItemFieldNames.a], itemFields[(int)ItemFieldNames.b0_b],
+                            itemFields[(int)ItemFieldNames.b1_c], itemFields[(int)ItemFieldNames.b2],
+                            itemFields[(int)ItemFieldNames.b3], itemFields[(int)ItemFieldNames.ScorePoints_1]);
+
+                        if (!avg_b.Errors.Any())
+                        {
+                            itemFields[(int)ItemFieldNames.avg_b] = avg_b.Value;
+                        }
+                        else
+                        {
+                            avg_b.Errors.ToList().ForEach(x =>
+                                ReportingUtility.ReportError(
+                                    testInformation[ItemFieldNames.AssessmentId],
+                                    testSpecificationProcessor.PackageType,
+                                    $"testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/itempool/testitem/itemscoredimension",
+                                    ErrorSeverity.Degraded,
+                                    itemId,
+                                    itemScoreDimension.Navigator.OuterXml,
+                                    x)
+                            );
+                        }
                     }
                 }
 
@@ -400,19 +484,19 @@ namespace TabulateSmarterTestPackage.Tabulators
                         x => x.ItemId.Equals(itemFields[(int) ItemFieldNames.ItemId],
                             StringComparison.OrdinalIgnoreCase));
 
-                    itemFields[(int) ItemFieldNames.CommonCore] = contentItem?.CommonCore ?? string.Empty;
+                    itemFields[(int) ItemFieldNames.CommonCore] = contentItem?.CCSS ?? string.Empty;
                     itemFields[(int) ItemFieldNames.ClaimContentTarget] = contentItem?.ClaimContentTarget ??
                                                                           string.Empty;
-                    itemFields[(int) ItemFieldNames.SecondaryCommonCore] = contentItem?.SecondaryCommonCore ??
+                    itemFields[(int) ItemFieldNames.SecondaryCommonCore] = contentItem?.SecondaryCCSS ??
                                                                            string.Empty;
                     itemFields[(int) ItemFieldNames.SecondaryClaimContentTarget] =
                         contentItem?.SecondaryClaimContentTarget ?? string.Empty;
 
                     itemFields[(int)ItemFieldNames.AnswerKey] = contentItem?.AnswerKey ?? string.Empty;
 
-                    itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.NumberOfAnswerOptions ?? string.Empty;
+                    itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.AnswerOptions ?? string.Empty;
 
-                    itemFields[(int)ItemFieldNames.PerformanceTask] = contentItem?.PerformanceTask ?? string.Empty;
+                    //itemFields[(int)ItemFieldNames.PerformanceTask] = contentItem?.PerformanceTask ?? string.Empty;
                     itemFields[(int)ItemFieldNames.PtWritingType] = contentItem?.PtWritingType ?? string.Empty;
                 }
 
