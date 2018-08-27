@@ -92,8 +92,8 @@ namespace TabulateSmarterTestPackage.Tabulators
             var adminSegments = navigator.Select("//adminsegment");
             // If there are no admin segments, this must be a fixed form assessment
             // 2018-08-08: fixed form assessments do have admin segments. Not sure why the original comment was placed here, nor the check for an adminSegment element
-            //if (adminSegments == null || !adminSegments.OfType<XPathNavigator>().Any())
-            if (adminSegments != null || adminSegments.OfType<XPathNavigator>().Any())
+            if (adminSegments == null || !adminSegments.OfType<XPathNavigator>().Any())
+            //if (adminSegments != null || adminSegments.OfType<XPathNavigator>().Any())
             {
                 var testFormPartitions = new List<XPathNavigator>();
                 // Convoluted way of checking whether the test form identifier ends with Default-ENU
