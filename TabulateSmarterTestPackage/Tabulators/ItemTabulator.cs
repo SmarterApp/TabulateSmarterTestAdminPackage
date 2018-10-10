@@ -42,7 +42,7 @@ namespace TabulateSmarterTestPackage.Tabulators
         // /testspecification/administration/testform/formpartition/itemgroup/groupitem <- now handled by absolute positioning
         // /testspecification/administration/adminsegment/segmentpool/itemgroup/groupitem
         private static readonly XPathExpression sXp_GroupItem =
-            XPathExpression.Compile("/testspecification/administration/adminsegment/segmentpool/itemgroup/groupitem");
+            XPathExpression.Compile("/testspecification//groupitem");
 
         // Parse bpref entries to standard, claim, target
         private static readonly Regex s_Rx_BprefMath =
@@ -91,8 +91,6 @@ namespace TabulateSmarterTestPackage.Tabulators
 
             var adminSegments = navigator.Select("//adminsegment");
             // If there are no admin segments, this must be a fixed form assessment
-            // 2018-08-08: fixed form assessments do have admin segments. Not sure why the original comment was placed here, nor the check for an adminSegment element
-            //if (adminSegments == null || !adminSegments.OfType<XPathNavigator>().Any())
             if (adminSegments != null || adminSegments.OfType<XPathNavigator>().Any())
             {
                 var testFormPartitions = new List<XPathNavigator>();
@@ -121,9 +119,11 @@ namespace TabulateSmarterTestPackage.Tabulators
                                 $"/testspecification/{testSpecificationProcessor.PackageType.ToString().ToLower()}/testform")
                             .OfType<XPathNavigator>()
                             .FirstOrDefault();
-                    testFormPartitions = testForms?.Select("./formpartition")
-                        .OfType<XPathNavigator>()
-                        .ToList();
+                    if (testForms != null) { 
+                        testFormPartitions = testForms?.Select("./formpartition")
+                            .OfType<XPathNavigator>()
+                            .ToList();
+                    }
                 }
 
                 // We will do this section only for fixed-form assessments. 
@@ -148,20 +148,32 @@ namespace TabulateSmarterTestPackage.Tabulators
                                         IsActive = y.GetAttribute("isactive", string.Empty),
                                         ResponseRequired = y.GetAttribute("responserequired", string.Empty),
                                         AdminRequired = y.GetAttribute("adminrequired", string.Empty),
-                                        FormPosition = y.GetAttribute("formposition", string.Empty)
+                                        FormPosition = y.GetAttribute("formposition", string.Empty),
+                                        ItemPosition = y.GetAttribute("formposition", string.Empty)
                                     })).ToList();
                     // Zip the group items against an autonumbering enumerable to get the absolute form position (required for RDW)
-                    indexGroupItemInfo =
-                        groupItems.Zip(Enumerable.Range(1, groupItems.Count()),
-                            (groupItem, absolutePosition) => new GroupItemInfo
-                            {
-                                ItemId = groupItem.ItemId,
-                                IsFieldTest = groupItem.IsFieldTest,
-                                IsActive = groupItem.IsActive,
-                                ResponseRequired = groupItem.ResponseRequired,
-                                AdminRequired = groupItem.AdminRequired,
-                                FormPosition = absolutePosition.ToString()
-                            }).ToDictionary(x => x.ItemId, x => x);
+                    // There is a bug where there may be more than one formpartion with the same items ((SBAC)SBAC-GEN-INTR-IAB-MA-GCO-11-Winter-2018-2019). 
+                    // The Zip function will throw an exception when this case occurs
+                    // Create a try...catch block that will send a message to the log file, but continue to process the file
+                    try
+                    {
+                        indexGroupItemInfo =
+                            groupItems.Zip(Enumerable.Range(1, groupItems.Count()),
+                                (groupItem, absolutePosition) => new GroupItemInfo
+                                {
+                                    ItemId = groupItem.ItemId,
+                                    IsFieldTest = groupItem.IsFieldTest,
+                                    IsActive = groupItem.IsActive,
+                                    ResponseRequired = groupItem.ResponseRequired,
+                                    AdminRequired = groupItem.AdminRequired,
+                                    FormPosition = groupItem.FormPosition,
+                                    ItemPosition = absolutePosition.ToString()
+                                }).ToDictionary(x => x.ItemId, x => x);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error($"Cannot add to the indexGroupItemInfo for the same set of items that exist in multiple form partitions. " + ex.Message);
+                    }
                 }
                 else
                 {
@@ -190,6 +202,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     var isActive = node.GetAttribute("isactive", string.Empty);
                     var responseRequired = node.GetAttribute("responserequired", string.Empty);
                     var adminRequired = node.GetAttribute("adminrequired", string.Empty);
+                    var formPosition = node.GetAttribute("formposition", string.Empty);
+                    var itemPosition = node.GetAttribute("formposition", string.Empty);
 
                     GroupItemInfo gii;
                     if (indexGroupItemInfo.TryGetValue(itemId, out gii))
@@ -202,7 +216,9 @@ namespace TabulateSmarterTestPackage.Tabulators
                         IsActive = isActive,
                         ResponseRequired = responseRequired,
                         AdminRequired = adminRequired,
-                        FormPosition = string.Empty
+                        //FormPosition = string.Empty
+                        FormPosition = formPosition,
+                        ItemPosition = formPosition
                         // This information should be provided by the test form and will cause confusion if it is pulled from here
                     };
                     indexGroupItemInfo.Add(itemId, gii);
@@ -255,6 +271,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                 itemFields[(int) ItemFieldNames.Version] = testItem.ChildNodeWithName("identifier").ValueForAttribute("version");
                 itemFields[(int) ItemFieldNames.ItemType] = testItem.ValueForAttribute("itemtype");
                 itemFields[(int) ItemFieldNames.PassageId] = testItem.ChildNodeWithName("passageref")?.ValueForAttribute("passageref") ?? string.Empty;
+
+                itemFields[(int) ItemFieldNames.Grade] = testInformation[ItemFieldNames.AssessmentGrade];
+                //itemFields[(int) ItemFieldNames.Braille] = testItem.
+                
 
                 // Process PoolProperties
                 var glossary = new List<string>();
@@ -316,7 +336,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 
                 if (itemScoreDimension != null)
                 {
-                    /*if (itemFields[(int)ItemFieldNames.ItemType].Equals("WER"))
+                    if (itemFields[(int)ItemFieldNames.ItemType].Equals("WER"))
                     {
                         // find the multiples of the itemscoredimension
                         var itemScoreDimensions = testItem.ChildNodesWithName("itemscoredimension");
@@ -360,10 +380,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                             }
                             if (currentScoreDimension.ValidatedAttributes["dimension"].Value.Equals("D"))
                             {
-                                itemFields[(int)ItemFieldNames.MeasurementModel_2] = currentScoreDimension.ValidatedAttributes["measurementmodel"].Value.ToString();
-                                itemFields[(int)ItemFieldNames.Weight_2] = FormatHelper.FormatDouble(currentScoreDimension.ValidatedAttributes["weight"].Value.ToString());
-                                itemFields[(int)ItemFieldNames.ScorePoints_2] = currentScoreDimension.ValidatedAttributes["scorepoints"].Value.ToString();
-                                itemFields[(int)ItemFieldNames.dimension_2] = "D";
+                                itemFields[(int)ItemFieldNames.MeasurementModel_d2] = currentScoreDimension.ValidatedAttributes["measurementmodel"].Value.ToString();
+                                itemFields[(int)ItemFieldNames.Weight_d2] = FormatHelper.FormatDouble(currentScoreDimension.ValidatedAttributes["weight"].Value.ToString());
+                                itemFields[(int)ItemFieldNames.ScorePoints_d2] = currentScoreDimension.ValidatedAttributes["scorepoints"].Value.ToString();
+                                itemFields[(int)ItemFieldNames.dimension_d2] = "D";
 
                                 var itemScoreParameters = currentScoreDimension.ChildNodesWithName("itemscoreparameter");
                                 foreach (var currentItemScoreParameter in itemScoreParameters)
@@ -396,20 +416,20 @@ namespace TabulateSmarterTestPackage.Tabulators
                         
                     }
                     else
-                    {*/
-                        itemFields[(int)ItemFieldNames.MeasurementModel] = itemScoreDimension.ValueForAttribute("measurementmodel");
-                        itemFields[(int)ItemFieldNames.Weight] = FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
-                        itemFields[(int)ItemFieldNames.ScorePoints] = itemScoreDimension.ValueForAttribute("scorepoints");
+                    {
+                        itemFields[(int)ItemFieldNames.MeasurementModel_1] = itemScoreDimension.ValueForAttribute("measurementmodel");
+                        itemFields[(int)ItemFieldNames.Weight_1] = FormatHelper.FormatDouble(itemScoreDimension.ValueForAttribute("weight"));
+                        itemFields[(int)ItemFieldNames.ScorePoints_1] = itemScoreDimension.ValueForAttribute("scorepoints");
                         itemFields[(int)ItemFieldNames.a] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter1)); // measureparameter = "a"
                         itemFields[(int)ItemFieldNames.b0_b] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter2)); // measureparameter = "b0"
                         itemFields[(int)ItemFieldNames.b1_c] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter3)); // measureparameter = "b1"
                         itemFields[(int)ItemFieldNames.b2] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter4)); // measureparameter = "b2"
                         itemFields[(int)ItemFieldNames.b3] = FormatHelper.FormatDouble(testItem.Navigator.Eval(sXp_Parameter5)); // measureparameter = "b3"
 
-                        var avg_b = MathHelper.CalculateAverageB(itemFields[(int)ItemFieldNames.MeasurementModel],
+                        var avg_b = MathHelper.CalculateAverageB(itemFields[(int)ItemFieldNames.MeasurementModel_1],
                             itemFields[(int)ItemFieldNames.a], itemFields[(int)ItemFieldNames.b0_b],
                             itemFields[(int)ItemFieldNames.b1_c], itemFields[(int)ItemFieldNames.b2],
-                            itemFields[(int)ItemFieldNames.b3], itemFields[(int)ItemFieldNames.ScorePoints]);
+                            itemFields[(int)ItemFieldNames.b3], itemFields[(int)ItemFieldNames.ScorePoints_1]);
 
                         if (!avg_b.Errors.Any())
                         {
@@ -428,7 +448,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                                     x)
                             );
                         }
-                    //}
+                    }
                 }
 
                 // bprefs
@@ -448,16 +468,15 @@ namespace TabulateSmarterTestPackage.Tabulators
                     // A proper ELA standard ID should be in this format: SBAC-ELA-v1:3-L|4-6|6.SL.2
                     // However, the bpref form substitutes "SBAC-" FOR "SBAC-ELA-v1:" and it drops the
                     // last segment which is the common core state standard.
-                    if (testInformation[ItemFieldNames.AssessmentSubject].Equals("Math",
-                        StringComparison.OrdinalIgnoreCase))
+                    if (testInformation[ItemFieldNames.AssessmentSubject].Equals("Math", StringComparison.OrdinalIgnoreCase) ||
+                        testInformation[ItemFieldNames.AssessmentSubject].Equals("Mathematics", StringComparison.OrdinalIgnoreCase))
                     {
                         var match = s_Rx_BprefMath.Match(bpRef);
                         if (!match.Success)
                         {
                             continue;
                         }
-                        itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix,
-                            match.Value.Substring(match.Value.IndexOf("-")+1)); // since the regex can handle SBAC and SBAC_PT
+                        itemFields[(int) ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix, match.Value.Substring(match.Value.IndexOf("-")+1)); // since the regex can handle SBAC and SBAC_PT
                         itemFields[(int) ItemFieldNames.Claim] = match.Groups[2].Value;
                         itemFields[(int) ItemFieldNames.Target] = match.Groups[3].Value;
                     }
@@ -507,7 +526,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     itemFields[(int) ItemFieldNames.IsActive] = gii.IsActive;
                     itemFields[(int) ItemFieldNames.ResponseRequired] = gii.ResponseRequired;
                     itemFields[(int) ItemFieldNames.AdminRequired] = gii.AdminRequired;
-                    itemFields[(int) ItemFieldNames.ItemPosition] = gii.FormPosition;
+                    itemFields[(int) ItemFieldNames.ItemPosition] = gii.ItemPosition;
+                    itemFields[(int) ItemFieldNames.FormPosition] = gii.FormPosition;
                 }
                 else
                 {
@@ -516,6 +536,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     itemFields[(int) ItemFieldNames.ResponseRequired] = string.Empty;
                     itemFields[(int) ItemFieldNames.AdminRequired] = string.Empty;
                     itemFields[(int) ItemFieldNames.ItemPosition] = string.Empty;
+                    itemFields[(int) ItemFieldNames.FormPosition] = string.Empty;
                 }
 
                 var j = 0;
@@ -555,7 +576,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                             : item.ValueForAttribute("AllowCalculator");
                 }
 
-                if (itemFields[(int) ItemFieldNames.AssessmentSubject].Equals("MATH", StringComparison.OrdinalIgnoreCase))
+                if (itemFields[(int) ItemFieldNames.AssessmentSubject].Equals("MATH", StringComparison.OrdinalIgnoreCase) ||
+                    itemFields[(int) ItemFieldNames.AssessmentSubject].Equals("Mathematics", StringComparison.OrdinalIgnoreCase))
                 {
                     if (string.IsNullOrEmpty(itemFields[(int) ItemFieldNames.AllowCalculator]))
                     {
