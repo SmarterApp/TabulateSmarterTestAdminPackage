@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
+using ProcessSmarterTestPackage.Processors.Combined;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
@@ -94,13 +96,100 @@ namespace TabulateSmarterTestPackage.Models
                     {
                         result.Add(ItemFieldNames.AssessmentSubtype, string.Empty);
                         Errors.Add(GenerateTestInformationValidationError(result[ItemFieldNames.AssessmentId],
-                            "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either \"ICA\" or \"IAB\"",
+                            "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either 'ICA' or 'IAB'",
                             "property", "testspecification/property", GetPackageType(processor)));
                     }
                 }
                 else
                 {
                     result.Add(ItemFieldNames.AssessmentSubtype, "summative");
+                }
+            }
+
+            return result;
+        }
+
+        public IDictionary<ItemFieldNames, string> RetrieveTestInformation(CombinedTestProcessor processor)
+        {
+            var result = new Dictionary<ItemFieldNames, string>();
+            var testPackage = processor.TestPackage;
+            var identifier = testPackage.Test[0];
+            if (identifier == null)
+            {
+                Errors.Add(GenerateTestInformationValidationError(string.Empty, "Test node not found",
+                    "Test", "TestPackage/Test", GetPackageType(processor)));
+                result.Add(ItemFieldNames.AssessmentId, string.Empty);
+                result.Add(ItemFieldNames.AssessmentName, string.Empty);
+                result.Add(ItemFieldNames.AssessmentLabel, string.Empty);
+                result.Add(ItemFieldNames.AssessmentVersion, string.Empty);
+            }
+            else
+            {
+                result.Add(ItemFieldNames.AssessmentId, $"({testPackage.publisher}){identifier.id}-{testPackage.academicYear}");
+                result.Add(ItemFieldNames.AssessmentName, identifier.id);
+                result.Add(ItemFieldNames.AssessmentLabel, identifier.label);
+                result.Add(ItemFieldNames.AssessmentVersion, testPackage.version.ToString());
+                result.Add(ItemFieldNames.Version, testPackage.version.ToString());
+                result.Add(ItemFieldNames.AcademicYear, testPackage.academicYear);
+                result.Add(ItemFieldNames.BankKey, testPackage.bankKey.ToString());
+                result.Add(ItemFieldNames.AssessmentSubject, testPackage.subject);
+                result.Add(ItemFieldNames.AssessmentGrade, identifier.Grades[0].value.ToString());
+                result.Add(ItemFieldNames.AssessmentType, testPackage.type);
+                if (!result[ItemFieldNames.AssessmentType].Equals("summative", StringComparison.OrdinalIgnoreCase))
+                {
+                    if ($"({testPackage.publisher}){identifier.id}-{testPackage.academicYear}".Contains("ICA"))
+                    {
+                        result.Add(ItemFieldNames.AssessmentSubtype, "ICA");
+                    }
+                    else if (result[ItemFieldNames.AssessmentId].Contains("IAB"))
+                    {
+                        result.Add(ItemFieldNames.AssessmentSubtype, "IAB");
+                    }
+                    else
+                    {
+                        result.Add(ItemFieldNames.AssessmentSubtype, string.Empty);
+                        Errors.Add(GenerateTestInformationValidationError(result[ItemFieldNames.AssessmentId],
+                            "Test type is interim, but subtype is indeterminate. Interim test subtypes must be either 'ICA' or 'IAB",
+                            "TestPackage", "Test", GetPackageType(processor)));
+                    }
+                }
+                else
+                {
+                    result.Add(ItemFieldNames.AssessmentSubtype, "summative");
+                }
+
+                foreach (var blueprint in testPackage.Blueprint)
+                {
+                    if (blueprint.Scoring != null && blueprint.Scoring.PerformanceLevels != null)
+                    {
+                        foreach (var performaceLevel in blueprint.Scoring.PerformanceLevels)
+                        {
+                            switch (performaceLevel.pLevel)
+                            {
+                                case 1:
+                                    result[ItemFieldNames.CutPoint1] = performaceLevel.pLevel.ToString();
+                                    result[ItemFieldNames.ScaledHigh1] = performaceLevel.scaledHi.ToString(CultureInfo.InvariantCulture);
+                                    result[ItemFieldNames.ScaledLow1] = performaceLevel.scaledLo.ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case 2:
+                                    result[ItemFieldNames.CutPoint2] = performaceLevel.pLevel.ToString();
+                                    result[ItemFieldNames.ScaledHigh2] = performaceLevel.scaledHi.ToString(CultureInfo.InvariantCulture);
+                                    result[ItemFieldNames.ScaledLow2] = performaceLevel.scaledLo.ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case 3:
+                                    result[ItemFieldNames.CutPoint3] = performaceLevel.pLevel.ToString();
+                                    result[ItemFieldNames.ScaledHigh3] = performaceLevel.scaledHi.ToString(CultureInfo.InvariantCulture);
+                                    result[ItemFieldNames.ScaledLow3] = performaceLevel.scaledLo.ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case 4:
+                                    result[ItemFieldNames.CutPoint4] = performaceLevel.pLevel.ToString();
+                                    result[ItemFieldNames.ScaledHigh4] = performaceLevel.scaledHi.ToString(CultureInfo.InvariantCulture);
+                                    result[ItemFieldNames.ScaledLow4] = performaceLevel.scaledLo.ToString(CultureInfo.InvariantCulture);
+                                    break;
+
+                            }
+                        }
+                    }
                 }
             }
 

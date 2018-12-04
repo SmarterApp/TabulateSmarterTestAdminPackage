@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.XPath;
+using NLog;
 using ProcessSmarterTestPackage.Processors.Common;
 using ProcessSmarterTestPackage.Processors.Common.ItemPool.Passage;
 using SmarterTestPackage.Common.Data;
@@ -10,11 +12,14 @@ using SmarterTestPackage.Common.Extensions;
 using TabulateSmarterTestPackage.Models;
 using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
+using ProcessSmarterTestPackage.Processors.Combined;
+
 
 namespace TabulateSmarterTestPackage.Tabulators
 {
     internal class TestPackageTabulator : IDisposable
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public TestPackageTabulator(string oFilename)
         {
             ReportingUtility.SetFileName(oFilename);
@@ -39,7 +44,7 @@ namespace TabulateSmarterTestPackage.Tabulators
 #endif
         }
 
-        public PackageType ExpectedPackageType { get; set; }
+        private PackageType ExpectedPackageType { get; set; }
 
 
         public void Dispose()
@@ -47,63 +52,119 @@ namespace TabulateSmarterTestPackage.Tabulators
             Dispose(true);
         }
 
-        public TestSpecificationProcessor ProcessResult(Stream input)
+        public Processor ProcessResult(Stream input)
         {
-            var doc = new XPathDocument(input);
-            var nav = doc.CreateNavigator();
+            try
+            {
+                var doc = new XPathDocument(input);
+                var nav = doc.CreateNavigator();
+                var nodeSelector = "";
 
-            // /testspecification
-            var packageType = nav.SelectSingleNode("/testspecification")
-                .Eval(XPathExpression.Compile("@purpose"));
-            if (packageType.Equals("administration", StringComparison.OrdinalIgnoreCase))
-            {
-                ExpectedPackageType = PackageType.Administration;
-            }
-            else if (packageType.Equals("scoring", StringComparison.OrdinalIgnoreCase))
-            {
-                ExpectedPackageType = PackageType.Scoring;
-            }
-            else
-            {
-                throw new ArgumentException("UnrecognizedPackageType");
-            }
-            var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode("/testspecification"),
-                ExpectedPackageType);
-            testSpecificationProcessor.Process();
+                if (nav.IsNode && nav.SelectSingleNode("//TestPackage") != null)
+                {
 
-            return testSpecificationProcessor;
+                    Logger.Info("Processing new package format.");
+                    nodeSelector = "//TestPackage";
+                    ExpectedPackageType = PackageType.Combined;
+                }
+                else if (nav.IsNode && nav.SelectSingleNode("/testspecification") != null)
+                {
+                    Logger.Info("Processing old package format.");
+                    nodeSelector = "/testspecification";
+                    var packageType = nav.SelectSingleNode(nodeSelector)
+                        .Eval(XPathExpression.Compile("@purpose"));
+                    if (packageType.Equals("administration", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ExpectedPackageType = PackageType.Administration;
+                    }
+                    else if (packageType.Equals("scoring", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ExpectedPackageType = PackageType.Scoring;
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("UnrecognizedPackageType");
+                }
+
+                if (ExpectedPackageType != PackageType.Combined)
+                {
+                    var testSpecificationProcessor = new TestSpecificationProcessor(nav.SelectSingleNode(nodeSelector),
+                        ExpectedPackageType);
+                    testSpecificationProcessor.Process();
+                    return testSpecificationProcessor;
+                }
+                else
+                {
+                    var combinedTestProcessor = new CombinedTestProcessor(nav.SelectSingleNode(nodeSelector), ExpectedPackageType);
+                    combinedTestProcessor.Process();
+                    return combinedTestProcessor;
+                }
+            }
+            catch (XmlException e)
+            {
+                throw new ArgumentException($"XML document parse failure. Error:  \"{e.Message}\" Skipping file.");
+            }
+            
+
         }
 
-        public void TabulateResults(List<TestSpecificationProcessor> testSpecificationProcessors,
+       
+        public void TabulateResults(List<Processor> testSpecificationProcessors,
             List<ProcessingError> crossTabulationErrors)
         {
             foreach (var testSpecificationProcessor in testSpecificationProcessors)
             {
                 // Extract the test info
                 var testInfo = new TestInformation();
-                var testInformation = testInfo.RetrieveTestInformation(testSpecificationProcessor);
+                IDictionary<ItemFieldNames, string> testInformation;
+                    
+                if (testSpecificationProcessor is CombinedTestProcessor)
+                {
+                    testInformation = testInfo.RetrieveTestInformation((CombinedTestProcessor)testSpecificationProcessor);
+                    var combinedItemTabulator = new CombinedItemTabulator();
+                    var combinedItems = combinedItemTabulator.ProcessResult(testSpecificationProcessor.Navigator,
+                        (CombinedTestProcessor)testSpecificationProcessor,
+                        testInformation);
+                    combinedItems.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
+
+                    var stimuliNodes = testSpecificationProcessor.Navigator.Select("//Stimulus");
+                    if (stimuliNodes.Count > 0)
+                    {
+                        var stimuliTabulator = new StimuliTabulator();
+                        var stimuli = stimuliTabulator.ProcessResult(stimuliNodes, testInformation);
+                        stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+                    }
+                    
+
+                }
+                else
+                {
+                    testInformation = testInfo.RetrieveTestInformation((TestSpecificationProcessor)testSpecificationProcessor);
+                    var itemTabulator = new ItemTabulator();
+                    var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
+                        testInformation);
+                    items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
+
+                    var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration") ??
+                                         testSpecificationProcessor.ChildNodeWithName("scoring");
+                    var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage").ToList();
+                    if (passages.Any())
+                    {
+                        var stimuliTabulator = new StimuliTabulator();
+                        var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(),
+                            testInformation);
+                        stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
+                    }
+                }
 
                 ReportingUtility.TestName = testInformation[ItemFieldNames.AssessmentName];
-
-                var itemTabulator = new ItemTabulator();
-                var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
-                    testInformation);
-                items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
-
-                var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration") ??
-                                     testSpecificationProcessor.ChildNodeWithName("scoring");
-                var passages = assessmentRoot.ChildNodeWithName("itempool").ChildNodesWithName("passage").ToList();
-                if (passages.Any())
-                {
-                    var stimuliTabulator = new StimuliTabulator();
-                    var stimuli = stimuliTabulator.ProcessResult(passages.Cast<PassageProcessor>().ToList(),
-                        testInformation);
-                    stimuli.ToList().ForEach(x => ReportingUtility.GetStimuliWriter().Write(x.ToArray()));
-                }
 
                 var errors = testSpecificationProcessor.GenerateErrorMessages().Cast<ProcessingError>().ToList();
                 errors.AddRange(crossTabulationErrors);
                 errors.AddRange(testInfo.Errors);
+                errors.AddRange(ItemTabulator.ItemTabulationErrors);
+                ItemTabulator.ItemTabulationErrors.Clear();
                 var errorList = new List<List<string>>();
                 errorList.AddRange(errors.Select(x => new List<string>
                 {

@@ -58,6 +58,8 @@
         ClaimContentTarget,
         SecondaryCommonCore,
         SecondaryClaimContentTarget,
+        AnswerKey,
+        NumberOfAnswerOptions,
         CutPoint1,
         ScaledLow1,
         ScaledHigh1,
@@ -69,6 +71,8 @@
         ScaledHigh3,
         CutPoint4,
         ScaledLow4,
-        ScaledHigh4
+        ScaledHigh4,
+        HandScored,
+        DoNotScore
     }
 }

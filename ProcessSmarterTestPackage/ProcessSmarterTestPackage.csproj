@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -66,6 +70,7 @@
     <Compile Include="Processors\Administration\AdminSegment\SegmentFormProcessor.cs" />
     <Compile Include="Processors\Administration\AdminSegment\SegmentPoolProcessor.cs" />
     <Compile Include="Processors\Administration\PoolPropertyProcessor.cs" />
+    <Compile Include="Processors\Combined\CombinedTestProcessor.cs" />
     <Compile Include="Processors\Common\IdentifierProcessor.cs" />
     <Compile Include="Processors\Common\ItemPool\ItemPoolProcessor.cs" />
     <Compile Include="Processors\Common\ItemPool\Passage\PassageProcessor.cs" />
@@ -100,6 +105,7 @@
       <Name>ValidateSmarterTestPackage</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
