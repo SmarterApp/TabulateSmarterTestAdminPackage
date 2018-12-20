@@ -375,6 +375,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                         }
                         itemFields[(int)ItemFieldNames.Standard] = string.Concat(c_MathStdPrefix,
                             match.Value.Substring(5));
+						itemFields[(int)ItemFieldNames.ContentSpecId] = 
+                            ConvertToEnhanced(itemFields[(int)ItemFieldNames.Standard], itemFields[(int)ItemFieldNames.Grade]);
                         itemFields[(int)ItemFieldNames.Claim] = match.Groups[1].Value;
                         itemFields[(int)ItemFieldNames.Target] = match.Groups[2].Value;
                     }
@@ -388,6 +390,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                         }
                         itemFields[(int)ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix,
                             match.Value.Substring(5));
+                        itemFields[(int)ItemFieldNames.ContentSpecId] =
+                            ConvertToEnhanced(itemFields[(int)ItemFieldNames.Standard], itemFields[(int)ItemFieldNames.Grade]);
                         itemFields[(int)ItemFieldNames.Claim] = match.Groups[1].Value + "\t";
                         // Adding tab character prevents Excel from treating these as dates.
                         itemFields[(int)ItemFieldNames.Target] = match.Groups[2].Value + "\t";
@@ -499,6 +503,21 @@ namespace TabulateSmarterTestPackage.Tabulators
             }
 
             return resultList;
+        }
+
+        private string ConvertToEnhanced(string standard, string grade)
+        {
+            if (!string.IsNullOrEmpty(standard))
+            {
+                SmarterApp.ContentSpecGrade defaultGrade = SmarterApp.ContentSpecId.ParseGrade(grade);
+                SmarterApp.ContentSpecId csid = SmarterApp.ContentSpecId.TryParse(standard, defaultGrade);
+                if (csid.ParseErrorSeverity != SmarterApp.ErrorSeverity.Invalid)
+                {
+                    return csid.ToString(SmarterApp.ContentSpecIdFormat.Enhanced);
+                }
+            }
+
+            return string.Empty;
         }
 
         private static CrossPackageValidationError GenerateItemError(string message, string id, Processor processor,

@@ -19,6 +19,7 @@
         ItemType,
         Grade,
         Standard,
+		ContentSpecId,
         Claim,
         Target,
         PassageId,
