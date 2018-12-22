@@ -25,14 +25,17 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 
         private void validateEachBlueprintElement(TestPackage testPackage, List<ValidationError> errors, BlueprintElement[] blueprint)
         {
+            string subject = testPackage.subject;
+            string grade = testPackage.Test[0].Grades[0].value;
+
             foreach (var bpEl in blueprint)
             {
                 string errStr;
                 switch (bpEl.type)
                 {
-                        
+
                     case CombinedBlueprintElementTypes.PACKAGE:
-                    // Validate that a "package" blueprint has only child test blueprint elements
+                        // Validate that a "package" blueprint has only child test blueprint elements
                         if (bpEl.BlueprintElement1 != null)
                             foreach (var childBlueprintElement in bpEl.BlueprintElement1)
                             {
@@ -142,8 +145,12 @@ namespace ValidateSmarterTestPackage.Validators.Combined
 
                     case CombinedBlueprintElementTypes.CLAIM:
                     case CombinedBlueprintElementTypes.TARGET:
+                        // Validate content spec IDs contained in this claim blueprint element, and all the nested target blueprint elements.
+                        validateContentSpecId(bpEl, subject, grade, errors);
+
                         // Validate that a "claim" blueprint has only child claims or targets
                         if (bpEl.BlueprintElement1 != null)
+                        {
                             foreach (var childBpel in bpEl.BlueprintElement1)
                             {
                                 if (!childBpel.type.Equals(CombinedBlueprintElementTypes.TARGET,
@@ -157,12 +164,13 @@ namespace ValidateSmarterTestPackage.Validators.Combined
                                         Location = "TestPackage/Blueprint/BlueprintElement",
                                         GeneratedMessage = errStr,
                                         ItemId = bpEl.id,
-                                        Key = "BlueprintElement",
+                                        Key = "Label",
                                         PackageType = PackageType.Combined,
                                         Value = bpEl.id
                                     });
                                 }
                             }
+                        }
 
                         break;
 
@@ -217,6 +225,94 @@ namespace ValidateSmarterTestPackage.Validators.Combined
             }
         }
 
+        private void validateContentSpecId(BlueprintElement bpEl, string subject, string grade, List<ValidationError> errors)
+        {
+            var defaultGrade = SmarterApp.ContentSpecId.ParseGrade(grade);
+            string fullId = bpEl.id;
+
+            if (subject.Equals("ELA", StringComparison.OrdinalIgnoreCase))
+            {
+                fullId = $"SBAC-ELA-v1:{bpEl.id}";
+            }
+            else if (subject.Equals("MATH", StringComparison.OrdinalIgnoreCase))
+            {
+                fullId = $"SBAC-MA-v6:{bpEl.id}";
+            }
+
+            SmarterApp.ContentSpecId csid = SmarterApp.ContentSpecId.TryParse(fullId, defaultGrade);
+            if (csid.ParseErrorSeverity == SmarterApp.ErrorSeverity.Invalid)
+            {
+                // Blueprint element's id cannot be parsed via content spec library
+                errors.Add(new ValidationError
+                {
+                    ErrorSeverity = ErrorSeverity.Severe,
+                    Location = "TestPackage/Blueprint/BlueprintElement",
+                    GeneratedMessage = $"ContentSpec rule: invalid blueprint id '{bpEl.id}' ({fullId}) : {csid.ParseErrorDescription}",
+                    ItemId = bpEl.id,
+                    Key = "id",
+                    PackageType = PackageType.Combined,
+                    Value = bpEl.id
+                });
+            }
+
+            if (string.IsNullOrEmpty(bpEl.label))
+            {
+                // Blueprint element's label field has not been set
+                errors.Add(new ValidationError
+                {
+                    ErrorSeverity = ErrorSeverity.Severe,
+                    Location = "TestPackage/Blueprint/BlueprintElement",
+                    GeneratedMessage = $"ContentSpec rule: label not populated for blueprint id '{bpEl.id}'",
+                    ItemId = bpEl.id,
+                    Key = "label",
+                    PackageType = PackageType.Combined,
+                    Value = bpEl.label
+                });
+            }
+            else if (csid.ParseErrorSeverity == SmarterApp.ErrorSeverity.Invalid)
+            {
+                // Blueprint element's label field not consistent with id because id field is not parsable as a content spec Id
+                errors.Add(new ValidationError
+                {
+                    ErrorSeverity = ErrorSeverity.Severe,
+                    Location = "TestPackage/Blueprint/BlueprintElement",
+                    GeneratedMessage = $"ContentSpec rule: blueprint label does not match id for blueprint id '{bpEl.id}'. Label is '{bpEl.label}', but id cannot be parsed: {csid.ParseErrorDescription}",
+                    ItemId = bpEl.id,
+                    Key = "label",
+                    PackageType = PackageType.Combined,
+                    Value = bpEl.label
+                });
+            }
+            else if (!string.Equals(bpEl.label, csid.ToString(SmarterApp.ContentSpecIdFormat.Enhanced), StringComparison.Ordinal))
+            {
+                // Blueprint element's label field not consistent with id because label does not match converted value of the id
+                errors.Add(new ValidationError
+                {
+                    ErrorSeverity = ErrorSeverity.Severe,
+                    Location = "TestPackage/Blueprint/BlueprintElement",
+                    GeneratedMessage = $"ContentSpec rule: blueprint label does not match id for blueprint id '{bpEl.id}'. Label is '{bpEl.label}', " +
+                                        $"but id is equivalent to '{csid.ToString(SmarterApp.ContentSpecIdFormat.Enhanced)}'",
+                    ItemId = bpEl.id,
+                    Key = "label",
+                    PackageType = PackageType.Combined,
+                    Value = bpEl.label
+                });
+            }
+
+            // Recurse through nested target elements
+            if (bpEl.BlueprintElement1 != null)
+            {
+                foreach (var childBpel in bpEl.BlueprintElement1)
+                {
+                    if (childBpel.type.Equals(CombinedBlueprintElementTypes.TARGET,
+                        StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        validateContentSpecId(childBpel, subject, grade, errors);
+                    }
+                }
+            }
+        }
+         
         // <Blueprint type=?> ? must be one of the types in ROOT_BLUEPRINT_ELEMENT_TYPES
         private void ValidateTopLevelBlueprintElements(TestPackage testPackage, List<ValidationError> errors)
         {
