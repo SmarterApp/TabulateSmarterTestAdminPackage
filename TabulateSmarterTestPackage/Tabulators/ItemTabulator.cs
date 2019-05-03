@@ -530,11 +530,13 @@ namespace TabulateSmarterTestPackage.Tabulators
 
                     itemFields[(int)ItemFieldNames.AnswerKey] = contentItem?.AnswerKey ?? string.Empty;
 
+
                     itemFields[(int)ItemFieldNames.NumberOfAnswerOptions] = contentItem?.AnswerOptions ?? string.Empty;
 
 
                     //itemFields[(int)ItemFieldNames.PerformanceTask] = contentItem?.PerformanceTask ?? string.Empty;
                     itemFields[(int)ItemFieldNames.PtWritingType] = contentItem?.PtWritingType ?? string.Empty;
+
 
                 }
 

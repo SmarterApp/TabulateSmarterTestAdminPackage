@@ -72,8 +72,10 @@
         SecondaryClaimContentTarget,
         AnswerKey,
         NumberOfAnswerOptions,
+
         //PerformanceTask,
         PtWritingType,
+
         CutPoint1,
         ScaledLow1,
         ScaledHigh1,

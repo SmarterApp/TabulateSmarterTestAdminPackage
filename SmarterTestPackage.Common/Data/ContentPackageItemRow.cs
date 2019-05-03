@@ -30,6 +30,7 @@
         public string Target { get; set; } = string.Empty;
         public string CCSS { get; set; } = string.Empty;        
         public string ClaimContentTarget { get; set; } = string.Empty;
+
         public string SecondaryCCSS { get; set; } = string.Empty;        
         public string SecondaryClaimContentTarget { get; set; } = string.Empty;                
         public string PtWritingType { get; set; } = string.Empty;
@@ -45,5 +46,6 @@
         public string PP_Parameters { get; set; } = string.Empty;
         public string PerformanceTask { get; set; } = string.Empty;
         public string AnswerOptions { get; set; } = string.Empty;
+
     }
 }
