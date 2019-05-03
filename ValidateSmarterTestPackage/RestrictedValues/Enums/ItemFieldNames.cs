@@ -19,6 +19,7 @@
         ItemType,
         Grade,
         Standard,
+		ContentSpecId,
         Claim,
         Target,
         PassageId,
@@ -84,6 +85,8 @@
         ScaledHigh3,
         CutPoint4,
         ScaledLow4,
-        ScaledHigh4
+        ScaledHigh4,
+        HandScored,
+        DoNotScore
     }
 }

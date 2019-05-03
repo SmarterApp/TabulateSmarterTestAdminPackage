@@ -15,7 +15,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestBlueprint
                 .ForEach(x => Processors.Add(new BlueprintElementProcessor(x, packageType)));
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new TestBlueprintPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
