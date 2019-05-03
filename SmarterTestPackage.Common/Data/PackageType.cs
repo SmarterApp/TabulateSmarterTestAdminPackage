@@ -3,6 +3,7 @@
     public enum PackageType
     {
         Administration,
-        Scoring
+        Scoring,
+        Combined
     }
 }

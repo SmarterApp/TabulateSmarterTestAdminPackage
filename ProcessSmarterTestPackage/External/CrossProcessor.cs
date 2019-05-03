@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NLog;
 using ProcessSmarterTestPackage.Processors.Common;
 using SmarterTestPackage.Common.Data;
 
@@ -7,6 +8,8 @@ namespace ProcessSmarterTestPackage.External
 {
     public class CrossProcessor
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public CrossProcessor(IList<ContentPackageItemRow> itemContentPackage,
             IList<ContentPackageStimRow> stimuliContentPackage)
         {
@@ -25,10 +28,10 @@ namespace ProcessSmarterTestPackage.External
 
         public TestPackageCrossProcessor TestPackageCrossProcessor { get; set; } = new TestPackageCrossProcessor();
 
-        public Dictionary<string, List<TestSpecificationProcessor>> TestPackages { get; set; } =
-            new Dictionary<string, List<TestSpecificationProcessor>>();
+        public Dictionary<string, List<Processor>> TestPackages { get; set; } =
+            new Dictionary<string, List<Processor>>();
 
-        public void AddProcessedTestPackage(TestSpecificationProcessor processor)
+        public void AddProcessedTestPackage(Processor processor)
         {
             var uniqueId = processor.GetUniqueId();
             if (TestPackages.ContainsKey(uniqueId))
@@ -37,14 +40,14 @@ namespace ProcessSmarterTestPackage.External
             }
             else
             {
-                TestPackages.Add(uniqueId, new List<TestSpecificationProcessor>
+                TestPackages.Add(uniqueId, new List<Processor>
                 {
                     processor
                 });
             }
         }
 
-        public void AddCrossProcessingErrors(TestSpecificationProcessor processor,
+        public void AddCrossProcessingErrors(Processor processor,
             IEnumerable<CrossPackageValidationError> errors)
         {
             var uniqueId = processor.GetUniqueId();
@@ -66,21 +69,25 @@ namespace ProcessSmarterTestPackage.External
                 }
                 var adminPackage = TestPackages[key].FirstOrDefault(x => x.PackageType == PackageType.Administration);
                 var scoringPackage = TestPackages[key].FirstOrDefault(x => x.PackageType == PackageType.Scoring);
+                var combinedPackage = TestPackages[key].FirstOrDefault(x => x.PackageType == PackageType.Combined);
 
-                if (adminPackage == null && scoringPackage == null)
+                if (adminPackage == null && scoringPackage == null && combinedPackage == null)
                 {
                     continue;
                 }
 
-                if (adminPackage == null)
+                if (adminPackage == null && combinedPackage == null)
                 {
                     result.AddRange(ContentPackageCrossProcessor.CrossValidateContent(scoringPackage, ItemContentPackage,
                         StimuliContentPackage));
                 }
-                else if (scoringPackage == null)
+                else if (scoringPackage == null && combinedPackage == null)
                 {
                     result.AddRange(ContentPackageCrossProcessor.CrossValidateContent(adminPackage, ItemContentPackage,
                         StimuliContentPackage));
+                } else if (combinedPackage != null)
+                {
+                    result.AddRange(ContentPackageCrossProcessor.CrossValidateCombinedContent(combinedPackage, ItemContentPackage));
                 }
                 else
                 {

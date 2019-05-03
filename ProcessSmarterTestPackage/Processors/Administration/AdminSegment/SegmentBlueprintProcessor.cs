@@ -17,7 +17,7 @@ namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
                 .ForEach(x => Processors.Add(new SegmentBlueprintElementProcessor(x, packageType)));
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new SegmentBlueprintPostProcessor(PackageType, this).GenerateErrors().ToList();
         }

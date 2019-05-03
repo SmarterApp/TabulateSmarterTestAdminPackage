@@ -43,5 +43,7 @@
         public string PP_Dimension { get; set; } = string.Empty;
         public string PP_Weight { get; set; } = string.Empty;
         public string PP_Parameters { get; set; } = string.Empty;
+        public string PerformanceTask { get; set; } = string.Empty;
+        public string AnswerOptions { get; set; } = string.Empty;
     }
 }
