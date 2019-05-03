@@ -9,10 +9,11 @@ namespace TabulateSmarterTestPackage.Utilities
     {
         public static IEnumerable<T> Process<T>(Stream stream)
         {
-            var csvReader = new CsvReader(new StreamReader(stream), new CsvConfiguration
+            var csvReader = new CsvReader(new StreamReader(stream), new Configuration
             {
                 HasHeaderRecord = true
             });
+            csvReader.Read();
             csvReader.ReadHeader();
             return csvReader.GetRecords<T>();
         }
