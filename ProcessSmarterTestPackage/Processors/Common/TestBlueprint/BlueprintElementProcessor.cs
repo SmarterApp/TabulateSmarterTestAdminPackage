@@ -39,7 +39,8 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestBlueprint
                     "opitemcount", IntValidator.IsValidNonEmptyWithLengthAndMinValue(4, 1)
                 },
                 {
-                    "ftitemcount", IntValidator.IsValidPositiveNonEmptyWithLength(4)
+                    //"ftitemcount", IntValidator.IsValidPositiveNonEmptyWithLength(4)
+                    "ftitemcount", new NoValidator(ErrorSeverity.Benign)
                 },
                 {
                     "parentid", new NoValidator(ErrorSeverity.Benign)
@@ -71,7 +72,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestBlueprint
             RemoveAttributeValidation("identifier", "label");
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new BlueprintElementPostProcessor(PackageType, this).GenerateErrors().ToList();
         }

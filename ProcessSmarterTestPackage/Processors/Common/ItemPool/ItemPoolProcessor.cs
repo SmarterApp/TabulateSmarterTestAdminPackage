@@ -17,7 +17,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool
             Navigator.GenerateList("testitem").ForEach(x => Processors.Add(new TestItemProcessor(x, packageType)));
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new ItemPoolPostProcessor(PackageType, this).GenerateErrors().ToList();
         }

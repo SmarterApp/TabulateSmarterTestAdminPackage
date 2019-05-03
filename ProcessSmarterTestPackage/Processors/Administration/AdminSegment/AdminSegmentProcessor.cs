@@ -39,7 +39,7 @@ namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
             Navigator.GenerateList("segmentform").ForEach(x => Processors.Add(new SegmentFormProcessor(x, packageType)));
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new AdminSegmentPostProcessor(PackageType, this).GenerateErrors().ToList();
         }

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -38,12 +41,29 @@
   <ItemGroup>
     <Compile Include="AttributeValidationDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\TestPackage.cs">
+      <DependentUpon>TestPackageSchema.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="RestrictedValues\Enums\Algorithm.cs" />
     <Compile Include="RestrictedValues\Enums\BlueprintElementType.cs" />
+    <Compile Include="RestrictedValues\Enums\CombinedBlueprintElementTypes.cs" />
     <Compile Include="RestrictedValues\Enums\ItemFieldNames.cs" />
     <Compile Include="RestrictedValues\Enums\RestrictedListItems.cs" />
     <Compile Include="RestrictedValues\Enums\StimFieldNames.cs" />
     <Compile Include="RestrictedValues\RestrictedList\RestrictedList.cs" />
     <Compile Include="ValidatedAttribute.cs" />
+    <Compile Include="Validators\Combined\AssessmentValidator.cs" />
+    <Compile Include="Validators\Combined\BlueprintValidator.cs" />
+    <Compile Include="Validators\Combined\ItemGroupValidator .cs" />
+    <Compile Include="Validators\Combined\ItemScoreDimensionValidator.cs" />
+    <Compile Include="Validators\Combined\ItemValidator.cs" />
+    <Compile Include="Validators\Combined\ITestPackageValidator.cs" />
+    <Compile Include="Validators\Combined\SegmentBlueprintValidator.cs" />
+    <Compile Include="Validators\Combined\SegmentFormValidator.cs" />
+    <Compile Include="Validators\Combined\SegmentValidator.cs" />
+    <Compile Include="Validators\Combined\StimulusValidator.cs" />
+    <Compile Include="Validators\Combined\TestPackageRootValidator.cs" />
+    <Compile Include="Validators\Combined\ToolsValidator.cs" />
     <Compile Include="Validators\Convenience\BooleanValidator.cs" />
     <Compile Include="Validators\Convenience\DateTimeValidator.cs" />
     <Compile Include="Validators\Convenience\DecimalValidator.cs" />
@@ -72,7 +92,12 @@
       <Name>SmarterTestPackage.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\TestPackageSchema.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

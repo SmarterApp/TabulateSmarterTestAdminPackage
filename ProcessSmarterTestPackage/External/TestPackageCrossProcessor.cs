@@ -10,8 +10,8 @@ namespace ProcessSmarterTestPackage.External
 {
     public class TestPackageCrossProcessor
     {
-        public List<CrossPackageValidationError> CrossValidatePackages(TestSpecificationProcessor primary,
-            TestSpecificationProcessor secondary)
+        public List<CrossPackageValidationError> CrossValidatePackages(Processor primary,
+            Processor secondary)
         {
             var result = new List<CrossPackageValidationError>();
             var administrationItemPool =

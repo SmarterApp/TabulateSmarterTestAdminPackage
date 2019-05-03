@@ -34,7 +34,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.TestForm
                     .ForEach(y => x.Processors.Add(new PassageRefProcessor(y, packageType))));
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new FormPartitionPostProcessor(PackageType, this).GenerateErrors().ToList();
         }

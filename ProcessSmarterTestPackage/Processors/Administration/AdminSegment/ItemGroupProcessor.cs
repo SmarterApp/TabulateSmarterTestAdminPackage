@@ -53,7 +53,7 @@ namespace ProcessSmarterTestPackage.Processors.Administration.AdminSegment
             RemoveAttributeValidation("identifier", "label");
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new ItemGroupPostProcessor(PackageType, this).GenerateErrors().ToList();
         }

@@ -22,7 +22,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
         public IList<Processor> Processors { get; } = new List<Processor>();
         public PackageType PackageType { get; }
 
-        public AttributeValidationDictionary Attributes { get; set; } = new AttributeValidationDictionary();
+        protected AttributeValidationDictionary Attributes { get; set; } = new AttributeValidationDictionary();
 
         public IDictionary<string, ValidatedAttribute> ValidatedAttributes { get; set; } =
             new Dictionary<string, ValidatedAttribute>();
@@ -116,7 +116,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
         {
             return Processors.FirstOrDefault(x => x.Navigator.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
-
+      
         public Processor ChildNodeWithNameAndPropertyValue(string name, string propertyName, string propertyValue)
         {
             return
@@ -132,7 +132,7 @@ namespace ProcessSmarterTestPackage.Processors.Common
             return ValidatedAttributes.ContainsKey(attribute) ? ValidatedAttributes[attribute].Value : string.Empty;
         }
 
-        public virtual List<ValidationError> AdditionalValidations()
+        protected virtual List<ValidationError> AdditionalValidations()
         {
             return new List<ValidationError>();
         }
@@ -179,6 +179,23 @@ namespace ProcessSmarterTestPackage.Processors.Common
                 }
             }
             return result;
+        }
+
+        public string GetUniqueId()
+        {
+            if (PackageType == PackageType.Combined)
+            { 
+                if (Navigator.LocalName.Equals("Item"))
+                {
+                    return Navigator.GetAttribute("id", "");
+                }
+                return Navigator.SelectSingleNode("//Test")?.GetAttribute("id", string.Empty);
+            }
+            else
+            {
+                return ChildNodeWithName("identifier").ValueForAttribute("uniqueid");
+
+            }
         }
     }
 }

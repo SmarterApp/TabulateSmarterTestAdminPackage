@@ -52,7 +52,7 @@ namespace ProcessSmarterTestPackage.Processors.Common.ItemPool.TestItem
                 .ForEach(x => Processors.Add(new ItemScoredDimensionProcessor(x, packageType)));
         }
 
-        public override List<ValidationError> AdditionalValidations()
+        protected override List<ValidationError> AdditionalValidations()
         {
             return new TestItemPostProcessor(PackageType, this).GenerateErrors().ToList();
         }
