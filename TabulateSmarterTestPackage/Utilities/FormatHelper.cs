@@ -5,13 +5,13 @@ namespace TabulateSmarterTestPackage.Utilities
 {
     public static class FormatHelper
     {
-        public static string StripItemBankPrefix(string val)
+        public static string Strip200(string val)
         {
             if (string.IsNullOrEmpty(val))
             {
                 return string.Empty;
             }
-            return val.StartsWith("200-", StringComparison.Ordinal) || val.StartsWith("187-", StringComparison.Ordinal) ? val.Substring(4) : val;
+            return val.StartsWith("200-", StringComparison.Ordinal) ? val.Substring(4) : val;
         }
 
         public static string FormatDouble(string val)

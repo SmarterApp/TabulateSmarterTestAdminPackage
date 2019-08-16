@@ -9,7 +9,6 @@ using ProcessSmarterTestPackage.Processors.Combined;
 using SmarterTestPackage.Common.Data;
 using TabulateSmarterTestPackage.Utilities;
 using ValidateSmarterTestPackage.RestrictedValues.Enums;
-using TabulateSmarterTestPackage.Models;
 
 namespace TabulateSmarterTestPackage.Tabulators
 {
@@ -108,6 +107,15 @@ namespace TabulateSmarterTestPackage.Tabulators
                                     GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup, segment, testPackage.publisher, testPackage.academicYear);
                                 }
                         }
+                    }
+                    else
+                    {
+                        var itemGroups = (segment.Item as TestSegmentPool)?.ItemGroup;
+                        if (itemGroups != null)
+                            foreach (var itemGroup in itemGroups)
+                            {
+                                GetAssesmentItemList(test, itemGroup.Item.ToList(), commonTestPackageItems, testInformation, resultList, itemGroup, segment, testPackage.publisher, testPackage.academicYear);
+                            }
                     }
 
                 }
@@ -256,12 +264,12 @@ namespace TabulateSmarterTestPackage.Tabulators
 
             foreach (var item in testItems)
             {
-                var poolProperties = GetPoolProperties(item, testInformation);
-                var grade = poolProperties.ContainsKey((int)ItemFieldNames.Grade) ? poolProperties[(int)ItemFieldNames.Grade] : String.Empty;
-                var ids = GetStandardIDs(item, testInformation[ItemFieldNames.AssessmentSubject], grade);
+                var ids = GetStandardIDs(item, testInformation[ItemFieldNames.AssessmentSubject]);
                 var langs = GetLanguages(item);
+                var poolProperties = GetPoolProperties(item, testInformation);
                 var bpRefs = GetBpRefs(item, publisher, academicYear);
                 var itemScoreParams = GetItemScoreParameters(item, testInformation);
+                var formPosition = GetItemPosition(segment, itemGroup, item.id);
                 var itemPosition = GetItemPosition(segment, itemGroup, item.id);
                 var crossTabs = GetCrossTabulationItems(item);
                 var passageId = string.Empty;
@@ -280,9 +288,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.Filename,  $"item-{testInformation[ItemFieldNames.BankKey]}-{item.id}.xml"}, // item-200-21818.xml"
                     { (int)ItemFieldNames.ItemType, item.type },
                     { (int)ItemFieldNames.AssessmentSubtype, subType },
-					{ (int)ItemFieldNames.Standard, ids["Standard"]},
-					{ (int)ItemFieldNames.ContentSpecId, ids["ContentSpecId"]},
-					{ (int)ItemFieldNames.Claim, ids["Claim"]},
+                    { (int)ItemFieldNames.Standard, ids["Standard"]},
+                    { (int)ItemFieldNames.Claim, ids["Claim"]},
                     { (int)ItemFieldNames.Target, ids["Target"]},
                     { (int)ItemFieldNames.PassageId,passageId },
                     { (int)ItemFieldNames.ASL, poolProperties.ContainsKey((int)ItemFieldNames.ASL) ? poolProperties[(int)ItemFieldNames.ASL] : String.Empty },
@@ -301,10 +308,11 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.IsActive, item.active ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.ResponseRequired, item.responseRequired ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.AdminRequired, item.administrationRequired ? "TRUE" : "FALSE"  },
+                    { (int)ItemFieldNames.FormPosition, formPosition.ToString() },
                     { (int)ItemFieldNames.ItemPosition, itemPosition.ToString() },
-                    { (int)ItemFieldNames.MeasurementModel, item.ItemScoreDimensions[0].measurementModel },
-                    { (int)ItemFieldNames.Weight, item.ItemScoreDimensions[0].weight.ToString(CultureInfo.InvariantCulture) },
-                    { (int)ItemFieldNames.ScorePoints, item.ItemScoreDimensions[0].scorePoints.ToString() },
+                    { (int)ItemFieldNames.MeasurementModel_1, item.ItemScoreDimensions[0].measurementModel },
+                    { (int)ItemFieldNames.Weight_1, item.ItemScoreDimensions[0].weight.ToString(CultureInfo.InvariantCulture) },
+                    { (int)ItemFieldNames.ScorePoints_1, item.ItemScoreDimensions[0].scorePoints.ToString() },
                     { (int)ItemFieldNames.a, itemScoreParams[(int)ItemFieldNames.a] },
                     { (int)ItemFieldNames.b0_b, itemScoreParams[(int)ItemFieldNames.b0_b] },
                     { (int)ItemFieldNames.b1_c, itemScoreParams[(int)ItemFieldNames.b1_c] },
@@ -511,11 +519,9 @@ namespace TabulateSmarterTestPackage.Tabulators
             return bpRefs;
         }
 
-        private Dictionary<string, string> GetStandardIDs(ItemGroupItem item, String subject, String grade)
+        private Dictionary<string, string> GetStandardIDs(ItemGroupItem item, String subject)
         {
             var ids = new Dictionary<string, string>();
-            var contentSpecId = new SmarterApp.ContentSpecId();
-            
             foreach (var bpRef in item.BlueprintReferences)
             {
                 if (subject.Equals("ELA", StringComparison.OrdinalIgnoreCase))
@@ -526,10 +532,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                         if (parts.Length <= 2)
                         {
                             ids["Standard"] = $"SBAC-ELA-v1:{bpRef.idRef}";
-                            ids["ContentSpecId"] = ConvertToEnhanced(ids["Standard"], grade);
                             ids["Claim"] = parts[0];
                             ids["Target"] = parts[1] + "\t";
                         }
+                        
                     }
                 } else if (subject.Equals("MATH", StringComparison.OrdinalIgnoreCase))
                 {
@@ -537,37 +543,21 @@ namespace TabulateSmarterTestPackage.Tabulators
                     if (parts.Length == 4)
                     {
                         ids["Standard"] = $"SBAC-MA-v6:{bpRef.idRef}";
-                        ids["ContentSpecId"] = ConvertToEnhanced(ids["Standard"], grade);
                         ids["Claim"] = parts[0];
                         ids["Target"] = parts[parts.Length-1] + "\t";
                     }
                 }
+
             }
 
             if (ids.Count == 0)
             {
                 ids.Add("Standard", String.Empty);
                 ids.Add("Claim", String.Empty);
-                ids.Add("ContentSpecId", String.Empty);
                 ids.Add("Target", String.Empty);
             }
 
             return ids;
-        }
-
-        private string ConvertToEnhanced(string standard, string grade)
-        {
-            if (!string.IsNullOrEmpty(standard))
-            {
-                SmarterApp.ContentSpecGrade defaultGrade = SmarterApp.ContentSpecId.ParseGrade(grade);
-                SmarterApp.ContentSpecId csid = SmarterApp.ContentSpecId.TryParse(standard, defaultGrade);
-                if (csid.ParseErrorSeverity != SmarterApp.ErrorSeverity.Invalid)
-                {
-                    return csid.ToString(SmarterApp.ContentSpecIdFormat.Enhanced);
-                }
-            }
-
-            return string.Empty;
         }
     }
 }

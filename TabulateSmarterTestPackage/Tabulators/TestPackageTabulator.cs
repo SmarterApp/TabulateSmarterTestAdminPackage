@@ -81,6 +81,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                     {
                         ExpectedPackageType = PackageType.Scoring;
                     }
+                    else
+                    {
+                        throw new ArgumentException("UnrecognizedPackageType");
+                    }
                 }
                 else
                 {

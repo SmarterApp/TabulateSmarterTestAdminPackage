@@ -56,7 +56,15 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                             {
                                 foreach (var itemGroup in segmentForm.ItemGroup)
                                 {
-                                    items.AddRange(itemGroup.Item.ToList());
+                                    // Add unique items. There are cases where item groups may contain the same items (see SUMMATIVE-ELA-PT-G11-2018-19, item 61253)
+                                    foreach (ItemGroupItem currentItem in itemGroup.Item)
+                                    {
+                                        if (!items.Select(i => i.id == currentItem.id).Any())
+                                        {
+                                            items.Add(currentItem);
+                                        }
+                                    }
+                                    //items.AddRange(itemGroup.Item.ToList());
                                 }
                             }
                         }
@@ -66,7 +74,15 @@ namespace ProcessSmarterTestPackage.Processors.Combined
                             if (itemGroups != null)
                                 foreach (var itemGroup in itemGroups)
                                 {
-                                    items.AddRange(itemGroup.Item.ToList());
+                                    // Add unique items. There are cases where item groups may contain the same items (see SUMMATIVE-ELA-PT-G11-2018-19, item 61253)
+                                    foreach (ItemGroupItem currentItem in itemGroup.Item)
+                                    {
+                                        if (!items.Select(i => i.id == currentItem.id).Any())
+                                        {
+                                            items.Add(currentItem);
+                                        }
+                                    }
+                                    //items.AddRange(itemGroup.Item.ToList());
                                 }
                         }
                     }

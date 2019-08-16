@@ -19,7 +19,6 @@
         ItemType,
         Grade,
         Standard,
-		ContentSpecId,
         Claim,
         Target,
         PassageId,
@@ -51,7 +50,7 @@
         b3,
         avg_b,
         MeasurementModel_d2,
-        Weight_d2,      
+        Weight_d2,
         dimension_d2,
         ScorePoints_d2,
         a_d2,
@@ -72,10 +71,7 @@
         SecondaryClaimContentTarget,
         AnswerKey,
         NumberOfAnswerOptions,
-
-        //PerformanceTask,
         PtWritingType,
-
         CutPoint1,
         ScaledLow1,
         ScaledHigh1,

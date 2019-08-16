@@ -48,6 +48,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Resources\IrpContentPackage_ItemReport.csv" />
     <None Include="Resources\IrpContentPackage_StimulusReport.csv" />
   </ItemGroup>
