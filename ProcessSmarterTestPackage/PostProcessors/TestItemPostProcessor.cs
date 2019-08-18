@@ -27,24 +27,6 @@ namespace ProcessSmarterTestPackage.PostProcessors
                 });
             }
 
-            // If there is a duplicate pool property, where pool property uniqueness is defined as unique property and value, record an error
-            Processor.ChildNodesWithName("poolproperty")
-                .GroupBy(x => $"{x.ValueForAttribute("property")}|{x.ValueForAttribute("value")}")
-                .Where(x => x.Count() > 1)
-                .ToList()
-                .ForEach(x => validationErrors.Add(new ValidationError
-                {
-                    ErrorSeverity = ErrorSeverity.Severe,
-                    Location = "testitem/poolproperty",
-                    GeneratedMessage = "[Duplicate poolproperty values exist for property: " +
-                                       $"{x.Key.Split('|').FirstOrDefault() ?? string.Empty} " +
-                                       $"with value: {x.Key.Split('|').LastOrDefault() ?? string.Empty}]",
-                    ItemId = Processor.ChildNodeWithName("identifier").ValueForAttribute("uniqueid").Split('-').Last(),
-                    Key = "poolproperty",
-                    PackageType = PackageType,
-                    Value = Processor.Navigator.OuterXml
-                }));
-
             return validationErrors;
         }
     }

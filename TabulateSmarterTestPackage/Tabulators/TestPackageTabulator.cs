@@ -81,6 +81,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                     {
                         ExpectedPackageType = PackageType.Scoring;
                     }
+                    else
+                    {
+                        throw new ArgumentException("UnrecognizedPackageType");
+                    }
                 }
                 else
                 {
@@ -127,6 +131,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                         (CombinedTestProcessor)testSpecificationProcessor,
                         testInformation);
                     combinedItems.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
+                    var combinedItemsRDW = PrepareFieldsForRDW(combinedItems);
+                    combinedItemsRDW.ToList().ForEach(x => ReportingUtility.GetItemWriterRDW().Write(x.ToArray()));
 
                     var stimuliNodes = testSpecificationProcessor.Navigator.Select("//Stimulus");
                     if (stimuliNodes.Count > 0)
@@ -145,6 +151,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     var items = itemTabulator.ProcessResult(testSpecificationProcessor.Navigator, testSpecificationProcessor,
                         testInformation);
                     items.ToList().ForEach(x => ReportingUtility.GetItemWriter().Write(x.ToArray()));
+                    var itemsRDW = PrepareFieldsForRDW(items);
+                    itemsRDW.ToList().ForEach(x => ReportingUtility.GetItemWriterRDW().Write(x.ToArray()));
 
                     var assessmentRoot = testSpecificationProcessor.ChildNodeWithName("administration") ??
                                          testSpecificationProcessor.ChildNodeWithName("scoring");
@@ -187,6 +195,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                 .Write(new[]
                     {"AssessmentId", "PackageType", "ErrorSeverity", "Location", "UniqueId", "Value", "Message"});
             ReportingUtility.GetStimuliWriter().Write(Enum.GetNames(typeof(StimFieldNames)));
+
             var itemHeaders = new List<string>();
             itemHeaders.AddRange(Enum.GetNames(typeof(ItemFieldNames)).ToList());
             for (var i = 0; i < performancelevels; i++)
@@ -194,6 +203,15 @@ namespace TabulateSmarterTestPackage.Tabulators
                 itemHeaders.AddRange(new List<string> {"PerformanceLevel", "ScaledLow", "ScaledHigh"});
             }
             ReportingUtility.GetItemWriter().Write(itemHeaders.ToArray());
+
+            // Specific RDW headers
+            var itemHeadersRDW = new List<string>();
+            itemHeadersRDW.AddRange(Enum.GetNames(typeof(ItemFieldNamesRDW)).ToList());
+            for (var i = 0; i < performancelevels; i++)
+            {
+                itemHeadersRDW.AddRange(new List<string> { "PerformanceLevel", "ScaledLow", "ScaledHigh" });
+            }
+            ReportingUtility.GetItemWriterRDW().Write(itemHeadersRDW.ToArray());
         }
 
         ~TestPackageTabulator()
@@ -208,6 +226,38 @@ namespace TabulateSmarterTestPackage.Tabulators
             {
                 GC.SuppressFinalize(this);
             }
+        }
+
+        private IEnumerable<IEnumerable<string>> PrepareFieldsForRDW(IEnumerable<IEnumerable<string>> itemsFullList)
+        {
+            var rdwList = new List<List<string>>();
+            
+
+            foreach(var item in itemsFullList)
+            {
+                int fieldCounter = 0;
+                var rdwFieldList = new List<string>();
+                foreach(var field in item)
+                {
+                    if (fieldCounter != 35 && fieldCounter != 39 && fieldCounter != 47 &&
+                        fieldCounter != 48 && fieldCounter != 49 && fieldCounter != 50 && 
+                        fieldCounter != 51 && fieldCounter != 52 && fieldCounter != 53 &&
+                        fieldCounter != 54 && fieldCounter != 55 && fieldCounter != 82 && 
+                        fieldCounter != 83)
+                    {
+                        rdwFieldList.Add(field);
+                    }
+                    if (fieldCounter == 68)
+                    {
+                        rdwFieldList.Add("");
+                        //fieldCounter++;
+                    }
+                    fieldCounter++;
+                }
+                rdwList.Add(rdwFieldList);
+            }
+
+            return rdwList;
         }
     }
 }

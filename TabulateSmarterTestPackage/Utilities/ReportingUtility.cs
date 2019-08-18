@@ -10,6 +10,7 @@ namespace TabulateSmarterTestPackage.Utilities
     {
         internal static CsvWriter ErrorWriter;
         internal static CsvWriter ItemWriter;
+        internal static CsvWriter ItemWriterRDW;
         internal static CsvWriter StimuliWriter;
 
         static ReportingUtility()
@@ -19,6 +20,7 @@ namespace TabulateSmarterTestPackage.Utilities
 
         public static string ErrorFileName { get; set; }
         public static string ItemFileName { get; set; }
+        public static string ItemFileNameRDW { get; set; }
         public static string StimuliFileName { get; set; }
         public static ErrorHandling ErrorHandling { get; set; }
         public static string TestName { get; set; }
@@ -29,6 +31,11 @@ namespace TabulateSmarterTestPackage.Utilities
         public static CsvWriter GetItemWriter()
         {
             return ItemWriter ?? (ItemWriter = new CsvWriter(ItemFileName, false));
+        }
+
+        public static CsvWriter GetItemWriterRDW()
+        {
+            return ItemWriterRDW ?? (ItemWriterRDW = new CsvWriter(ItemFileNameRDW, false));
         }
 
         public static CsvWriter GetStimuliWriter()
@@ -45,6 +52,7 @@ namespace TabulateSmarterTestPackage.Utilities
         {
             ErrorFileName = fileName + ".errors.csv";
             ItemFileName = fileName + ".items.csv";
+            ItemFileNameRDW = fileName + ".items-RDW.csv";
             StimuliFileName = fileName + ".stims.csv";
         }
 
@@ -86,6 +94,7 @@ namespace TabulateSmarterTestPackage.Utilities
             if (ItemWriter != null)
             {
                 ItemWriter.Dispose();
+                ItemWriterRDW.Dispose();
                 ItemWriter = null;
             }
             if (StimuliWriter != null)

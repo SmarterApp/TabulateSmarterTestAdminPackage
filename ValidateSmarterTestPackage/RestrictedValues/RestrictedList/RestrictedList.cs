@@ -54,7 +54,6 @@ namespace ValidateSmarterTestPackage.RestrictedValues.RestrictedList
                     {
                         "ELA",
                         "MATH",
-                        "Mathematics",
                         "Student Help"
                     }
                 },
