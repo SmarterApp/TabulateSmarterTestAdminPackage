@@ -117,7 +117,6 @@ namespace ProcessSmarterTestPackage.External
                 }
 
                 // validate MaxPoints IsValidPositiveNonEmptyWithLength(10)
-                Console.WriteLine(contentItem.ItemId);
                 if (contentItem.MaxPoints.Length > 0)
                 {
                     myProcessor.ValidatedAttributes.Add("MaxPoints", GenerateFromValidationCollection("MaxPoints",

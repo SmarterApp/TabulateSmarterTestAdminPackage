@@ -291,7 +291,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.Standard, ids["Standard"]},
                     { (int)ItemFieldNames.Claim, ids["Claim"]},
                     { (int)ItemFieldNames.Target, ids["Target"]},
-                    { (int)ItemFieldNames.PassageId,passageId },
+                    { (int)ItemFieldNames.PassageId, passageId },
                     { (int)ItemFieldNames.ASL, poolProperties.ContainsKey((int)ItemFieldNames.ASL) ? poolProperties[(int)ItemFieldNames.ASL] : String.Empty },
                     { (int)ItemFieldNames.Braille, poolProperties.ContainsKey((int)ItemFieldNames.Braille) ? poolProperties[(int)ItemFieldNames.Braille] : String.Empty },
                     { (int)ItemFieldNames.LanguageBraille, langs[(int)ItemFieldNames.LanguageBraille] },
@@ -310,32 +310,41 @@ namespace TabulateSmarterTestPackage.Tabulators
                     { (int)ItemFieldNames.AdminRequired, item.administrationRequired ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.FormPosition, formPosition.ToString() },
                     { (int)ItemFieldNames.ItemPosition, itemPosition.ToString() },
-                    { (int)ItemFieldNames.MeasurementModel_1, item.ItemScoreDimensions[0].measurementModel },
-                    { (int)ItemFieldNames.Weight_1, item.ItemScoreDimensions[0].weight.ToString(CultureInfo.InvariantCulture) },
-                    { (int)ItemFieldNames.ScorePoints_1, item.ItemScoreDimensions[0].scorePoints.ToString() },
+                    { (int)ItemFieldNames.MeasurementModel_1, itemScoreParams[(int)ItemFieldNames.MeasurementModel_1] },
+                    { (int)ItemFieldNames.Weight_1, itemScoreParams[(int)ItemFieldNames.Weight_1] },
+                    { (int)ItemFieldNames.dimension_1, itemScoreParams[(int)ItemFieldNames.dimension_1] },
+                    { (int)ItemFieldNames.ScorePoints_1, itemScoreParams[(int)ItemFieldNames.ScorePoints_1] },
                     { (int)ItemFieldNames.a, itemScoreParams[(int)ItemFieldNames.a] },
                     { (int)ItemFieldNames.b0_b, itemScoreParams[(int)ItemFieldNames.b0_b] },
                     { (int)ItemFieldNames.b1_c, itemScoreParams[(int)ItemFieldNames.b1_c] },
                     { (int)ItemFieldNames.b2, itemScoreParams[(int)ItemFieldNames.b2] },
                     { (int)ItemFieldNames.b3, itemScoreParams[(int)ItemFieldNames.b3] },
                     { (int)ItemFieldNames.avg_b, itemScoreParams[(int)ItemFieldNames.avg_b] },
+                    { (int)ItemFieldNames.MeasurementModel_d2, itemScoreParams[(int)ItemFieldNames.MeasurementModel_d2] },
+                    { (int)ItemFieldNames.Weight_d2, itemScoreParams[(int)ItemFieldNames.Weight_d2] },
+                    { (int)ItemFieldNames.dimension_d2, itemScoreParams[(int)ItemFieldNames.dimension_d2] },
+                    { (int)ItemFieldNames.ScorePoints_d2, itemScoreParams[(int)ItemFieldNames.ScorePoints_d2] },
+                    { (int)ItemFieldNames.a_d2, itemScoreParams[(int)ItemFieldNames.a_d2] },
+                    { (int)ItemFieldNames.b0_d2, itemScoreParams[(int)ItemFieldNames.b0_d2] },
+                    { (int)ItemFieldNames.b1_d2, itemScoreParams[(int)ItemFieldNames.b1_d2] },
+                    { (int)ItemFieldNames.b2_d2, itemScoreParams[(int)ItemFieldNames.b2_d2] },
+                    { (int)ItemFieldNames.b3_d2, itemScoreParams[(int)ItemFieldNames.b3_d2] },
                     { (int)ItemFieldNames.CommonCore, crossTabs.ContainsKey((int)ItemFieldNames.CommonCore) ? crossTabs[(int)ItemFieldNames.CommonCore] : String.Empty },
                     { (int)ItemFieldNames.ClaimContentTarget, crossTabs.ContainsKey((int)ItemFieldNames.ClaimContentTarget) ? crossTabs[(int)ItemFieldNames.ClaimContentTarget] : String.Empty },
                     { (int)ItemFieldNames.SecondaryCommonCore, crossTabs.ContainsKey((int)ItemFieldNames.SecondaryCommonCore) ? crossTabs[(int)ItemFieldNames.SecondaryCommonCore] : String.Empty },
                     { (int)ItemFieldNames.SecondaryClaimContentTarget, crossTabs.ContainsKey((int)ItemFieldNames.SecondaryClaimContentTarget) ? crossTabs[(int)ItemFieldNames.SecondaryClaimContentTarget] : String.Empty },
                     { (int)ItemFieldNames.AnswerKey, crossTabs.ContainsKey((int)ItemFieldNames.AnswerKey) ? crossTabs[(int)ItemFieldNames.AnswerKey] : String.Empty },
                     { (int)ItemFieldNames.NumberOfAnswerOptions, crossTabs.ContainsKey((int)ItemFieldNames.NumberOfAnswerOptions) ? crossTabs[(int)ItemFieldNames.NumberOfAnswerOptions] : String.Empty },
+                    { (int)ItemFieldNames.PtWritingType, crossTabs.ContainsKey((int)ItemFieldNames.PtWritingType) ? crossTabs[(int)ItemFieldNames.PtWritingType] : String.Empty },
                     { (int)ItemFieldNames.HandScored, item.handScored ? "TRUE" : "FALSE"  },
                     { (int)ItemFieldNames.DoNotScore, item.doNotScore ? "TRUE" : "FALSE"  }
-
                 };
-                
                 foreach (var bpRef in bpRefs)
                 {
                     newList.Add(bpRef.Key, bpRef.Value);
                 }
-                
-                resultList.Add(newList.Values.ToList());
+
+                resultList.Add(newList.Values.ToList());                
             }           
         }
 
@@ -370,31 +379,124 @@ namespace TabulateSmarterTestPackage.Tabulators
             var scoreParams = new SortedDictionary<int, string>();
             if (item.ItemScoreDimensions != null && !item.ItemScoreDimensions[0].measurementModel.Equals("RAWSCORE"))
             {
-                foreach (var isp in item.ItemScoreDimensions[0].ItemScoreParameter)
+                if (item.type.Equals("WER"))
                 {
-                    if (isp.measurementParameter.Equals("a", StringComparison.Ordinal))
-                    {
-                        scoreParams.Add((int)ItemFieldNames.a, isp.value.ToString());
+                    foreach (var isp in item.ItemScoreDimensions)
+                    {                        
+                        if (isp.dimension.Equals("C"))
+                        {
+                            scoreParams[(int)ItemFieldNames.MeasurementModel_1] = isp.measurementModel.ToString();
+                            scoreParams[(int)ItemFieldNames.Weight_1] = FormatHelper.FormatDouble(isp.weight.ToString());
+                            scoreParams[(int)ItemFieldNames.ScorePoints_1] = isp.scorePoints.ToString();
+                            scoreParams[(int)ItemFieldNames.dimension_1] = "C";
+
+                            foreach (var currentItemScoreParameter in isp.ItemScoreParameter)
+                            {
+                                if (currentItemScoreParameter.measurementParameter.Equals("a"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.a] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString()); // measureparameter = "a"
+                                }
+                                if (currentItemScoreParameter.measurementParameter.Equals("b") ||
+                                    currentItemScoreParameter.measurementParameter.Equals("b0"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.b0_b] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString());
+                                }
+                                if (currentItemScoreParameter.measurementParameter.Equals("b1") ||
+                                    currentItemScoreParameter.measurementParameter.Equals("c"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.b1_c] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString());
+                                }
+                                if (currentItemScoreParameter.measurementParameter.Equals("b2"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.b2] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString());
+                                }
+                                if (currentItemScoreParameter.measurementParameter.Equals("b3"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.b3] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString());
+                                }
+                            }
+                        }
+                        if (isp.dimension.Equals("D"))
+                        {
+                            scoreParams[(int)ItemFieldNames.MeasurementModel_d2] = isp.measurementModel.ToString();
+                            scoreParams[(int)ItemFieldNames.Weight_d2] = FormatHelper.FormatDouble(isp.weight.ToString());
+                            scoreParams[(int)ItemFieldNames.ScorePoints_d2] = isp.scorePoints.ToString();
+                            scoreParams[(int)ItemFieldNames.dimension_d2] = "D";
+
+                            foreach (var currentItemScoreParameter in isp.ItemScoreParameter)
+                            {
+                                if (currentItemScoreParameter.measurementParameter.Equals("a"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.a_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString()); // measureparameter = "a"
+                                }
+                                if (currentItemScoreParameter.measurementParameter.Equals("b") ||
+                                    currentItemScoreParameter.measurementParameter.Equals("b0"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.b0_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString());
+                                }
+                                if (currentItemScoreParameter.measurementParameter.Equals("b1") ||
+                                    currentItemScoreParameter.measurementParameter.Equals("c"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.b1_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString());
+                                }
+                                if (currentItemScoreParameter.measurementParameter.Equals("b2"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.b2_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString());
+                                }
+                                if (currentItemScoreParameter.measurementParameter.Equals("b3"))
+                                {
+                                    scoreParams[(int)ItemFieldNames.b3_d2] = FormatHelper.FormatDouble(currentItemScoreParameter.value.ToString());
+                                }
+                            }
+                        }
                     }
-                    else if (isp.measurementParameter.Equals("b0", StringComparison.Ordinal) || isp.measurementParameter.Equals("b", StringComparison.Ordinal))
+                }
+                else { 
+                    foreach(var isd in item.ItemScoreDimensions)
                     {
-                        scoreParams.Add((int)ItemFieldNames.b0_b, isp.value.ToString());
-                    }
-                    else if (isp.measurementParameter.Equals("b1", StringComparison.Ordinal) || isp.measurementParameter.Equals("c", StringComparison.Ordinal))
-                    {
-                        scoreParams.Add((int)ItemFieldNames.b1_c, isp.value.ToString());
-                    }
-                    else if (isp.measurementParameter.Equals("b2", StringComparison.Ordinal))
-                    {
-                        scoreParams.Add((int)ItemFieldNames.b2, isp.value.ToString());
-                    }
-                    else if (isp.measurementParameter.Equals("b3", StringComparison.Ordinal))
-                    {
-                        scoreParams.Add((int)ItemFieldNames.b3, isp.value.ToString());
-                    }
+                        scoreParams[(int)ItemFieldNames.MeasurementModel_1] = isd.measurementModel.ToString();
+                        scoreParams[(int)ItemFieldNames.Weight_1] = FormatHelper.FormatDouble(isd.weight.ToString());
+                        scoreParams[(int)ItemFieldNames.ScorePoints_1] = isd.scorePoints.ToString();
+
+                        foreach (var isp in isd.ItemScoreParameter)
+                        {                            
+                            if (isp.measurementParameter.Equals("a", StringComparison.Ordinal))
+                            {
+                                scoreParams[(int)ItemFieldNames.a] = isp.value.ToString();
+                            }
+                            else if (isp.measurementParameter.Equals("b0", StringComparison.Ordinal) || isp.measurementParameter.Equals("b", StringComparison.Ordinal))
+                            {
+                                scoreParams[(int)ItemFieldNames.b0_b] = isp.value.ToString();
+                            }
+                            else if (isp.measurementParameter.Equals("b1", StringComparison.Ordinal) || isp.measurementParameter.Equals("c", StringComparison.Ordinal))
+                            {
+                                scoreParams[(int)ItemFieldNames.b1_c] = isp.value.ToString();
+                            }
+                            else if (isp.measurementParameter.Equals("b2", StringComparison.Ordinal))
+                            {
+                                scoreParams[(int)ItemFieldNames.b2] = isp.value.ToString();
+                            }
+                            else if (isp.measurementParameter.Equals("b3", StringComparison.Ordinal))
+                            {
+                                scoreParams[(int)ItemFieldNames.b3] = isp.value.ToString();
+                            }
+                        }                        
+                    }                    
                 }
             }
 
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.MeasurementModel_1))
+            {
+                scoreParams.Add((int)ItemFieldNames.MeasurementModel_1, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.Weight_1))
+            {
+                scoreParams.Add((int)ItemFieldNames.Weight_1, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.ScorePoints_1))
+            {
+                scoreParams.Add((int)ItemFieldNames.ScorePoints_1, String.Empty);
+            }
             if (!scoreParams.ContainsKey((int)ItemFieldNames.a))
             {
                 scoreParams.Add((int)ItemFieldNames.a, String.Empty);
@@ -414,6 +516,46 @@ namespace TabulateSmarterTestPackage.Tabulators
             if (!scoreParams.ContainsKey((int)ItemFieldNames.b3))
             {
                 scoreParams.Add((int)ItemFieldNames.b3, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.dimension_1))
+            {
+                scoreParams.Add((int)ItemFieldNames.dimension_1, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.MeasurementModel_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.MeasurementModel_d2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.Weight_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.Weight_d2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.dimension_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.dimension_d2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.ScorePoints_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.ScorePoints_d2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.a_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.a_d2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.b0_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.b0_d2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.b1_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.b1_d2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.b2_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.b2_d2, String.Empty);
+            }
+            if (!scoreParams.ContainsKey((int)ItemFieldNames.b3_d2))
+            {
+                scoreParams.Add((int)ItemFieldNames.b3_d2, String.Empty);
             }
 
             if (item.ItemScoreDimensions != null && !item.ItemScoreDimensions[0].measurementModel.Equals("RAWSCORE"))

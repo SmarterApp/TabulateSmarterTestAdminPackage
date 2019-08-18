@@ -26,7 +26,7 @@ namespace ProcessSmarterTestPackage.Processors.Combined
         {
             XmlDocument validateDocument = new XmlDocument();
             validateDocument.LoadXml(Navigator.OuterXml);
-            validateDocument.Schemas.Add(null, "Resources/TestPackageSchema.xsd");
+            validateDocument.Schemas.Add(null, "http://www.smarterapp.org/documents/EnhancedTestPackage_Schema.xsd");
             ValidationEventHandler validation = SchemaValidationHandler;
             validateDocument.Validate(validation);
             Logger.Info("New format xml file loaded and validated against XML schema");
