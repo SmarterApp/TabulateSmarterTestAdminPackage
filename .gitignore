@@ -23,6 +23,7 @@ build/
 [Bb]uild[Ll]og.*
 
 # Conversion backups
+MigrationBackup/
 *.csproj.old
 
 *_i.c
@@ -159,13 +160,5 @@ $RECYCLE.BIN/
 ._.DS_Store
 TabulateSmarterTestPackage/._.DS_Store
 
-# VS 2017 files
-/.vs/ProjectSettings.json
-/.vs/config/applicationhost.config
-/.vs/slnx.sqlite
-/.vs/TabulateSmarterTestPackage/v15/Server/sqlite3/db.lock
-/.vs/TabulateSmarterTestPackage/v15/Server/sqlite3/storage.ide
-/.vs/TabulateSmarterTestPackage/v15/Server/sqlite3/storage.ide-shm
-/.vs/TabulateSmarterTestPackage/v15/Server/sqlite3/storage.ide-wal
-
-# Other
+# Temp VS folder
+/.vs/
