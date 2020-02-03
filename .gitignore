@@ -22,6 +22,9 @@ build/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+# Conversion backups
+*.csproj.old
+
 *_i.c
 *_p.c
 *.ilk

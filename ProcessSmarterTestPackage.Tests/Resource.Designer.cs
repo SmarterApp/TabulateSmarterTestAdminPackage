@@ -19,7 +19,7 @@ namespace ProcessSmarterTestAdminPackage.Tests {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resource {
@@ -80,13 +80,16 @@ namespace ProcessSmarterTestAdminPackage.Tests {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;testspecification purpose=&quot;administration&quot; publisher=&quot;SBAC_PT&quot; publishdate=&quot;Aug 19 2015  4:37PM&quot; version=&quot;1.0&quot;&gt;
-        ///  &lt;identifier uniqueid=&quot;(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016&quot; name=&quot;SBAC-IRP-ELA-3-COMBINED&quot; label=&quot;Grade 3 ELA&quot; version=&quot;8175&quot; /&gt;
+        ///
+        ///&lt;testspecification purpose=&quot;administration&quot; publisher=&quot;SBAC_PT&quot; publishdate=&quot;12&quot; version=&quot;1.0&quot;&gt;
+        ///  &lt;identifier uniqueid=&quot;(SBAC_PT)SBAC-IRP-ELA-3-COMBINED-Summer-2015-2016&quot; name=&quot;SBAC-IRP-ELA-3-COMBINED&quot;
+        ///              version=&quot;8175&quot; /&gt;
         ///  &lt;property name=&quot;subject&quot; value=&quot;ELA&quot; label=&quot;ELA&quot; /&gt;
-        ///  &lt;property name=&quot;grade&quot; value=&quot;3&quot; label=&quot;grade 3&quot; /&gt;
+        ///  &lt;property name=&quot;grade&quot; value=&quot;-2&quot; label=&quot;grade 3&quot; /&gt;
         ///  &lt;property name=&quot;type&quot; value=&quot;summative&quot; label=&quot;summative&quot; /&gt;
         ///  &lt;administration&gt;
-        ///    &lt;testblueprint&gt; [rest of string was truncated]&quot;;.
+        ///    &lt;testblueprint&gt;
+        ///      &lt;bpelement  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string _SBAC_PT_SBAC_IRP_ELA_3_COMBINED_Summer_2015_2016 {
             get {
