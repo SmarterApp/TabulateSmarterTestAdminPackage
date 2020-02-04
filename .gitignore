@@ -162,3 +162,6 @@ TabulateSmarterTestPackage/._.DS_Store
 
 # Temp VS folder
 /.vs/
+
+# Rider IDE
+.idea/

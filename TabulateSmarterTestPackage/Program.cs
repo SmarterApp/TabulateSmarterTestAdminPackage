@@ -28,7 +28,8 @@ namespace TabulateSmarterTestPackage
             other package types.
 
             Command-line parameters:
-                -i <input filename>
+
+            -i <input filename>
             Specifies an input filename which should be the name of a test
             administration or test reporting package. The Filename may include
             wildcards in which case all matching files will be processed. If the
@@ -36,7 +37,7 @@ namespace TabulateSmarterTestPackage
             regardless of their path within the .zip file. The -i parameter may be
             repeated to process multiple input sources.
 
-                -o <output filename>
+            -o <output filename>
             Output filename prefix. The results are stored in the following files:
                 filename.items.csv    Tabulation of item data
                 filename.stims.csv    Tabulation of stimulus data
@@ -54,11 +55,16 @@ namespace TabulateSmarterTestPackage
 
             -sv
             If this flag is present and both cs and ci arguments are provided, the tabulator will 
-            write cross tabulation errors for stimuli versions";
+            write cross tabulation errors for stimuli versions
 
+            Exit codes:
+            0       - emitted when no work is done, nor any errors
+            1       - tabulation work done
+            255(-1) - error, no work done";
+        
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private static void Main(string[] args)
+        private static int Main(string[] args)
         {
             Logger.Info(string.Concat(Enumerable.Repeat("-", 60)));
             Logger.Info("Test Package Tabulator Initialized");
@@ -83,9 +89,7 @@ namespace TabulateSmarterTestPackage
                             ++i;
                             if (i >= args.Length)
                             {
-                                Logger.Error("-i option must be followed by a valid string filename");
-                                throw new ArgumentException(
-                                    "Invalid command line. '-i' option not followed by filename.");
+                                throw new ArgumentException("Invalid command line. '-i' option must be followed by filename.");
                             }
                             Logger.Info($"Input found: {args[i]}");
                             inputFilenames.Add(args[i]);
@@ -97,14 +101,11 @@ namespace TabulateSmarterTestPackage
                             ++i;
                             if (i >= args.Length)
                             {
-                                Logger.Error("-o option must be followed by a valid string filename");
-                                throw new ArgumentException(
-                                    "Invalid command line. '-o' option not followed by filename.");
+                                throw new ArgumentException("Invalid command line. '-o' option must be followed by filename.");
                             }
                             if (oFilename != null)
                             {
-                                Logger.Error($"Output filename already set to: {oFilename}, cannot set to {args[i]}");
-                                throw new ArgumentException("Only one item output filename may be specified.");
+                                throw new ArgumentException($"Output filename already set to: {oFilename}, cannot set to {args[i]}");
                             }
                             oFilename = Path.GetFullPath(args[i]);
                             if (oFilename.EndsWith(".csv"))
@@ -119,18 +120,12 @@ namespace TabulateSmarterTestPackage
                             ++i;
                             if (i >= args.Length)
                             {
-                                Logger.Error(
-                                    "-ci option must be followed by a valid path to the \"ItemReport.csv\" output of the ContentPackageTabulator https://github.com/smarterapp/TabulateSmarterTestContentPackage");
-                                throw new ArgumentException(
-                                    "Invalid command line. '-ci' option not followed by filename.");
+                                throw new ArgumentException("Invalid command line. '-ci' option must be followed by a valid path to the \"ItemReport.csv\" output of the ContentPackageTabulator");
                             }
                             if (!File.Exists(args[i]) &&
                                 !new FileInfo(args[i]).Extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
                             {
-                                Logger.Error(
-                                    "-ci option must be followed by a valid path to the \"ItemReport.csv\" output of the ContentPackageTabulator https://github.com/smarterapp/TabulateSmarterTestContentPackage");
-                                throw new ArgumentException(
-                                    "Invalid command line. '-ci' argument does not refer to valid csv output file.");
+                                throw new ArgumentException("Invalid command line. '-ci' argument does not refer to valid csv file.");
                             }
                             ReportingUtility.ContentItemDirectoryPath = args[i];
                             break;
@@ -138,18 +133,12 @@ namespace TabulateSmarterTestPackage
                             ++i;
                             if (i >= args.Length)
                             {
-                                Logger.Error(
-                                    "-cs option must be followed by a valid path to the \"StimulusReport.csv\" output of the ContentPackageTabulator https://github.com/smarterapp/TabulateSmarterTestContentPackage");
-                                throw new ArgumentException(
-                                    "Invalid command line. '-cs' option not followed by filename.");
+                                throw new ArgumentException("Invalid command line. '-cs' option must be followed by a valid path to the \"StimulusReport.csv\" output of the ContentPackageTabulator");
                             }
                             if (!File.Exists(args[i]) &&
                                 !new FileInfo(args[i]).Extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
                             {
-                                Logger.Error(
-                                    "-ci option must be followed by a valid path to the \"ItemReport.csv\" output of the ContentPackageTabulator https://github.com/smarterapp/TabulateSmarterTestContentPackage");
-                                throw new ArgumentException(
-                                    "Invalid command line. '-cs' argument does not refer to valid csv output file.");
+                                throw new ArgumentException("Invalid command line. '-cs' argument does not refer to valid csv file.");
                             }
                             ReportingUtility.ContentStimuliDirectoryPath = args[i];
                             break;
@@ -157,61 +146,46 @@ namespace TabulateSmarterTestPackage
                             UserSettings.ValidateStimuliVersion = true;
                             break;
                         default:
-                            Logger.Error($"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");
-                            throw new ArgumentException(
-                                $"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");
+                            throw new ArgumentException($"Unknown command line option '{args[i]}'. Use '-h' for syntax help.");
                     }
                 }
 
                 if (!string.IsNullOrEmpty(ReportingUtility.ContentItemDirectoryPath) &&
                     !string.IsNullOrEmpty(ReportingUtility.ContentStimuliDirectoryPath))
                 {
-                    Logger.Info(
-                        "Found valid paths to ContentPackageTabulator outputs. Initializing cross-processing validations...");
+                    Logger.Info("Found valid paths to ContentPackageTabulator outputs. Initializing cross-processing validations...");
                     ReportingUtility.InitializeCrossProcessor();
                 }
                 else
                 {
-                    Logger.Warn(
-                        "Unable to find valid paths to ContentPackageTabulator outputs. No cross-processing validations will be run.");
+                    Logger.Warn("Unable to find valid paths to ContentPackageTabulator outputs. No cross-processing validations will be run.");
                 }
 
                 if (help || args.Length == 0)
                 {
                     Console.WriteLine(HelpMessage);
+                    return 0;  // indicate no work was done (but no error)
                 }
 
-                else
+                if (inputFilenames.Count == 0 || oFilename == null)
                 {
-                    if (inputFilenames.Count == 0 || oFilename == null)
-                    {
-                        Logger.Error(
-                            "Invalid command line. One output filename and at least one input filename must be specified.");
-                        throw new ArgumentException(
-                            "Invalid command line. One output filename and at least one input filename must be specified.");
-                    }
+                    throw new ArgumentException("Invalid command line. One output filename and at least one input filename must be specified.");
+                }
 
-                    using (var tabulator = new TestPackageTabulator(oFilename))
-                    {
-                        var results = inputFilenames.SelectMany(x => ProcessInputFilename(x, tabulator)).ToList();
-                        TabulateResults(results, tabulator);
-                    }
+                using (var tabulator = new TestPackageTabulator(oFilename))
+                {
+                    var results = inputFilenames.SelectMany(x => ProcessInputFilename(x, tabulator)).ToList();
+                    TabulateResults(results, tabulator);
+                    return 1;  // indicate some work was done
                 }
             }
             catch (Exception err)
             {
-                Logger.Fatal(err);
-                Console.WriteLine();
-#if DEBUG
-                Console.WriteLine(err.ToString());
-#else
-                Console.WriteLine(err.Message);
-#endif
-                Console.ReadKey();
+                // log the error message; debug full exception info
+                Logger.Fatal(err.Message);
+                Logger.Debug(err);
+                return -1;  // indicate an error
             }
-
-            Console.Write("Press any key to exit.");
-            Console.ReadKey(true);
         }
 
         private static IEnumerable<Processor> ProcessInputFilename(string filenamePattern,
@@ -260,10 +234,7 @@ namespace TabulateSmarterTestPackage
                         break;
 
                     default:
-                        Logger.Warn(
-                            $"Input '{filename}' is of unsupported type. Only directories, .xml, and .zip are supported.");
-                        throw new ArgumentException(
-                            $"Input file '{filename}' is of unsupported type. Only directories, .xml, and .zip are supported.");
+                        throw new ArgumentException($"Input file '{filename}' is of unsupported type. Only directories, .xml, and .zip are supported.");
                 }
             }
             return processors;
@@ -351,7 +322,7 @@ namespace TabulateSmarterTestPackage
                     if (string.IsNullOrEmpty(entry.Name) ||
                         !Path.GetExtension(entry.Name).Equals(".xml", StringComparison.OrdinalIgnoreCase))
                     {
-                        Logger.Info($"File: {entry.Name} in zip file: {filename} is not a valid .xml file. Skipping...");
+                        Logger.Debug($"File: {entry.Name} in zip file: {filename} is not a valid .xml file. Skipping...");
                         continue;
                     }
                     Logger.Info($"   Processing: {entry.FullName}");
