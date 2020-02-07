@@ -62,7 +62,6 @@ namespace TabulateSmarterTestPackage.Tabulators
 
                 if (nav.IsNode && nav.SelectSingleNode("//TestPackage") != null)
                 {
-
                     Logger.Info("Processing new package format.");
                     nodeSelector = "//TestPackage";
                     ExpectedPackageType = PackageType.Combined;
