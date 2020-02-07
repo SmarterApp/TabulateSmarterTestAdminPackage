@@ -40,7 +40,7 @@ namespace TabulateSmarterTestPackage.Common.Tests.Validators
             //Assert
             Assert.IsFalse(result);
             Assert.AreEqual(errorSeverity, ItemUnderTest.ErrorSeverity);
-            Assert.AreEqual(ItemUnderTest.GetMessage(), "[Value!=bad input");
+            Assert.AreEqual(ItemUnderTest.GetMessage(), "[Value!=bad input]");
         }
 
         [TestMethod]

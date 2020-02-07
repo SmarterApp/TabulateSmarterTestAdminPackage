@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using CsvHelper;
-using CsvHelper.Configuration;
 
 namespace TabulateSmarterTestPackage.Utilities
 {
@@ -9,7 +9,7 @@ namespace TabulateSmarterTestPackage.Utilities
     {
         public static IEnumerable<T> Process<T>(Stream stream)
         {
-            var csvReader = new CsvReader(new StreamReader(stream), new Configuration
+            var csvReader = new CsvReader(new StreamReader(stream), new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = true
             });

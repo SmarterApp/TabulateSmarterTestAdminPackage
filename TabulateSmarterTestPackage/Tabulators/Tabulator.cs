@@ -1,7 +1,6 @@
 ﻿using System.IO;
-using TabulateSmarterTestPackage.Tabulators;
 
-namespace TabulateSmarterTestPackage
+namespace TabulateSmarterTestPackage.Tabulators
 {
     public abstract class Tabulator : ITabulator
     {
