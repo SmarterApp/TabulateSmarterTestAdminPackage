@@ -30,7 +30,7 @@ Other editions of Visual Studio should also work; VS 2017 and VS 2019 have been 
 JetBrains Rider works pretty well on a mac.
 
 The project has settings to produce trimmed, single file executables for certain target platforms.
-To build for linux: 
+To build for linux (TODO - consider linux-musl-x64 for Alpine linux): 
 ```
 dotnet publish -r linux-x64 -c Release
 ls -al TabulateSmarterTestPackage/bin/Release/netcoreapp3.1/linux-x64/publish 
@@ -42,5 +42,25 @@ dotnet publish -r osx-x64 -c Release
 ls -al TabulateSmarterTestPackage/bin/Release/netcoreapp3.1/osx-x64/publish 
 -rwxr-xr-x    1 staff  staff  43000712 Feb  4 15:33 TabulateSmarterTestPackage
 ```
+To build framework-dependent (FDD):
+```
+dotnet publish -c Release
+ls -al TabulateSmarterTestPackage/bin/Release/netcoreapp3.1/publish 
+-rwxr--r--   1 mark.laffoon  staff  164864 Jan 30 15:55 CsvHelper.dll
+-rw-r--r--   1 mark.laffoon  staff     380 Feb  4 14:04 NLog.config
+-rwxr--r--   1 mark.laffoon  staff  781824 Nov  4 21:13 NLog.dll
+-rw-r--r--   1 mark.laffoon  staff   92160 Feb  7 13:15 ProcessSmarterTestPackage.dll
+-rw-r--r--   1 mark.laffoon  staff   27508 Feb  7 13:15 ProcessSmarterTestPackage.pdb
+drwxr-xr-x   3 mark.laffoon  staff      96 Feb  7 13:15 Resources
+-rw-r--r--   1 mark.laffoon  staff   35328 Feb  7 13:15 SmarterTestPackage.Common.dll
+-rw-r--r--   1 mark.laffoon  staff   11772 Feb  7 13:15 SmarterTestPackage.Common.pdb
+-rwxr-xr-x   1 mark.laffoon  staff   80868 Feb  7 13:15 TabulateSmarterTestPackage
+-rw-r--r--   1 mark.laffoon  staff    3990 Feb  7 13:15 TabulateSmarterTestPackage.deps.json
+-rw-r--r--   1 mark.laffoon  staff   74752 Feb  7 13:15 TabulateSmarterTestPackage.dll
+-rw-r--r--   1 mark.laffoon  staff   15900 Feb  7 13:15 TabulateSmarterTestPackage.pdb
+-rw-r--r--   1 mark.laffoon  staff     146 Feb  7 13:15 TabulateSmarterTestPackage.runtimeconfig.json
+-rw-r--r--   1 mark.laffoon  staff   42050 Feb  4 08:48 TestPackageSchema.xsd
+-rw-r--r--   1 mark.laffoon  staff   77824 Feb  7 13:15 ValidateSmarterTestPackage.dll
+-rw-r--r--   1 mark.laffoon  staff   23072 Feb  7 13:15 ValidateSmarterTestPackage.pdb
+```
 
-TODO - consider linux-musl-x64 for Alpine linux if needed 
