@@ -236,24 +236,83 @@ namespace TabulateSmarterTestPackage.Tabulators
             {
                 int fieldCounter = 0;
                 var rdwFieldList = new List<string>();
-                foreach(var field in item)
+
+                string[] itemFields = item.ToArray();
+
+                // check if there are cut score values for this item. If not, do not add the values to the item report
+                // items without cut scores should not be added to the RDW item report. The non-RDW item report will still
+                // contain items without cut scores. Typically, items with out cut scores are from the ICA scoring files. Only
+                // the combined ICA scoring files (those files with "COMBINED" in the file name) contain cut scores.
+                if (!itemFields[70].Equals(""))
                 {
-                    if (fieldCounter != 35 && fieldCounter != 39 && fieldCounter != 47 &&
-                        fieldCounter != 48 && fieldCounter != 49 && fieldCounter != 50 && 
-                        fieldCounter != 51 && fieldCounter != 52 && fieldCounter != 53 &&
-                        fieldCounter != 54 && fieldCounter != 55 && fieldCounter != 82 && 
-                        fieldCounter != 83)
+                    // check if Claim field is blank; if it is, get the value from the bpref3 field
+                    if (itemFields[17].Equals(""))
                     {
-                        rdwFieldList.Add(field);
+                        itemFields[17] = itemFields[58].Substring(7);
                     }
-                    if (fieldCounter == 68)
+                    // check if Target field is blank; if it is, get the value from the bpref4 field
+                    if (itemFields[18].Equals(""))
                     {
-                        rdwFieldList.Add("");
-                        //fieldCounter++;
+                        string[] bpref4 = itemFields[59].Split("|");
+                        itemFields[18] = bpref4[2];
                     }
-                    fieldCounter++;
+                    // if the item type is WER, change the MaxPoints to 6
+                    if (itemFields[14].Equals("WER"))
+                    {
+                        itemFields[27] = "6";
+                    }
+                    // if spanish, change empty fields to "N"
+                    if (itemFields[30].Equals(""))
+                    {
+                        itemFields[30] = "N";
+                    }
+                    // if avg_b is blank, determine the averge based on b0_b and b1_c
+                    if (itemFields[46].Equals(""))
+                    {
+                        float avgB = (float.Parse(itemFields[42]) + float.Parse(itemFields[43])) / 2;
+                        itemFields[46] = avgB.ToString();
+                    }
+                    // if NumberOfAnswerOptions, change blanks to "0"
+                    if (itemFields[68].Equals(""))
+                    {
+                        itemFields[68] = "0";
+                    }
+                    // for ELA, replaced the ClaimContentTarget field with the values from the Claim and Target fields
+                    if (itemFields[2].Equals("ELA"))
+                    {
+                        itemFields[64] = itemFields[17].TrimEnd() + "|" + itemFields[18].TrimEnd();
+                    }
+                    // for Math, remove the leading "C" in the ClaimContentTarget fields 
+                    if (itemFields[2].Equals("Math") ||
+                        itemFields[2].Equals("MATH"))
+                    {
+                        itemFields[64] = itemFields[64].Substring(1); // remove the leading "C" in the ClaimContentTarget field
+                        if (!itemFields[66].Equals(""))
+                        {
+                            itemFields[66] = itemFields[66].Substring(1); // remove the leading "C" in the SecondaryClaimContentTarget field
+                        }
+                    }
+
+                    foreach (var field in itemFields)
+                    {
+                        if (fieldCounter != 35 && fieldCounter != 39 && fieldCounter != 47 &&
+                            fieldCounter != 48 && fieldCounter != 49 && fieldCounter != 50 &&
+                            fieldCounter != 51 && fieldCounter != 52 && fieldCounter != 53 &&
+                            fieldCounter != 54 && fieldCounter != 55 && fieldCounter != 82 &&
+                            fieldCounter != 83)
+                        {
+
+                            rdwFieldList.Add(field);
+                        }
+                        if (fieldCounter == 68)
+                        {
+                            rdwFieldList.Add("");
+                            //fieldCounter++;
+                        }
+                        fieldCounter++;
+                    }
+                    rdwList.Add(rdwFieldList);
                 }
-                rdwList.Add(rdwFieldList);
             }
 
             return rdwList;
