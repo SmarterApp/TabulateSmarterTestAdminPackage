@@ -289,7 +289,10 @@ namespace TabulateSmarterTestPackage.Tabulators
                         itemFields[64] = itemFields[64].Substring(1); // remove the leading "C" in the ClaimContentTarget field
                         if (!itemFields[66].Equals(""))
                         {
-                            itemFields[66] = itemFields[66].Substring(1); // remove the leading "C" in the SecondaryClaimContentTarget field
+                            // remove the leading "C" in the SecondaryClaimContentTarget field. 
+                            // This field may also contains a semicolon delimited list of claimcontenttargets, which will need to have the leading "C" removed
+                            itemFields[66] = itemFields[66].Substring(1);
+                            itemFields[66] = itemFields[66].Replace(";C", ";");
                         }
                     }
 
