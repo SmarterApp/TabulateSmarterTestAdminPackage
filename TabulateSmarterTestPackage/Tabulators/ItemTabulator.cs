@@ -479,8 +479,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                     // A proper ELA standard ID should be in this format: SBAC-ELA-v1:3-L|4-6|6.SL.2
                     // However, the bpref form substitutes "SBAC-" FOR "SBAC-ELA-v1:" and it drops the
                     // last segment which is the common core state standard.
-                    if (testInformation[ItemFieldNames.AssessmentSubject].Equals("Math",
-                        StringComparison.OrdinalIgnoreCase))
+                    if (testInformation[ItemFieldNames.AssessmentSubject].Equals("Math", StringComparison.OrdinalIgnoreCase) ||
+                        testInformation[ItemFieldNames.AssessmentSubject].Equals("Mathematics", StringComparison.OrdinalIgnoreCase))
                     {
                         var match = s_Rx_BprefMath.Match(bpRef);
                         if (!match.Success)
@@ -501,7 +501,7 @@ namespace TabulateSmarterTestPackage.Tabulators
                             continue;
                         }
                         itemFields[(int)ItemFieldNames.Standard] = string.Concat(c_ElaStdPrefix,
-                            match.Value.Substring(5));
+                            match.Value.Substring(match.Value.IndexOf("-") + 1));
                         itemFields[(int)ItemFieldNames.Claim] = match.Groups[1].Value + "\t";
                         // Adding tab character prevents Excel from treating these as dates.
                         itemFields[(int)ItemFieldNames.Target] = match.Groups[2].Value + "\t";
@@ -587,7 +587,8 @@ namespace TabulateSmarterTestPackage.Tabulators
                             : item.ValueForAttribute("AllowCalculator");
                 }
 
-                if (itemFields[(int)ItemFieldNames.AssessmentSubject].Equals("MATH", StringComparison.OrdinalIgnoreCase))
+                if (itemFields[(int)ItemFieldNames.AssessmentSubject].Equals("MATH", StringComparison.OrdinalIgnoreCase) ||
+                    itemFields[(int)ItemFieldNames.AssessmentSubject].Equals("Mathematics", StringComparison.OrdinalIgnoreCase))
                 {
                     if (string.IsNullOrEmpty(itemFields[(int)ItemFieldNames.AllowCalculator]))
                     {
